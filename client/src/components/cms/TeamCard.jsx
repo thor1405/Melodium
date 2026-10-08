@@ -13,8 +13,11 @@ export const TeamCard = ({ member }) => {
       {/* Photo */}
       <div className="relative h-64 sm:h-72 overflow-hidden bg-dark-900">
         <img
-          src={member.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop'}
+          src={member.photo || '/gallery/sound_engineer_console.png'}
           alt={member.name}
+          onError={(e) => {
+            e.target.src = '/gallery/sound_engineer_console.png';
+          }}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent" />

@@ -19,8 +19,11 @@ export const EventCard = ({ event, onRsvp, isRsvpd }) => {
       {/* Event Poster */}
       <div className="relative h-52 sm:h-56 overflow-hidden">
         <img
-          src={event.posterImage || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000&auto=format&fit=crop'}
+          src={event.posterImage || '/gallery/sound_treated_live_room.png'}
           alt={event.title}
+          onError={(e) => {
+            e.target.src = '/gallery/sound_treated_live_room.png';
+          }}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/40 to-transparent" />

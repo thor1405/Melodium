@@ -127,12 +127,16 @@ export const HomePage = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative rounded-3xl overflow-hidden glass-panel-elevated border border-amber-500/25 p-8 sm:p-12">
           {/* Background art */}
-          <div className="absolute top-0 right-0 w-full sm:w-1/2 h-full opacity-15 pointer-events-none">
+          <div className="absolute top-0 right-0 w-full sm:w-1/2 h-full opacity-25 pointer-events-none overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1200&auto=format&fit=crop"
-              alt="Studio gear"
-              className="w-full h-full object-cover"
+              src="/gallery/sound_treated_live_room.png"
+              alt="Melodium SJEC Jam Room Studio"
+              className="w-full h-full object-cover object-center"
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
             />
+            <div className="absolute inset-0 bg-gradient-to-r from-dark-950 via-dark-950/60 to-transparent" />
           </div>
 
           <div className="relative z-10 max-w-2xl space-y-6">

@@ -110,8 +110,11 @@ export const EventDetailPage = () => {
       {/* Hero Poster Banner */}
       <div className="relative rounded-3xl overflow-hidden glass-panel border border-white/10 h-72 sm:h-96">
         <img
-          src={event.posterImage || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000&auto=format&fit=crop'}
+          src={event.posterImage || '/gallery/sound_treated_live_room.png'}
           alt={event.title}
+          onError={(e) => {
+            e.target.src = '/gallery/sound_treated_live_room.png';
+          }}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/50 to-transparent" />
