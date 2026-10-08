@@ -62,7 +62,7 @@ export const seedDatabase = async () => {
       imageUrl: '/gallery/sound_treated_live_room.png',
       caption: 'Acoustically isolated rehearsal space at SJEC featuring custom sound dampeners, acoustic wood flooring, and studio vocal booth.',
       eventDate: 'October 2026',
-      location: 'Jam Room 1 (Activity Block)',
+      location: 'Jam Room 1 (Academic Block 3, Ground Floor)',
       featured: true,
       likesCount: 0,
       order: 1,

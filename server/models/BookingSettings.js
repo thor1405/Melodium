@@ -64,7 +64,7 @@ const bookingSettingsSchema = new mongoose.Schema(
     },
     roomLocation: {
       type: String,
-      default: 'Activity Block, 2nd Floor, SJEC Campus',
+      default: 'Academic Block 3, Ground Floor, St. Joseph Engineering College, Vamanjoor, Mangaluru, Karnataka 575028',
     },
     maxParticipants: {
       type: Number,

@@ -68,7 +68,7 @@ export const sendBookingConfirmationEmail = async ({ user, bookings = [], settin
     (!user.email.endsWith('@sjec.ac.in') && user.role !== 'ADMIN');
 
   const roomName = settings.roomName || 'Melodium SJEC Jam Room (Studio 1)';
-  const roomLocation = settings.roomLocation || 'Activity Block, 2nd Floor, SJEC Campus, Vamanjoor, Mangaluru';
+  const roomLocation = settings.roomLocation || 'Academic Block 3, Ground Floor, St. Joseph Engineering College, Vamanjoor, Mangaluru, Karnataka 575028';
 
   const totalFee = isOutsider ? 500 : 0;
   const paymentStatus = firstBooking.paymentStatus || (isOutsider ? 'PAID' : 'FREE');

@@ -162,7 +162,7 @@ export const JamRoomBookingPage = () => {
         <div className="p-4 rounded-2xl glass-panel border border-white/10 space-y-1.5 text-xs text-slate-300">
           <div className="flex items-center gap-2 font-bold text-white">
             <MapPin className="w-4 h-4 text-amber-400" />
-            <span>Activity Block, 2nd Floor</span>
+            <span>Academic Block 3, Ground Floor</span>
           </div>
           <div className="text-[11px] text-slate-400">
             Operating: 09:00 AM – 06:00 PM • 60 Mins/Slot

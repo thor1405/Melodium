@@ -14,7 +14,7 @@ export const defaultBookingSettings = {
   allowedEmailDomains: ["sjec.ac.in"],
   enforceEmailDomain: false, // configurable restriction
   roomName: "Melodium SJEC Jam Room (Studio 1)",
-  roomLocation: "Activity Block, 2nd Floor, SJEC Campus",
+  roomLocation: "Academic Block 3, Ground Floor, St. Joseph Engineering College, Vamanjoor, Mangaluru, Karnataka 575028",
   maxParticipants: 8,
   rulesSummary: [
     "Bookings operate in strict 1-hour slots.",

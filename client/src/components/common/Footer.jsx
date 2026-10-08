@@ -88,7 +88,7 @@ export const Footer = () => {
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <span>
-                  Activity Block, 2nd Floor, St. Joseph Engineering College, Vamanjoor, Mangaluru, Karnataka 575028
+                  Academic Block 3, Ground Floor, St. Joseph Engineering College, Vamanjoor, Mangaluru, Karnataka 575028
                 </span>
               </li>
               <li className="flex items-center gap-2.5">

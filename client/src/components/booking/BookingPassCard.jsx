@@ -98,7 +98,7 @@ export const BookingPassCard = ({ booking, onCancel }) => {
           </span>
           <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
             <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>Activity Block, 2nd Flr</span>
+            <span>Academic Block 3, Ground Flr</span>
           </div>
         </div>
       </div>
