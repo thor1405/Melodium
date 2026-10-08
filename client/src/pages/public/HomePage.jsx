@@ -125,68 +125,84 @@ export const HomePage = () => {
 
       {/* 2. JAM ROOM STUDIO 1 SPOTLIGHT */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative rounded-3xl overflow-hidden glass-panel-elevated border border-amber-500/25 p-8 sm:p-12">
-          {/* Background art */}
-          <div className="absolute top-0 right-0 w-full sm:w-1/2 h-full opacity-25 pointer-events-none overflow-hidden">
-            <img
-              src="/gallery/sound_treated_live_room.png"
-              alt="Melodium SJEC Jam Room Studio"
-              className="w-full h-full object-cover object-center"
-              onError={(e) => {
-                e.target.style.display = 'none';
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-dark-950 via-dark-950/60 to-transparent" />
-          </div>
+        <div className="relative rounded-3xl overflow-hidden glass-panel-elevated border border-amber-500/25 p-6 sm:p-10 lg:p-12">
+          {/* Ambient Glow */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 max-w-2xl space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/35 text-xs font-bold uppercase">
-              <Radio className="w-3.5 h-3.5 animate-pulse" />
-              <span>Dedicated University Jam Room</span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+            {/* Left Column: Text & Actions */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/35 text-xs font-bold uppercase">
+                <Radio className="w-3.5 h-3.5 animate-pulse" />
+                <span>Dedicated University Jam Room</span>
+              </div>
+
+              <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
+                Studio-Grade Gear. <br />
+                <span className="text-amber-400">Instant 1-Hour Slots.</span>
+              </h2>
+
+              <p className="text-slate-300 text-sm leading-relaxed">
+                Equipped with a Pearl acoustic drum kit, high-gain Marshall half-stacks, Fender Twin Reverbs, Ampeg bass amplification, stage pianos, and Shure microphones — our sound-treated Jam Room is ready for your rehearsals.
+              </p>
+
+              {/* Feature Bullets */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs text-slate-200">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>Real-time availability & instant pass</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>Strict double-booking prevention</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>Acoustically isolated room</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>Multi-mic drum recording setup</span>
+                </div>
+              </div>
+
+              <div className="pt-2 flex flex-wrap items-center gap-4">
+                <Link
+                  to="/jam-room"
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all"
+                >
+                  Book a Slot for Today
+                </Link>
+                <Link
+                  to="/about#jam-room-rules"
+                  className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-semibold text-xs border border-white/10 transition-all"
+                >
+                  Read Studio Guidelines
+                </Link>
+              </div>
             </div>
 
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white">
-              Studio-Grade Gear. <br />
-              <span className="text-amber-400">Instant 1-Hour Slots.</span>
-            </h2>
-
-            <p className="text-slate-300 text-sm leading-relaxed">
-              Equipped with a Pearl acoustic drum kit, high-gain Marshall half-stacks, Fender Twin Reverbs, Ampeg bass amplification, stage pianos, and Shure microphones — our sound-treated Jam Room is ready for your rehearsals.
-            </p>
-
-            {/* Feature Bullets */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs text-slate-200">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Real-time availability & instant pass</span>
+            {/* Right Column: Framed Studio Photo */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl group aspect-[4/3] bg-dark-900">
+                <img
+                  src="/gallery/sound_treated_live_room.png"
+                  alt="Melodium SJEC Jam Room Studio"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-dark-950/80 via-transparent to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
+                  <span className="font-semibold text-white text-[11px] drop-shadow-md">
+                    Studio 1 • Rehearsal Hall
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-amber-500/30 border border-amber-400/40 text-amber-300 text-[10px] font-bold">
+                    Academic Block 3
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Strict double-booking prevention</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Acoustically isolated room</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Multi-mic drum recording setup</span>
-              </div>
-            </div>
-
-            <div className="pt-4 flex flex-wrap items-center gap-4">
-              <Link
-                to="/jam-room"
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all"
-              >
-                Book a Slot for Today
-              </Link>
-              <Link
-                to="/about#jam-room-rules"
-                className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-semibold text-xs border border-white/10 transition-all"
-              >
-                Read Studio Guidelines
-              </Link>
             </div>
           </div>
         </div>
