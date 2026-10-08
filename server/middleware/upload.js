@@ -25,14 +25,14 @@ const storage = multer.diskStorage({
 });
 
 const videoFilter = (req, file, cb) => {
-  const allowedTypes = /mp4|webm|ogg|mov|quicktime|m4v/;
+  const allowedTypes = /mp4|webm|ogg|mov|quicktime|m4v|mkv|avi|x-matroska/i;
   const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
-  const mime = file.mimetype;
+  const mime = file.mimetype || '';
 
-  if (allowedTypes.test(ext) || mime.startsWith('video/')) {
+  if (allowedTypes.test(ext) || mime.startsWith('video/') || mime === 'application/octet-stream') {
     cb(null, true);
   } else {
-    cb(new Error('Only video files (.mp4, .webm, .ogg, .mov) are allowed!'), false);
+    cb(new Error('Only video files (.mp4, .webm, .ogg, .mov, .m4v, .mkv) are allowed!'), false);
   }
 };
 

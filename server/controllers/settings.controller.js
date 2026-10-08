@@ -63,9 +63,7 @@ export const uploadHeroVideo = async (req, res, next) => {
       });
     }
 
-    const host = req.get('host');
-    const protocol = req.protocol;
-    const videoUrl = `${protocol}://${host}/uploads/videos/${req.file.filename}`;
+    const videoUrl = `/uploads/videos/${req.file.filename}`;
 
     let settings = await BookingSettings.findOne();
     if (!settings) {

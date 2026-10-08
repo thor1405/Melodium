@@ -61,10 +61,16 @@ export const adminService = {
     return res.data;
   },
 
-  uploadHeroVideo: async (formData) => {
+  uploadHeroVideo: async (formData, onProgress) => {
     const res = await api.post('/settings/upload-video', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: (progressEvent) => {
+        if (onProgress && progressEvent.total) {
+          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          onProgress(percent);
+        }
       },
     });
     return res.data;

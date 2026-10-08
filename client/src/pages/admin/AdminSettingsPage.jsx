@@ -10,6 +10,8 @@ export const AdminSettingsPage = () => {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isDragOver, setIsDragOver] = useState(false);
   const [videoMode, setVideoMode] = useState('upload'); // 'upload' | 'link'
 
   const fetchSettings = async () => {
@@ -40,8 +42,7 @@ export const AdminSettingsPage = () => {
     setSettings((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleVideoFileUpload = async (e) => {
-    const file = e.target.files?.[0];
+  const processVideoFile = async (file) => {
     if (!file) return;
 
     if (file.size > 150 * 1024 * 1024) {
@@ -56,16 +57,38 @@ export const AdminSettingsPage = () => {
     }
 
     setIsUploadingVideo(true);
+    setUploadProgress(0);
+
     try {
-      const res = await adminService.uploadHeroVideo(formData);
+      const res = await adminService.uploadHeroVideo(formData, (percent) => {
+        setUploadProgress(percent);
+      });
       if (res.success) {
         toast.success('Video file uploaded and published to homepage! 🎬');
         setSettings(res.data);
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to upload video file.');
+      toast.error(err.response?.data?.message || err.message || 'Failed to upload video file.');
     } finally {
       setIsUploadingVideo(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const handleVideoFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      await processVideoFile(file);
+    }
+    if (e.target) e.target.value = '';
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const file = e.dataTransfer?.files?.[0];
+    if (file) {
+      await processVideoFile(file);
     }
   };
 
@@ -393,35 +416,59 @@ export const AdminSettingsPage = () => {
 
           {/* Mode 1: File Upload */}
           {videoMode === 'upload' && (
-            <div className="p-6 rounded-2xl border-2 border-dashed border-amber-500/30 bg-amber-500/5 hover:border-amber-400/60 transition-all text-center space-y-3">
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragOver(true);
+              }}
+              onDragLeave={() => setIsDragOver(false)}
+              onDrop={handleDrop}
+              onClick={() => {
+                if (!isUploadingVideo) {
+                  document.getElementById('videoFileInput')?.click();
+                }
+              }}
+              className={`p-6 rounded-2xl border-2 border-dashed transition-all text-center space-y-3 cursor-pointer ${
+                isDragOver
+                  ? 'border-amber-400 bg-amber-500/15 scale-[1.01]'
+                  : 'border-amber-500/30 bg-amber-500/5 hover:border-amber-400/60 hover:bg-amber-500/10'
+              }`}
+            >
               <input
                 type="file"
                 id="videoFileInput"
-                accept="video/mp4,video/webm,video/ogg,video/quicktime,video/m4v"
+                accept="video/mp4,video/webm,video/ogg,video/quicktime,video/m4v,video/mkv,video/avi"
                 onChange={handleVideoFileUpload}
                 disabled={isUploadingVideo}
                 className="hidden"
               />
-              <label
-                htmlFor="videoFileInput"
-                className="cursor-pointer flex flex-col items-center justify-center gap-2"
-              >
+              <div className="flex flex-col items-center justify-center gap-2 pointer-events-none">
                 <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center shadow-glow-yellow">
                   {isUploadingVideo ? (
-                    <RefreshCw className="w-6 h-6 animate-spin" />
+                    <RefreshCw className="w-6 h-6 animate-spin text-amber-400" />
                   ) : (
                     <FileVideo className="w-6 h-6" />
                   )}
                 </div>
-                <div>
+                <div className="w-full max-w-xs">
                   <div className="text-sm font-bold text-white">
-                    {isUploadingVideo ? 'Uploading & Processing Video...' : 'Click to Upload Video File from Device'}
+                    {isUploadingVideo ? `Uploading Video (${uploadProgress}%)...` : 'Click or Drag & Drop Video File'}
                   </div>
                   <p className="text-[11px] text-slate-400 mt-1">
-                    Supports MP4, WebM, MOV video files up to 150 MB.
+                    Supports MP4, WebM, MOV, M4V files up to 150 MB.
                   </p>
+
+                  {/* Upload Progress Bar */}
+                  {isUploadingVideo && (
+                    <div className="w-full bg-white/10 rounded-full h-2 mt-3 overflow-hidden border border-white/10">
+                      <div
+                        className="bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 h-full transition-all duration-300 rounded-full"
+                        style={{ width: `${uploadProgress}%` }}
+                      />
+                    </div>
+                  )}
                 </div>
-              </label>
+              </div>
 
               {settings.heroVideoUrl && settings.heroVideoUrl.includes('/uploads/') && (
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
