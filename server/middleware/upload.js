@@ -36,6 +36,44 @@ const videoFilter = (req, file, cb) => {
   }
 };
 
+// Avatar Upload Storage & Middleware
+const avatarDir = path.join(__dirname, '../uploads/avatars');
+if (!fs.existsSync(avatarDir)) {
+  fs.mkdirSync(avatarDir, { recursive: true });
+}
+
+const avatarStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, avatarDir);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const cleanName = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, '_');
+    const uniqueSuffix = `${Date.now()}_${Math.round(Math.random() * 1e6)}`;
+    cb(null, `avatar_${cleanName}_${uniqueSuffix}${ext}`);
+  },
+});
+
+const imageFilter = (req, file, cb) => {
+  const allowedTypes = /jpg|jpeg|png|webp|gif|svg/i;
+  const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
+  const mime = file.mimetype || '';
+
+  if (allowedTypes.test(ext) || mime.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files (.jpg, .jpeg, .png, .webp, .gif) are allowed!'), false);
+  }
+};
+
+export const uploadAvatar = multer({
+  storage: avatarStorage,
+  fileFilter: imageFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+});
+
 export const uploadVideo = multer({
   storage,
   fileFilter: videoFilter,

@@ -35,4 +35,13 @@ export const authService = {
     const res = await api.post(`/auth/reset-password/${token}`, { password });
     return res.data;
   },
+
+  uploadAvatar: async (formData) => {
+    const res = await api.post('/auth/upload-avatar', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  },
 };

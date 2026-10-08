@@ -454,3 +454,61 @@ export const resetPassword = async (req, res, next) => {
   }
 };
 
+// @desc    Upload profile picture
+// @route   POST /api/auth/upload-avatar
+// @access  Private
+export const uploadAvatar = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please select a valid image file (.jpg, .jpeg, .png, .webp, .gif) to upload.',
+      });
+    }
+
+    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    user.avatar = avatarUrl;
+    await user.save();
+
+    await ActivityLog.create({
+      userId: user._id,
+      userName: user.name,
+      userRole: user.role,
+      action: 'PROFILE_UPDATED',
+      details: `Uploaded new profile photo: ${req.file.originalname}`,
+      entityType: 'USER',
+      entityId: user._id.toString(),
+    });
+
+    res.json({
+      success: true,
+      message: 'Profile picture updated successfully! 📸',
+      avatarUrl,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        userType: user.userType || (user.email.endsWith('@sjec.ac.in') ? 'SJEC_STUDENT' : 'OUTSIDER'),
+        organization: user.organization || '',
+        city: user.city || '',
+        usn: user.usn,
+        department: user.department,
+        year: user.year,
+        instrument: user.instrument,
+        avatar: user.avatar,
+        phone: user.phone,
+        bio: user.bio,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

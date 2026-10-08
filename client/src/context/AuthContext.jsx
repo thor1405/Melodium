@@ -70,6 +70,19 @@ export const AuthProvider = ({ children }) => {
     return res;
   };
 
+  const updateAvatar = (newAvatarUrl, updatedUser) => {
+    if (updatedUser) {
+      setUser(updatedUser);
+      localStorage.setItem('melodium_user', JSON.stringify(updatedUser));
+    } else if (newAvatarUrl) {
+      setUser((prev) => {
+        const next = { ...prev, avatar: newAvatarUrl };
+        localStorage.setItem('melodium_user', JSON.stringify(next));
+        return next;
+      });
+    }
+  };
+
   const value = {
     user,
     token,
@@ -80,6 +93,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     updateProfile,
+    updateAvatar,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
