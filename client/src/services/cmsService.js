@@ -48,6 +48,15 @@ export const cmsService = {
     const res = await api.post(`/gallery/${id}/like`);
     return res.data;
   },
+  uploadGalleryImage: async (formData) => {
+    const res = await api.post('/gallery/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  },
+
 
   // Team
   getTeam: async (params = {}) => {

@@ -66,6 +66,32 @@ const imageFilter = (req, file, cb) => {
   }
 };
 
+// Gallery Image Upload Storage & Middleware
+const galleryDir = path.join(__dirname, '../uploads/gallery');
+if (!fs.existsSync(galleryDir)) {
+  fs.mkdirSync(galleryDir, { recursive: true });
+}
+
+const galleryStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, galleryDir);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const cleanName = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, '_');
+    const uniqueSuffix = `${Date.now()}_${Math.round(Math.random() * 1e6)}`;
+    cb(null, `photo_${cleanName}_${uniqueSuffix}${ext}`);
+  },
+});
+
+export const uploadGalleryImage = multer({
+  storage: galleryStorage,
+  fileFilter: imageFilter,
+  limits: {
+    fileSize: 25 * 1024 * 1024, // 25MB limit for high-res performance photos
+  },
+});
+
 export const uploadAvatar = multer({
   storage: avatarStorage,
   fileFilter: imageFilter,
@@ -81,3 +107,4 @@ export const uploadVideo = multer({
     fileSize: 150 * 1024 * 1024, // 150MB limit
   },
 });
+

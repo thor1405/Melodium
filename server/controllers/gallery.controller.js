@@ -126,3 +126,31 @@ export const likeGalleryItem = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Upload photo file from device for Gallery
+// @route   POST /api/gallery/upload
+// @access  Private (Admin)
+export const uploadGalleryPhoto = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please select an image file (.jpg, .jpeg, .png, .webp, .gif) to upload.',
+      });
+    }
+
+    const imageUrl = `/uploads/gallery/${req.file.filename}`;
+
+    res.json({
+      success: true,
+      message: 'Photo uploaded successfully! 📸',
+      imageUrl,
+      filename: req.file.filename,
+      originalName: req.file.originalname,
+      size: req.file.size,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

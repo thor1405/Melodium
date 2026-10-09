@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MapPin, Calendar, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const GalleryLightbox = ({ items = [] }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -129,21 +129,6 @@ export const GalleryLightbox = ({ items = [] }) => {
                       <p className="text-xs text-slate-400 leading-relaxed mt-2">
                         {selectedItem.caption}
                       </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2 text-xs text-slate-400 pt-2">
-                    {selectedItem.location && (
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                        <span>{selectedItem.location}</span>
-                      </div>
-                    )}
-                    {selectedItem.eventDate && (
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-3.5 h-3.5 text-amber-400" />
-                        <span>{selectedItem.eventDate}</span>
-                      </div>
                     )}
                   </div>
                 </div>

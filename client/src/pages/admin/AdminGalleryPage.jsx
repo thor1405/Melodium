@@ -1,9 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { cmsService } from '../../services/cmsService';
 import { useToast } from '../../context/ToastContext';
 import { Modal } from '../../components/common/Modal';
 import { ConfirmDialog } from '../../components/common/ConfirmDialog';
-import { Image, Plus, Trash2, Edit, Eye } from 'lucide-react';
+import {
+  Image as ImageIcon,
+  Plus,
+  Trash2,
+  Edit,
+  Upload,
+  Link2,
+  CheckCircle2,
+  Sparkles,
+  Camera,
+  X,
+} from 'lucide-react';
 
 export const AdminGalleryPage = () => {
   const toast = useToast();
@@ -16,13 +27,15 @@ export const AdminGalleryPage = () => {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
 
+  const [imageInputMode, setImageInputMode] = useState('upload'); // 'upload' | 'url'
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef(null);
+
   const [formData, setFormData] = useState({
     title: '',
     category: 'PERFORMANCES',
     imageUrl: '',
     caption: '',
-    eventDate: 'October 2026',
-    location: 'SJEC Campus',
     featured: true,
   });
 
@@ -30,7 +43,7 @@ export const AdminGalleryPage = () => {
     setLoading(true);
     try {
       const res = await cmsService.getGallery();
-      if (res.success) setItems(res.data);
+      if (res.success) setItems(res.data || []);
     } catch (err) {
       toast.error('Failed to load gallery.');
     } finally {
@@ -44,13 +57,12 @@ export const AdminGalleryPage = () => {
 
   const handleOpenCreate = () => {
     setEditingItem(null);
+    setImageInputMode('upload');
     setFormData({
       title: '',
       category: 'PERFORMANCES',
-      imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1200&auto=format&fit=crop',
+      imageUrl: '',
       caption: '',
-      eventDate: 'October 2026',
-      location: 'Kalam Auditorium',
       featured: true,
     });
     setModalOpen(true);
@@ -58,24 +70,65 @@ export const AdminGalleryPage = () => {
 
   const handleOpenEdit = (item) => {
     setEditingItem(item);
+    setImageInputMode(item.imageUrl?.startsWith('/uploads/') ? 'upload' : 'url');
     setFormData({
       title: item.title,
       category: item.category,
       imageUrl: item.imageUrl,
       caption: item.caption || '',
-      eventDate: item.eventDate || '',
-      location: item.location || '',
       featured: Boolean(item.featured),
     });
     setModalOpen(true);
   };
 
+  const handleFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file (.jpg, .jpeg, .png, .webp, .gif)');
+      return;
+    }
+
+    if (file.size > 25 * 1024 * 1024) {
+      toast.error('File size exceeds 25MB limit.');
+      return;
+    }
+
+    const uploadFormData = new FormData();
+    uploadFormData.append('photo', file);
+
+    setIsUploading(true);
+    try {
+      const res = await cmsService.uploadGalleryImage(uploadFormData);
+      if (res.success && res.imageUrl) {
+        setFormData((prev) => ({
+          ...prev,
+          imageUrl: res.imageUrl,
+          title: prev.title || file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
+        }));
+        toast.success('Photo uploaded from device successfully! 📸');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to upload photo.');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.imageUrl.trim()) {
+      toast.error('Please upload a photo from your device or provide an image URL.');
+      return;
+    }
+
     try {
       if (editingItem) {
         const res = await cmsService.updateGalleryItem(editingItem._id, formData);
-        if (res.success) toast.success('Photo updated.');
+        if (res.success) toast.success('Photo updated successfully.');
       } else {
         const res = await cmsService.createGalleryItem(formData);
         if (res.success) toast.success('Photo added to gallery.');
@@ -108,16 +161,16 @@ export const AdminGalleryPage = () => {
         <div>
           <h2 className="text-xl font-bold font-display text-white">Performance Gallery CMS</h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Add and manage high-resolution concert and jam room photos.
+            Upload and manage high-resolution concert, festival, and jam room photos.
           </p>
         </div>
 
         <button
           onClick={handleOpenCreate}
-          className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all flex items-center gap-1.5 self-start sm:self-auto"
+          className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
         >
-          <Plus className="w-3.5 h-3.5" />
-          <span>Upload Photo</span>
+          <Plus className="w-4 h-4 text-dark-950 stroke-[3]" />
+          <span>Add Photo to Gallery</span>
         </button>
       </div>
 
@@ -126,12 +179,16 @@ export const AdminGalleryPage = () => {
         {items.map((item) => (
           <div
             key={item._id}
-            className="glass-panel rounded-2xl overflow-hidden border border-white/10 flex flex-col justify-between"
+            className="glass-panel rounded-2xl overflow-hidden border border-white/10 flex flex-col justify-between group hover:border-amber-500/40 transition-all shadow-lg"
           >
-            <div className="h-48 relative">
-              <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
+            <div className="h-48 relative overflow-hidden bg-dark-900">
+              <img
+                src={item.imageUrl}
+                alt={item.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
               <div className="absolute top-3 left-3">
-                <span className="px-2.5 py-0.5 rounded-full bg-dark-950/80 text-[10px] font-bold text-white uppercase">
+                <span className="px-2.5 py-0.5 rounded-full bg-dark-950/85 backdrop-blur-md border border-white/10 text-[10px] font-bold text-amber-300 uppercase">
                   {item.category?.replace('_', ' ')}
                 </span>
               </div>
@@ -140,14 +197,16 @@ export const AdminGalleryPage = () => {
             <div className="p-4 space-y-2 flex-1 flex flex-col justify-between">
               <div>
                 <h4 className="font-bold text-white text-sm font-display truncate">{item.title}</h4>
-                <p className="text-xs text-slate-400 line-clamp-2 mt-1">{item.caption}</p>
+                {item.caption && <p className="text-xs text-slate-400 line-clamp-2 mt-1">{item.caption}</p>}
               </div>
 
-              <div className="flex items-center justify-end pt-2 border-t border-white/5 text-xs text-slate-400">
+              <div className="flex items-center justify-between pt-2.5 border-t border-white/5 text-xs text-slate-400">
+                <span className="text-[11px] text-slate-400">{item.featured ? '⭐ Featured' : 'Gallery'}</span>
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => handleOpenEdit(item)}
-                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300"
+                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                    title="Edit Photo"
                   >
                     <Edit className="w-3.5 h-3.5" />
                   </button>
@@ -156,7 +215,8 @@ export const AdminGalleryPage = () => {
                       setDeletingId(item._id);
                       setConfirmDeleteOpen(true);
                     }}
-                    className="p-1.5 rounded-lg bg-white/5 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400"
+                    className="p-1.5 rounded-lg bg-white/5 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
+                    title="Delete Photo"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -171,10 +231,151 @@ export const AdminGalleryPage = () => {
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editingItem ? 'Edit Gallery Item' : 'Add Photo to Gallery'}
+        title={editingItem ? 'Edit Gallery Photo' : 'Add Photo to Gallery'}
+        subtitle="Performance & Studio Photography"
         maxWidth="max-w-lg"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Photo Source Selector Tabs */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-200 block">Photo Media *</label>
+            <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-dark-900 border border-white/10">
+              <button
+                type="button"
+                onClick={() => setImageInputMode('upload')}
+                className={`py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                  imageInputMode === 'upload'
+                    ? 'bg-amber-500 text-dark-950 shadow-glow-yellow'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Upload className="w-3.5 h-3.5" />
+                <span>Upload from Device</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setImageInputMode('url')}
+                className={`py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                  imageInputMode === 'url'
+                    ? 'bg-amber-500 text-dark-950 shadow-glow-yellow'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Link2 className="w-3.5 h-3.5" />
+                <span>Image Web URL</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Hidden Device File Input */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif"
+            className="hidden"
+          />
+
+          {/* Upload Dropzone / Live Preview Box */}
+          {imageInputMode === 'upload' ? (
+            <div>
+              {formData.imageUrl ? (
+                /* Uploaded Preview State */
+                <div className="relative rounded-2xl overflow-hidden border border-amber-500/40 bg-dark-950 shadow-inner group">
+                  <div className="h-44 w-full overflow-hidden">
+                    <img
+                      src={formData.imageUrl}
+                      alt="Gallery Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-dark-950/95 via-dark-950/30 to-transparent flex items-end justify-between p-3.5">
+                    <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-bold bg-dark-950/80 px-2.5 py-1 rounded-lg border border-emerald-500/30">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>Photo Ready</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploading}
+                        className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-dark-950 font-bold text-xs shadow-sm flex items-center gap-1.5 cursor-pointer transition-all"
+                      >
+                        <Camera className="w-3.5 h-3.5" />
+                        <span>Change Photo</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, imageUrl: '' })}
+                        className="p-1.5 rounded-lg bg-dark-950/80 hover:bg-rose-950/80 text-slate-300 hover:text-rose-400 border border-white/10 cursor-pointer transition-colors"
+                        title="Remove"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Dropzone State */
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center cursor-pointer transition-all space-y-2 group ${
+                    isUploading
+                      ? 'border-amber-400/50 bg-amber-500/5 pointer-events-none'
+                      : 'border-white/15 hover:border-amber-400/60 bg-white/5 hover:bg-amber-500/5'
+                  }`}
+                >
+                  {isUploading ? (
+                    <div className="flex flex-col items-center gap-2 py-4">
+                      <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                      <span className="text-xs font-bold text-amber-300">Uploading photo from device...</span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2.5">
+                      <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center group-hover:scale-105 transition-transform shadow-glow-yellow">
+                        <Upload className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <span className="text-xs font-bold text-white block">
+                          Click to Browse Photo from Device
+                        </span>
+                        <span className="text-[11px] text-slate-400 mt-0.5 block">
+                          Supports high-res JPG, PNG, WEBP (Up to 25MB)
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            /* URL Input Mode */
+            <div className="space-y-2">
+              <input
+                type="url"
+                required
+                value={formData.imageUrl}
+                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                placeholder="https://images.unsplash.com/..."
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-400 transition-all"
+              />
+              {formData.imageUrl && (
+                <div className="h-32 rounded-xl overflow-hidden border border-white/10 bg-dark-900">
+                  <img
+                    src={formData.imageUrl}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Photo Title */}
           <div className="space-y-1">
             <label className="text-xs font-semibold text-slate-200">Photo Title *</label>
             <input
@@ -182,16 +383,18 @@ export const AdminGalleryPage = () => {
               required
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-brand-purple"
+              placeholder="e.g. Annual Band Showcase 2026"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-400 transition-all"
             />
           </div>
 
+          {/* Category */}
           <div className="space-y-1">
             <label className="text-xs font-semibold text-slate-200">Category</label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-dark-900 border border-white/10 text-white text-xs focus:outline-none focus:border-brand-purple"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-dark-900 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
             >
               <option value="PERFORMANCES">Live Performances</option>
               <option value="JAM_SESSIONS">Jam Room Sessions</option>
@@ -201,63 +404,48 @@ export const AdminGalleryPage = () => {
             </select>
           </div>
 
+          {/* Caption */}
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-200">Image URL *</label>
-            <input
-              type="url"
-              required
-              value={formData.imageUrl}
-              onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-brand-purple"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-200">Event Date</label>
-              <input
-                type="text"
-                value={formData.eventDate}
-                onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
-                placeholder="e.g. October 2026"
-                className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-brand-purple"
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-200">Location</label>
-              <input
-                type="text"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                placeholder="e.g. Kalam Auditorium"
-                className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-brand-purple"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-200">Caption</label>
+            <label className="text-xs font-semibold text-slate-200">Caption / Notes</label>
             <textarea
               rows={2}
               value={formData.caption}
               onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-brand-purple"
+              placeholder="Brief description of the performance or gear used..."
+              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-400 transition-all"
             />
           </div>
 
+          {/* Featured on Home Toggle */}
+          <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 text-xs text-slate-300">
+            <input
+              type="checkbox"
+              id="featured-photo"
+              checked={formData.featured}
+              onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+              className="rounded border-slate-700 bg-dark-900 text-amber-500 focus:ring-0 cursor-pointer"
+            />
+            <label htmlFor="featured-photo" className="cursor-pointer text-xs select-none text-slate-200 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Feature on Melodium Homepage Gallery</span>
+            </label>
+          </div>
+
+          {/* Modal Footer Buttons */}
           <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
             <button
               type="button"
               onClick={() => setModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 bg-white/5"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow"
+              disabled={isUploading || !formData.imageUrl}
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer flex items-center gap-2"
             >
-              Save Photo
+              <span>{editingItem ? 'Update Photo' : 'Save Photo'}</span>
             </button>
           </div>
         </form>
