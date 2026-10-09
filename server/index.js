@@ -15,6 +15,7 @@ import teamRoutes from './routes/team.routes.js';
 import settingsRoutes from './routes/settings.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
+import reviewRoutes from './routes/review.routes.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 import { seedDatabase } from './seed/seed.js';
 import User from './models/User.js';
@@ -85,6 +86,7 @@ app.use('/api/team', teamRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // Serve Frontend SPA in Production (Docker / Raspberry Pi / Standalone)
 const clientDistPath = path.join(__dirname, 'public');

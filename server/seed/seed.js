@@ -12,6 +12,7 @@ import GalleryItem from '../models/GalleryItem.js';
 import TeamMember from '../models/TeamMember.js';
 import Notification from '../models/Notification.js';
 import ActivityLog from '../models/ActivityLog.js';
+import Review from '../models/Review.js';
 import { defaultBookingSettings } from '../config/defaultSettings.js';
 import { getNowInTimezone } from '../services/availability.service.js';
 
@@ -30,6 +31,7 @@ export const seedDatabase = async () => {
     TeamMember.deleteMany({}),
     Notification.deleteMany({}),
     ActivityLog.deleteMany({}),
+    Review.deleteMany({}),
   ]);
 
   console.log('🧹 Cleaned existing database collections.');
@@ -127,7 +129,62 @@ export const seedDatabase = async () => {
       order: 5,
     },
   ]);
-  console.log('📸 Seeded 5 Authentic Melodium Studio Photographs into Gallery.');
+  // 3.5 Populate Authentic Initial Musician Reviews
+  await Review.create([
+    {
+      userName: 'Aarav Shenoy',
+      userEmail: 'aarav.shenoy@sjec.ac.in',
+      userRole: 'Lead Guitarist • SJEC College Band',
+      rating: 5,
+      title: 'Flawless Acoustics & Marshall Amp Stack Power!',
+      comment: 'Rehearsing for the inter-college fest at Melodium was an absolute game changer. The Marshall DSL amplifiers and sound isolation panels let us push our heavy riffs without muddy frequencies. Lionel dialled in our monitor mix in under 5 minutes.',
+      category: 'JAM_ROOM_EQUIPMENT',
+      status: 'APPROVED',
+      isFeatured: true,
+      likesCount: 14,
+      verifiedMusician: true,
+    },
+    {
+      userName: 'Rhea DSouza',
+      userEmail: 'rhea.dsouza@sjec.ac.in',
+      userRole: 'Vocalist & Keyboardist • ECE Dept',
+      rating: 5,
+      title: 'The Best Vocal Isolation Booth on Campus',
+      comment: 'The gold condenser mic and quiet noise floor made tracking vocals so smooth. No ambient hallway noise, crystal-clear monitoring headphones, and instant booking without delays.',
+      category: 'ACOUSTICS_SOUND',
+      status: 'APPROVED',
+      isFeatured: true,
+      likesCount: 9,
+      verifiedMusician: true,
+    },
+    {
+      userName: 'Karthik Rao',
+      userEmail: 'karthik.rao@gmail.com',
+      userRole: 'Drummer • The Mangalore Groove Collective',
+      rating: 5,
+      title: 'Top Tier Pearl Export Drum Kit & Tight Rebound',
+      comment: 'As a guest drummer playing with our progressive rock quartet, finding an acoustic room with tuned drum heads and heavy cymbal stands is rare. The ₹500 day pass is insane value for money.',
+      category: 'JAM_ROOM_EQUIPMENT',
+      status: 'APPROVED',
+      isFeatured: true,
+      likesCount: 18,
+      verifiedMusician: true,
+    },
+    {
+      userName: 'Shawn Mendonca',
+      userEmail: 'shawn.m@sjec.ac.in',
+      userRole: 'Bass & Synth Producer • CSE Dept',
+      rating: 5,
+      title: 'Seamless Digital Booking & Instant Multi-Slot Access',
+      comment: 'Being able to schedule our 3-hour weekend practice blocks online in seconds from our phones is so convenient. Melodium is genuinely the pride of SJEC musicians.',
+      category: 'STUDIO_EXPERIENCE',
+      status: 'APPROVED',
+      isFeatured: false,
+      likesCount: 7,
+      verifiedMusician: true,
+    },
+  ]);
+  console.log('⭐ Seeded 4 Authentic Musician Reviews & Testimonials.');
 
   // 4. Initial System Setup Activity Log
   await ActivityLog.create({

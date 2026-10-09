@@ -5,6 +5,7 @@ import { Footer } from './components/common/Footer';
 import { HomePage } from './pages/public/HomePage';
 import { AboutPage } from './pages/public/AboutPage';
 import { GalleryPage } from './pages/public/GalleryPage';
+import { ReviewsPage } from './pages/public/ReviewsPage';
 import { TeamPage } from './pages/public/TeamPage';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
@@ -20,6 +21,7 @@ import { AdminBookingsPage } from './pages/admin/AdminBookingsPage';
 import { AdminCalendarPage } from './pages/admin/AdminCalendarPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminGalleryPage } from './pages/admin/AdminGalleryPage';
+import { AdminReviewsPage } from './pages/admin/AdminReviewsPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { AdminTeamPage } from './pages/admin/AdminTeamPage';
 import { AdminAnalyticsPage } from './pages/admin/AdminAnalyticsPage';
@@ -63,6 +65,7 @@ export const App = () => {
           <Route path="/events" element={<Navigate to="/" replace />} />
           <Route path="/events/*" element={<Navigate to="/" replace />} />
           <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/reviews" element={<ReviewsPage />} />
           <Route path="/sound-engineer" element={<TeamPage />} />
           <Route path="/team" element={<TeamPage />} />
 
@@ -101,6 +104,7 @@ export const App = () => {
             <Route path="calendar" element={<AdminCalendarPage />} />
             <Route path="users" element={<AdminUsersPage />} />
             <Route path="gallery" element={<AdminGalleryPage />} />
+            <Route path="reviews" element={<AdminReviewsPage />} />
             <Route path="team" element={<AdminTeamPage />} />
             <Route path="sound-engineer" element={<AdminTeamPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />
