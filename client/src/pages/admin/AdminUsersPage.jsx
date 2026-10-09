@@ -100,11 +100,77 @@ export const AdminUsersPage = () => {
         </select>
       </div>
 
-      {/* Users Table */}
-      <div className="glass-panel rounded-2xl border border-white/5 overflow-x-auto">
+      {/* Mobile Cards View (sm:hidden) */}
+      <div className="block sm:hidden space-y-3">
+        {users.map((u) => (
+          <div
+            key={u._id}
+            className="p-4 rounded-2xl glass-panel border border-white/10 space-y-3"
+          >
+            {/* Header: Name, Email & Role */}
+            <div className="flex items-start justify-between gap-2 border-b border-white/5 pb-2.5">
+              <div>
+                <div className="font-bold text-white text-sm">{u.name}</div>
+                <div className="text-[11px] text-slate-400 font-mono">{u.email}</div>
+              </div>
+              <span
+                className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase shrink-0 ${
+                  u.role === 'ADMIN'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    : 'bg-white/5 text-slate-300'
+                }`}
+              >
+                {u.role}
+              </span>
+            </div>
+
+            {/* Academic Info & Instrument */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="p-2 rounded-xl bg-white/5 border border-white/5">
+                <span className="text-[10px] text-slate-500 uppercase block font-semibold">USN / Dept</span>
+                <span className="font-mono text-amber-400 font-bold block">{u.usn || '—'}</span>
+                <span className="text-[10px] text-slate-300 truncate block">{u.department} (Yr {u.year})</span>
+              </div>
+
+              <div className="p-2 rounded-xl bg-white/5 border border-white/5">
+                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Instrument & Jams</span>
+                <div className="flex items-center gap-1 text-slate-200 mt-0.5">
+                  <Music className="w-3 h-3 text-amber-400 shrink-0" />
+                  <span className="truncate">{u.instrument || 'Musician'}</span>
+                </div>
+                <span className="text-[10px] text-emerald-400 font-bold block mt-0.5">{u.bookingCount || 0} Jam Sessions</span>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/5">
+              <button
+                onClick={() => handleRoleToggle(u)}
+                className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-semibold transition-colors cursor-pointer"
+              >
+                {u.role === 'ADMIN' ? 'Demote to User' : 'Promote to Admin'}
+              </button>
+              <button
+                onClick={() => handleStatusToggle(u)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                  u.isActive
+                    ? 'bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 hover:bg-rose-950/40 hover:text-rose-400'
+                    : 'bg-rose-950/40 border border-rose-500/30 text-rose-400 hover:bg-emerald-950/40 hover:text-emerald-400'
+                }`}
+              >
+                {u.isActive ? <UserCheck className="w-3.5 h-3.5" /> : <UserX className="w-3.5 h-3.5" />}
+                <span>{u.isActive ? 'Active' : 'Deactivated'}</span>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop Users Table (hidden sm:block) */}
+      <div className="hidden sm:block glass-panel rounded-2xl border border-white/5 overflow-x-auto">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
-            <tr className="border-b border-white/10 bg-white/5 text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
+            <tr className="border-b border-white/10 bg-white/5 text-slate-400 font-semibold uppercase tracking-wider text-[10px] whitespace-nowrap">
               <th className="py-4 px-4">Student</th>
               <th className="py-4 px-4">USN & Department</th>
               <th className="py-4 px-4">Instrument</th>
@@ -113,7 +179,7 @@ export const AdminUsersPage = () => {
               <th className="py-4 px-4 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-white/5 whitespace-nowrap">
             {users.map((u) => (
               <tr key={u._id} className="hover:bg-white/5 transition-colors">
                 <td className="py-3.5 px-4">
@@ -122,7 +188,7 @@ export const AdminUsersPage = () => {
                 </td>
 
                 <td className="py-3.5 px-4">
-                  <div className="font-mono text-brand-gold">{u.usn || '—'}</div>
+                  <div className="font-mono text-amber-400 font-bold">{u.usn || '—'}</div>
                   <div className="text-[11px] text-slate-400 truncate max-w-xs">
                     {u.department} (Yr {u.year})
                   </div>
@@ -130,7 +196,7 @@ export const AdminUsersPage = () => {
 
                 <td className="py-3.5 px-4 text-slate-300">
                   <div className="flex items-center gap-1.5">
-                    <Music className="w-3.5 h-3.5 text-brand-purple shrink-0" />
+                    <Music className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                     <span>{u.instrument || 'Musician'}</span>
                   </div>
                 </td>
@@ -143,7 +209,7 @@ export const AdminUsersPage = () => {
                   <span
                     className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
                       u.role === 'ADMIN'
-                        ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
                         : 'bg-white/5 text-slate-300'
                     }`}
                   >
@@ -155,14 +221,14 @@ export const AdminUsersPage = () => {
                   <div className="flex items-center justify-end gap-2">
                     <button
                       onClick={() => handleRoleToggle(u)}
-                      className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                      className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors cursor-pointer"
                       title="Toggle Admin Role"
                     >
                       {u.role === 'ADMIN' ? 'Demote' : 'Make Admin'}
                     </button>
                     <button
                       onClick={() => handleStatusToggle(u)}
-                      className={`p-1.5 rounded-lg transition-colors ${
+                      className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                         u.isActive
                           ? 'bg-emerald-950/40 text-emerald-400 hover:bg-rose-950/40 hover:text-rose-400'
                           : 'bg-rose-950/40 text-rose-400 hover:bg-emerald-950/40 hover:text-emerald-400'

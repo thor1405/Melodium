@@ -18,43 +18,41 @@ export const AdminHeader = ({ onToggleSidebar, title = 'Dashboard Overview' }) =
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 h-20 bg-dark-900/80 backdrop-blur-xl border-b border-white/5 px-4 sm:px-8 flex items-center justify-between">
-      <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-30 min-h-[3.75rem] sm:h-20 bg-dark-900/90 backdrop-blur-xl border-b border-white/10 px-3.5 sm:px-8 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="flex items-center gap-2.5 sm:gap-4 min-w-0 flex-1">
         <button
           onClick={onToggleSidebar}
-          className="p-2.5 rounded-xl bg-white/5 text-slate-300 hover:text-white lg:hidden border border-white/5"
+          className="p-2 sm:p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white lg:hidden border border-white/10 shrink-0 transition-colors cursor-pointer"
           aria-label="Toggle Sidebar"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        <div>
-          <h1 className="text-lg font-bold font-display text-white">{title}</h1>
-          <div className="flex items-center gap-2 text-xs text-slate-400">
-            <span>Melodium Jam Room</span>
-            <span>•</span>
-            <span className="text-emerald-400 font-medium flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+        <div className="min-w-0 flex-1">
+          <h1 className="text-sm sm:text-base lg:text-lg font-bold font-display text-white truncate leading-tight">
+            {title}
+          </h1>
+          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-400 mt-0.5 truncate">
+            <span className="hidden sm:inline">Melodium Jam Room •</span>
+            <span className="text-emerald-400 font-semibold flex items-center gap-1 shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
               Live System
             </span>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         {/* Clock IST */}
-        <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/5 text-xs text-slate-300 font-mono">
-          <Clock className="w-3.5 h-3.5 text-brand-gold" />
+        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-300 font-mono">
+          <Clock className="w-3.5 h-3.5 text-amber-400" />
           <span>{timeStr || 'Loading...'} IST</span>
         </div>
 
         {/* Admin Badge */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-950/40 border border-purple-500/20 text-xs">
-          <Shield className="w-3.5 h-3.5 text-brand-purple" />
-          <span className="font-semibold text-purple-200 hidden sm:inline">{user?.name}</span>
-          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 uppercase">
-            Admin
-          </span>
+        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold shadow-sm">
+          <Shield className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span className="text-[11px] font-extrabold uppercase tracking-wider">Admin</span>
         </div>
       </div>
     </header>

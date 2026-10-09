@@ -103,84 +103,84 @@ export const AdminOverviewPage = () => {
   const { metrics, todayDate, todaySchedule, recentBookings, recentLogs } = data || {};
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* 1. KPI Metric Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div className="p-6 rounded-3xl glass-panel border border-white/5 space-y-2">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+        <div className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl glass-panel border border-white/5 space-y-1.5 sm:space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-semibold">Today's Bookings</span>
-            <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-brand-gold flex items-center justify-center">
-              <Clock className="w-4 h-4" />
+            <span className="text-[11px] sm:text-xs text-slate-400 font-semibold truncate">Today's Bookings</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="text-3xl font-display font-black text-white">
+          <div className="text-2xl sm:text-3xl font-display font-black text-white">
             {metrics?.todayBookingsCount || 0}
           </div>
-          <div className="text-[11px] text-slate-500">Reserved for {formatDate(todayDate)}</div>
+          <div className="text-[10px] sm:text-[11px] text-slate-500 truncate">Reserved for {formatDate(todayDate)}</div>
         </div>
 
-        <div className="p-6 rounded-3xl glass-panel border border-white/5 space-y-2">
+        <div className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl glass-panel border border-white/5 space-y-1.5 sm:space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-semibold">Pending Approvals</span>
-            <div className="w-9 h-9 rounded-xl bg-purple-500/20 text-brand-purple flex items-center justify-center">
-              <CalendarCheck className="w-4 h-4" />
+            <span className="text-[11px] sm:text-xs text-slate-400 font-semibold truncate">Pending Approvals</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
+              <CalendarCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="text-3xl font-display font-black text-white">
+          <div className="text-2xl sm:text-3xl font-display font-black text-white">
             {metrics?.pendingApprovalsCount || 0}
           </div>
-          <div className="text-[11px] text-purple-300">Requires review</div>
+          <div className="text-[10px] sm:text-[11px] text-amber-300/80 truncate">Requires review</div>
         </div>
 
-        <div className="p-6 rounded-3xl glass-panel border border-white/5 space-y-2">
+        <div className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl glass-panel border border-white/5 space-y-1.5 sm:space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-semibold">Total Students</span>
-            <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-brand-cyan flex items-center justify-center">
-              <Users className="w-4 h-4" />
+            <span className="text-[11px] sm:text-xs text-slate-400 font-semibold truncate">Total Students</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-cyan-500/20 text-brand-cyan flex items-center justify-center shrink-0">
+              <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="text-3xl font-display font-black text-white">
+          <div className="text-2xl sm:text-3xl font-display font-black text-white">
             {metrics?.totalStudentsCount || 0}
           </div>
-          <div className="text-[11px] text-slate-500">Registered SJEC musicians</div>
+          <div className="text-[10px] sm:text-[11px] text-slate-500 truncate">Registered musicians</div>
         </div>
 
-        <div className="p-6 rounded-3xl glass-panel border border-white/5 space-y-2">
+        <div className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl glass-panel border border-white/5 space-y-1.5 sm:space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-semibold">All-Time Bookings</span>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-              <Radio className="w-4 h-4" />
+            <span className="text-[11px] sm:text-xs text-slate-400 font-semibold truncate">All-Time Bookings</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+              <Radio className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="text-3xl font-display font-black text-white">
+          <div className="text-2xl sm:text-3xl font-display font-black text-white">
             {metrics?.totalBookings || 0}
           </div>
-          <div className="text-[11px] text-slate-500">Sessions recorded</div>
+          <div className="text-[10px] sm:text-[11px] text-slate-500 truncate">Sessions recorded</div>
         </div>
       </div>
 
       {/* 2. Today's Jam Room Schedule Timeline */}
-      <div className="glass-panel-elevated rounded-3xl p-6 sm:p-8 border border-white/10 space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+      <div className="glass-panel-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-white/10 space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-4 border-b border-white/10">
           <div>
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              <h2 className="text-lg font-bold font-display text-white">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+              <h2 className="text-base sm:text-lg font-bold font-display text-white">
                 Today's Jam Room Live Timeline
               </h2>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Real-time slot-by-slot schedule for {formatDate(todayDate, 'EEEE, dd MMMM yyyy')}
+            <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5">
+              Real-time slot schedule for {formatDate(todayDate, 'EEEE, dd MMMM yyyy')}
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={() => {
                 setSelectedSlotForBlock(null);
                 setBlockModalOpen(true);
               }}
-              className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-rose-950/40 border border-white/10 text-rose-300 text-xs font-semibold transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-rose-950/40 border border-white/10 text-rose-300 text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Ban className="w-3.5 h-3.5" />
               <span>Block Slot</span>
@@ -190,7 +190,7 @@ export const AdminOverviewPage = () => {
                 setSelectedSlotForManual(null);
                 setManualModalOpen(true);
               }}
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 text-xs font-extrabold shadow-glow-yellow transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 text-xs font-extrabold shadow-glow-yellow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Manual Book</span>
@@ -215,14 +215,14 @@ export const AdminOverviewPage = () => {
       </div>
 
       {/* 3. Recent Bookings & System Logs Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         {/* Recent Bookings */}
-        <div className="glass-panel rounded-3xl p-6 border border-white/5 space-y-4">
+        <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-white/5 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold font-display text-white">Recent Student Bookings</h3>
             <Link
               to="/admin/bookings"
-              className="text-xs text-brand-gold hover:underline font-semibold flex items-center gap-1"
+              className="text-xs text-amber-400 hover:underline font-semibold flex items-center gap-1"
             >
               <span>View All</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -234,29 +234,31 @@ export const AdminOverviewPage = () => {
               recentBookings.map((b) => (
                 <div
                   key={b._id}
-                  className="p-3.5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors flex items-center justify-between gap-3 text-xs"
+                  className="p-3 sm:p-3.5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs"
                 >
-                  <div>
-                    <div className="font-bold text-white flex items-center gap-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-bold text-white flex items-center gap-2 flex-wrap">
                       <span>{b.userId?.name || 'Walk-in Student'}</span>
-                      <span className="font-mono text-[10px] text-brand-gold">({b.bookingId})</span>
+                      <span className="font-mono text-[10px] text-amber-400">({b.bookingId})</span>
                     </div>
                     <div className="text-[11px] text-slate-400 mt-0.5">
                       {formatDate(b.date)} • {b.startTime} - {b.endTime}
                     </div>
-                    <div className="text-[11px] text-slate-300 italic truncate max-w-xs mt-0.5">
-                      "{b.purpose}"
-                    </div>
+                    {b.purpose && (
+                      <div className="text-[11px] text-slate-300 italic truncate mt-0.5">
+                        "{b.purpose}"
+                      </div>
+                    )}
                   </div>
 
-                  <div>
+                  <div className="self-start sm:self-center shrink-0">
                     <span
                       className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
                         b.status === 'CONFIRMED'
-                          ? 'bg-emerald-500/20 text-emerald-400'
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                           : b.status === 'PENDING'
-                          ? 'bg-amber-500/20 text-amber-300'
-                          : 'bg-rose-500/20 text-rose-300'
+                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                          : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                       }`}
                     >
                       {b.status}

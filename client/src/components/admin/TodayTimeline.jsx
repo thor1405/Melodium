@@ -33,9 +33,9 @@ export const TodayTimeline = ({
         return (
           <div
             key={slot.startTime}
-            className={`p-4 rounded-2xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+            className={`p-3.5 sm:p-4 rounded-2xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 ${
               isBooked
-                ? 'bg-purple-950/20 border-purple-500/20 text-slate-200'
+                ? 'bg-amber-500/5 border-amber-500/20 text-slate-200'
                 : isBlocked
                 ? 'bg-rose-950/20 border-rose-500/20 text-rose-200'
                 : isAvailable
@@ -43,44 +43,44 @@ export const TodayTimeline = ({
                 : 'bg-white/5 border-white/5 opacity-60 text-slate-400'
             }`}
           >
-            {/* Left: Time & Status */}
-            <div className="flex items-center gap-4 min-w-[200px]">
-              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center shrink-0">
-                <span className="text-xs font-bold font-mono text-brand-gold">
+            {/* Top/Left: Time & Status */}
+            <div className="flex items-center gap-3 min-w-0 md:min-w-[200px]">
+              <div className="w-12 h-12 rounded-xl bg-dark-900/80 border border-white/10 flex flex-col items-center justify-center shrink-0 shadow-inner">
+                <span className="text-xs font-bold font-mono text-amber-400">
                   {slot.startTime}
                 </span>
                 <span className="text-[9px] text-slate-400">{slot.endTime}</span>
               </div>
 
-              <div>
-                <div className="flex items-center gap-2">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   <span className="text-sm font-bold font-display text-white">
                     {formatSlotRange(slot.startTime, slot.endTime)}
                   </span>
                   {slot.isPast && (
-                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-white/10 text-slate-400 uppercase">
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-400 uppercase">
                       Past
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-2 mt-0.5">
+                <div className="flex items-center gap-1.5 mt-0.5">
                   {isAvailable && (
                     <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      Available for Booking
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                      Available
                     </span>
                   )}
                   {isBooked && (
-                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-purple-300">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-brand-purple" />
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-300">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                       Booked {slot.bookingStatus ? `(${slot.bookingStatus})` : ''}
                     </span>
                   )}
                   {isBlocked && (
                     <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-400">
-                      <Ban className="w-3.5 h-3.5 text-rose-400" />
-                      Blocked by Admin
+                      <Ban className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                      Blocked
                     </span>
                   )}
                 </div>
@@ -88,15 +88,15 @@ export const TodayTimeline = ({
             </div>
 
             {/* Center: Details / Student Info */}
-            <div className="flex-1 px-0 md:px-4">
+            <div className="flex-1 min-w-0">
               {isBooked && (
-                <div className="space-y-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-bold text-white">
+                <div className="space-y-1 bg-white/5 md:bg-transparent p-2.5 md:p-0 rounded-xl border border-white/5 md:border-0">
+                  <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                    <span className="font-bold text-white">
                       {slot.student?.name || 'Student Musician'}
                     </span>
                     {slot.student?.usn && (
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-brand-gold">
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 text-amber-300 font-bold">
                         {slot.student.usn}
                       </span>
                     )}
@@ -107,36 +107,38 @@ export const TodayTimeline = ({
                     )}
                     {slot.bookingId && (
                       <span className="text-[10px] font-mono text-slate-400">
-                        (Ref: {slot.bookingId})
+                        ({slot.bookingId})
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-300 italic truncate max-w-md">
-                    "{slot.purpose || 'Band Rehearsal'}"
-                  </p>
+                  {slot.purpose && (
+                    <p className="text-[11px] text-slate-300 italic truncate">
+                      "{slot.purpose}"
+                    </p>
+                  )}
                 </div>
               )}
 
               {isBlocked && (
-                <div>
-                  <span className="text-xs font-semibold text-rose-300">Reason:</span>{' '}
-                  <span className="text-xs text-slate-300">{slot.reason}</span>
+                <div className="text-xs bg-rose-950/30 md:bg-transparent p-2 md:p-0 rounded-xl border border-rose-500/10 md:border-0">
+                  <span className="font-semibold text-rose-300">Reason:</span>{' '}
+                  <span className="text-slate-300">{slot.reason || 'Maintenance'}</span>
                 </div>
               )}
 
               {isAvailable && (
-                <span className="text-xs text-slate-400 italic">No reservation active.</span>
+                <span className="hidden md:inline text-xs text-slate-400 italic">No reservation active.</span>
               )}
             </div>
 
-            {/* Right: Actions */}
-            <div className="flex items-center gap-2 self-end md:self-center">
+            {/* Right/Bottom: Actions */}
+            <div className="flex items-center gap-2 pt-2 md:pt-0 border-t border-white/5 md:border-t-0 justify-end flex-wrap">
               {isBooked && (
                 <>
                   {slot.bookingDbId && onViewBookingDetails && (
                     <button
                       onClick={() => onViewBookingDetails(slot.bookingDbId)}
-                      className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                      className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors cursor-pointer"
                       title="View Booking Details"
                     >
                       <Eye className="w-4 h-4" />
@@ -145,7 +147,7 @@ export const TodayTimeline = ({
                   {slot.bookingStatus === 'PENDING' && onApproveBooking && (
                     <button
                       onClick={() => onApproveBooking(slot.bookingDbId)}
-                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-colors"
+                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-colors cursor-pointer"
                     >
                       Approve
                     </button>
@@ -153,7 +155,7 @@ export const TodayTimeline = ({
                   {onCancelBooking && (
                     <button
                       onClick={() => onCancelBooking(slot.bookingDbId)}
-                      className="px-3 py-1.5 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 border border-rose-500/30 text-rose-300 text-xs font-semibold transition-colors"
+                      className="px-3 py-1.5 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 border border-rose-500/30 text-rose-300 text-xs font-semibold transition-colors cursor-pointer"
                     >
                       Cancel
                     </button>
@@ -162,24 +164,24 @@ export const TodayTimeline = ({
               )}
 
               {isAvailable && (
-                <>
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                   {onBlockSlot && (
                     <button
                       onClick={() => onBlockSlot(slot)}
-                      className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-rose-950/40 hover:border-rose-500/30 border border-white/10 text-slate-300 hover:text-rose-300 text-xs font-medium transition-all"
+                      className="flex-1 sm:flex-none px-3 py-1.5 rounded-xl bg-white/5 hover:bg-rose-950/40 hover:border-rose-500/30 border border-white/10 text-slate-300 hover:text-rose-300 text-xs font-medium transition-all text-center cursor-pointer"
                     >
-                      Block Slot
+                      Block
                     </button>
                   )}
                   {onSelectSlot && (
                     <button
                       onClick={() => onSelectSlot(slot)}
-                      className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs shadow-glow-purple transition-all"
+                      className="flex-1 sm:flex-none px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-dark-950 font-bold text-xs shadow-sm transition-all text-center cursor-pointer"
                     >
                       Manual Book
                     </button>
                   )}
-                </>
+                </div>
               )}
             </div>
           </div>
