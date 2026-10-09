@@ -43,8 +43,8 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/team" className="text-slate-400 hover:text-white transition-colors">
-                  Core Committee & Leads
+                <Link to="/sound-engineer" className="text-slate-400 hover:text-white transition-colors">
+                  Sound Engineer (Lionel)
                 </Link>
               </li>
             </ul>

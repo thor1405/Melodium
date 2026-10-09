@@ -87,7 +87,7 @@ export const AboutPage = () => {
               Studio Sound & Production
             </h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Students get hands-on experience running 16-channel analog/digital mixers, balancing foldback monitor mixes, signal path routing, and multi-track recording.
+              Supervised by Sound Engineer Lionel, musicians and bands experience professional digital mixing, balanced foldback monitor mixes, acoustically tuned amps, and multi-track recording.
             </p>
           </div>
 

@@ -13,10 +13,10 @@ export const TeamCard = ({ member }) => {
       {/* Photo */}
       <div className="relative h-64 sm:h-72 overflow-hidden bg-dark-900">
         <img
-          src={member.photo || '/gallery/sound_engineer_console.png'}
+          src={member.photo || '/team/lionel.jpg'}
           alt={member.name}
           onError={(e) => {
-            e.target.src = '/gallery/sound_engineer_console.png';
+            e.target.src = '/team/lionel.jpg';
           }}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />

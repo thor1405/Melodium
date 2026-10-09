@@ -83,7 +83,7 @@ export const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
     { name: 'Gallery', path: '/gallery' },
-    { name: 'Team', path: '/team' },
+    { name: 'Sound Engineer', path: '/sound-engineer' },
   ];
 
   return (

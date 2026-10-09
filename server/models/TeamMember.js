@@ -14,8 +14,8 @@ const teamMemberSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ['FACULTY', 'CORE_COMMITTEE', 'BAND_LEADS', 'MEMBERS'],
-      default: 'CORE_COMMITTEE',
+      enum: ['FACULTY', 'CORE_COMMITTEE', 'BAND_LEADS', 'MEMBERS', 'SOUND_ENGINEER'],
+      default: 'SOUND_ENGINEER',
       index: true,
     },
     instrument: {

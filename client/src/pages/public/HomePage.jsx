@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   Volume2,
+  Headphones,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -231,30 +232,132 @@ export const HomePage = () => {
         <GalleryLightbox items={gallery} />
       </section>
 
-      {/* 6. MEET THE TEAM PREVIEW */}
+      {/* 6. MEET THE SOUND ENGINEER SPOTLIGHT */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <span className="text-xs font-bold uppercase tracking-widest text-amber-400">
-              Leadership & Artists
+              Studio & Sound Production
             </span>
             <h2 className="text-3xl font-display font-extrabold text-white mt-1">
-              Meet the Core Committee
+              Meet the Sound Engineer
             </h2>
           </div>
           <Link
-            to="/team"
+            to="/sound-engineer"
             className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 hover:underline transition-colors"
           >
-            <span>Meet All Members & Faculty</span>
+            <span>Learn More About Lionel</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {team.map((member) => (
-            <TeamCard key={member._id} member={member} />
-          ))}
+        <div className="glass-panel-elevated rounded-3xl p-6 sm:p-10 border border-amber-500/20 bg-gradient-to-br from-dark-900/90 via-dark-950 to-dark-900 shadow-2xl relative overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left: Lionel Photo Card */}
+            <div className="lg:col-span-5 relative group">
+              <div className="relative rounded-2xl overflow-hidden border-2 border-amber-500/30 shadow-2xl bg-dark-900 aspect-[3/4] max-w-md mx-auto">
+                <img
+                  src="/team/lionel.jpg"
+                  alt="Lionel - Sound Engineer"
+                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent" />
+
+                {/* Floating Tag */}
+                <div className="absolute top-4 left-4">
+                  <span className="px-3 py-1 rounded-full bg-dark-950/80 backdrop-blur-md border border-amber-500/40 text-amber-300 text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md">
+                    <Sliders className="w-3.5 h-3.5 text-amber-400" />
+                    Sound Engineer
+                  </span>
+                </div>
+
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="font-display font-black text-2xl text-white">Lionel</h3>
+                  <p className="text-xs font-semibold text-amber-300">
+                    Chief Sound Engineer & Studio Custodian
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Sound Engineering Capabilities & Bio */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="space-y-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
+                  <Headphones className="w-3.5 h-3.5" />
+                  <span>Resident Acoustic & Audio Specialist</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-display font-black text-white">
+                  The Acoustic Mind Behind Every Jam Session
+                </h3>
+                <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                  Lionel oversees all audio engineering, sound checks, and studio operations at Melodium SJEC. From calibrating 16-channel digital consoles and dialing in studio monitor acoustics to running multitrack DAW recording sessions for student bands and external artists, Lionel ensures every performance is captured with studio clarity.
+                </p>
+              </div>
+
+              {/* 4 Feature Badges */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+                <div className="p-3.5 rounded-2xl bg-white/5 border border-white/5 space-y-1">
+                  <div className="font-bold text-white text-xs flex items-center gap-2">
+                    <Sliders className="w-4 h-4 text-amber-400" />
+                    <span>Digital Console & EQ</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Channel fader routing, EQ curves, compression, and aux monitor mixes.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-white/5 border border-white/5 space-y-1">
+                  <div className="font-bold text-white text-xs flex items-center gap-2">
+                    <Mic2 className="w-4 h-4 text-amber-400" />
+                    <span>Multitrack DAW Capture</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Zero-latency recording stems for drums, guitars, keys, and vocals.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-white/5 border border-white/5 space-y-1">
+                  <div className="font-bold text-white text-xs flex items-center gap-2">
+                    <Volume2 className="w-4 h-4 text-amber-400" />
+                    <span>Live Band Soundchecks</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Feedback suppression, instrument balancing, and acoustic tuning.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-white/5 border border-white/5 space-y-1">
+                  <div className="font-bold text-white text-xs flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-amber-400" />
+                    <span>Studio Gear Custody</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Maintaining high-end mics, tube amps, acoustic isolation, and mixers.
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-white/10">
+                <Link
+                  to="/jam-room"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all flex items-center gap-2"
+                >
+                  <Radio className="w-4 h-4 text-dark-950" />
+                  <span>Book Jam Room with Sound Engineer</span>
+                </Link>
+                <Link
+                  to="/sound-engineer"
+                  className="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs transition-all flex items-center gap-2"
+                >
+                  <span>View Full Profile</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -62,6 +62,7 @@ export const App = () => {
           <Route path="/events" element={<Navigate to="/" replace />} />
           <Route path="/events/*" element={<Navigate to="/" replace />} />
           <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/sound-engineer" element={<TeamPage />} />
           <Route path="/team" element={<TeamPage />} />
 
           {/* Auth Routes */}

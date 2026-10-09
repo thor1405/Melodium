@@ -54,6 +54,23 @@ export const seedDatabase = async () => {
   });
   console.log('👤 Created Authentic Admin Account (admin@sjec.ac.in).');
 
+  // 2.5 Seed Lionel — Sound Engineer & Studio Manager
+  await TeamMember.create({
+    name: 'Lionel',
+    role: 'Sound Engineer & Studio Custodian',
+    category: 'SOUND_ENGINEER',
+    instrument: 'Live Sound, Multitrack DAW & Studio Acoustics',
+    bio: 'Official Resident Sound Engineer for Melodium SJEC. Manages live rehearsal acoustics, multitrack studio recording, digital mixing console routing, and audio calibration at Jam Room 1 (Academic Block 3).',
+    photo: '/team/lionel.jpg',
+    department: 'Studio Audio Engineering',
+    socialLinks: {
+      instagram: 'https://instagram.com',
+    },
+    order: 1,
+    isActive: true,
+  });
+  console.log('🎧 Seeded Lionel as Official Sound Engineer.');
+
   // 3. Populate Authentic Melodium Studio & Jam Room Photographs
   await GalleryItem.create([
     {
