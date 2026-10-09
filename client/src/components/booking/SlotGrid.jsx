@@ -137,24 +137,13 @@ export const SlotGrid = ({
               {/* Action / State Area */}
               <div className="pt-2 border-t border-white/5">
                 {isSelected ? (
-                  <div className="space-y-1.5">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onOpenBookingModal();
-                      }}
-                      className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-black text-xs shadow-glow-yellow flex items-center justify-center gap-1.5 transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shimmer-btn"
-                    >
-                      <Zap className="w-3.5 h-3.5 fill-current text-dark-950" />
-                      <span>
-                        Reserve Pass {selectedSlots.length > 1 ? `(${selectedSlots.length} Slots)` : ''}
-                      </span>
-                      <ArrowRight className="w-3.5 h-3.5 text-dark-950 stroke-[3]" />
-                    </button>
-                    <div className="text-[10px] text-amber-300/80 text-center font-medium">
-                      Tap card to unselect
-                    </div>
+                  <div className="flex items-center justify-between text-[11px] text-amber-300 font-bold py-1">
+                    <span className="flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" /> Selected
+                    </span>
+                    <span className="text-[10px] text-amber-300/70 font-normal">
+                      Tap to unselect
+                    </span>
                   </div>
                 ) : isAvailable ? (
                   <div className="flex items-center justify-between text-[11px] text-emerald-400 font-semibold py-1">
