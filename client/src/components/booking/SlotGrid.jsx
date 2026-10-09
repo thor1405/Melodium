@@ -7,7 +7,7 @@ export const SlotGrid = ({
   slots = [],
   selectedSlots = [],
   onToggleSlot = () => {},
-  onBookSlot = null,
+  onOpenBookingModal = () => {},
 }) => {
   if (slots.length === 0) {
     return (
@@ -19,14 +19,6 @@ export const SlotGrid = ({
 
   const isSlotSelected = (slot) => {
     return selectedSlots.some((s) => s.startTime === slot.startTime);
-  };
-
-  const handleSlotAction = (slot) => {
-    if (onBookSlot) {
-      onBookSlot(slot);
-    } else {
-      onToggleSlot(slot);
-    }
   };
 
   return (
@@ -52,8 +44,8 @@ export const SlotGrid = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
-          <span>💡 Tap any available slot to instantly open the booking pass</span>
+        <div className="flex items-center gap-1.5 text-amber-300/90 text-[11px] font-medium">
+          <span>💡 Tap multiple slots to select consecutive hours</span>
         </div>
       </div>
 
@@ -71,7 +63,7 @@ export const SlotGrid = ({
 
           if (isSelected) {
             cardStyle =
-              'bg-gradient-to-br from-amber-500/30 via-amber-900/50 to-dark-900 border-amber-400 shadow-glow-yellow text-white ring-2 ring-amber-400 cursor-pointer';
+              'bg-gradient-to-br from-amber-500/25 via-amber-950/50 to-dark-900 border-2 border-amber-400 shadow-glow-yellow text-white ring-2 ring-amber-400/40 cursor-pointer';
             badge = (
               <span className="px-2 py-0.5 rounded-md bg-amber-400 text-dark-950 text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow-sm">
                 <Check className="w-3 h-3 stroke-[3]" /> Selected
@@ -79,7 +71,7 @@ export const SlotGrid = ({
             );
           } else if (isAvailable) {
             cardStyle =
-              'bg-gradient-to-br from-emerald-950/30 via-dark-900/90 to-emerald-950/20 hover:from-amber-950/30 hover:to-dark-900 border-emerald-500/40 hover:border-amber-400 hover:shadow-glow-yellow text-slate-200 cursor-pointer transition-all active:scale-[0.98] group';
+              'bg-emerald-950/20 hover:bg-emerald-950/40 border border-emerald-500/30 hover:border-amber-400 hover:shadow-glow-yellow text-slate-200 cursor-pointer transition-all active:scale-[0.98]';
             badge = (
               <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
                 <Plus className="w-2.5 h-2.5" /> Available
@@ -87,7 +79,7 @@ export const SlotGrid = ({
             );
           } else if (isBooked) {
             cardStyle =
-              'bg-dark-900/70 border-amber-500/20 text-slate-300 cursor-not-allowed';
+              'bg-dark-900/70 border border-amber-500/20 text-slate-300 cursor-not-allowed';
             badge = (
               <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow-sm">
                 <Lock className="w-2.5 h-2.5 text-amber-400" />
@@ -96,7 +88,7 @@ export const SlotGrid = ({
             );
           } else if (isBlocked) {
             cardStyle =
-              'bg-slate-900/80 border-slate-700 text-slate-400 cursor-not-allowed';
+              'bg-slate-900/80 border border-slate-700 text-slate-400 cursor-not-allowed';
             badge = (
               <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
                 <Ban className="w-2.5 h-2.5" /> Blocked
@@ -117,9 +109,9 @@ export const SlotGrid = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.01 }}
               onClick={() => {
-                if (isAvailable || isSelected) handleSlotAction(slot);
+                if (isAvailable || isSelected) onToggleSlot(slot);
               }}
-              className={`p-3.5 sm:p-4 rounded-2xl border backdrop-blur-md relative flex flex-col justify-between min-h-[140px] select-none ${cardStyle}`}
+              className={`p-3.5 sm:p-4 rounded-2xl backdrop-blur-md relative flex flex-col justify-between min-h-[135px] select-none transition-all ${cardStyle}`}
             >
               {/* Header */}
               <div>
@@ -142,38 +134,35 @@ export const SlotGrid = ({
                 </div>
               </div>
 
-              {/* Interactive Direct Action Button / Status Sub-label */}
+              {/* Action / State Area */}
               <div className="pt-2 border-t border-white/5">
-                {isSelected && (
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSlotAction(slot);
-                    }}
-                    className="w-full py-2 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-dark-950 font-black text-xs shadow-glow-yellow flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer animate-pulse"
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5 text-dark-950" />
-                    <span>Open Pass (Book Now) →</span>
-                  </button>
-                )}
-
-                {!isSelected && isAvailable && (
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSlotAction(slot);
-                    }}
-                    className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-black text-xs shadow-glow-yellow flex items-center justify-center gap-1.5 transition-all group-hover:scale-[1.02] active:scale-[0.98] cursor-pointer shimmer-btn"
-                  >
-                    <Zap className="w-3.5 h-3.5 fill-current text-dark-950" />
-                    <span>Book Pass</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-dark-950 stroke-[3]" />
-                  </button>
-                )}
-
-                {isBooked && (
+                {isSelected ? (
+                  <div className="space-y-1.5">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onOpenBookingModal();
+                      }}
+                      className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-black text-xs shadow-glow-yellow flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer shimmer-btn"
+                    >
+                      <Zap className="w-3.5 h-3.5 fill-current text-dark-950" />
+                      <span>Book {selectedSlots.length} {selectedSlots.length === 1 ? 'Slot' : 'Slots'} Pass →</span>
+                    </button>
+                    <div className="text-[10px] text-amber-300/80 text-center font-medium">
+                      Tap card to unselect
+                    </div>
+                  </div>
+                ) : isAvailable ? (
+                  <div className="flex items-center justify-between text-[11px] text-emerald-400 font-semibold py-1">
+                    <span className="flex items-center gap-1">
+                      <Plus className="w-3 h-3" /> Tap to select
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-normal">
+                      Multi-select enabled
+                    </span>
+                  </div>
+                ) : isBooked ? (
                   <div className="text-[11px] text-amber-400/80 font-semibold truncate py-1 text-center">
                     {slot.isMine
                       ? 'Pass issued to you'
@@ -181,19 +170,15 @@ export const SlotGrid = ({
                       ? `Booked by ${slot.student.name}`
                       : 'Reserved Session'}
                   </div>
-                )}
-
-                {isBlocked && (
+                ) : isBlocked ? (
                   <div className="text-[11px] text-slate-400 truncate py-1 text-center">
                     {slot.reason || 'Blocked by Admin'}
                   </div>
-                )}
-
-                {isPast && (
+                ) : isPast ? (
                   <div className="text-[11px] text-slate-500 py-1 text-center font-medium">
                     Session Expired
                   </div>
-                )}
+                ) : null}
               </div>
             </motion.div>
           );

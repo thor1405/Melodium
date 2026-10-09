@@ -310,7 +310,7 @@ export const JamRoomBookingPage = () => {
             slots={availability?.slots || []}
             selectedSlots={selectedSlots}
             onToggleSlot={handleToggleSlot}
-            onBookSlot={handleDirectBookSlot}
+            onOpenBookingModal={handleOpenBookingModal}
           />
         )}
       </div>
