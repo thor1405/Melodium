@@ -44,12 +44,10 @@ export const seedDatabase = async () => {
     email: 'admin@sjec.ac.in',
     password: 'Admin@12345',
     role: 'ADMIN',
-    usn: 'ADMIN-01',
-    department: 'SJEC Cultural Council',
-    year: 4,
+    usn: '',
+    department: 'Melodium Studio Management',
     phone: '+91 98765 43210',
-    instrument: 'Audio Engineering & Production',
-    bio: 'Lead coordinator for Melodium SJEC. Managing Jam Room logistics and stage sound.',
+    bio: 'Lead coordinator & studio custodian for Melodium SJEC. Managing Jam Room logistics and console sound.',
     avatar: '',
   });
   console.log('👤 Created Authentic Admin Account (admin@sjec.ac.in).');

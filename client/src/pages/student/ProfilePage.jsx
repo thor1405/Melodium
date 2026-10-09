@@ -29,13 +29,15 @@ export const ProfilePage = () => {
   const toast = useToast();
   const fileInputRef = useRef(null);
 
+  const isAdmin = user?.role === 'ADMIN';
+
   const isOutsider =
     user?.userType === 'OUTSIDER' ||
-    (!user?.email?.endsWith('@sjec.ac.in') && user?.role !== 'ADMIN');
+    (!user?.email?.endsWith('@sjec.ac.in') && !isAdmin);
 
   const userRoleLabel =
-    user?.role === 'ADMIN'
-      ? 'ADMIN'
+    isAdmin
+      ? 'STUDIO ADMINISTRATOR'
       : isOutsider
       ? 'EXTERNAL MUSICIAN'
       : 'SJEC STUDENT';
@@ -227,7 +229,12 @@ export const ProfilePage = () => {
           <p className="text-xs text-slate-400 font-mono">{user?.email}</p>
 
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 pt-1 text-xs text-slate-300">
-            {isOutsider ? (
+            {isAdmin ? (
+              <span className="inline-flex items-center gap-1.5 font-medium text-amber-300">
+                <Shield className="w-3.5 h-3.5 text-amber-400" />
+                <span>Melodium Studio Administration & Dashboard Manager</span>
+              </span>
+            ) : isOutsider ? (
               <>
                 <span className="inline-flex items-center gap-1 font-medium text-amber-300">
                   <Building2 className="w-3.5 h-3.5" />
@@ -276,7 +283,13 @@ export const ProfilePage = () => {
           <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-5">
             <h2 className="font-display font-bold text-lg text-white flex items-center gap-2">
               <User className="w-4 h-4 text-amber-400" />
-              <span>{isOutsider ? 'Edit Musician Profile' : 'Edit Student Profile'}</span>
+              <span>
+                {isAdmin
+                  ? 'Edit Administrator Profile'
+                  : isOutsider
+                  ? 'Edit Musician Profile'
+                  : 'Edit Student Profile'}
+              </span>
             </h2>
 
             <form onSubmit={handleProfileSubmit} className="space-y-4">
@@ -346,7 +359,7 @@ export const ProfilePage = () => {
               </div>
 
               {/* Name & Identifier */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className={`grid grid-cols-1 ${isAdmin ? '' : 'sm:grid-cols-2'} gap-4`}>
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-slate-200">Full Name</label>
                   <input
@@ -358,34 +371,71 @@ export const ProfilePage = () => {
                   />
                 </div>
 
-                {isOutsider ? (
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-200">
-                      Band / Studio / Organization
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.organization}
-                      onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                      placeholder="e.g. The SJEC Collective / Independent"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
-                    />
-                  </div>
-                ) : (
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-200">USN / Student ID</label>
-                    <input
-                      type="text"
-                      value={formData.usn}
-                      onChange={(e) => setFormData({ ...formData, usn: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs uppercase font-mono focus:outline-none focus:border-amber-400"
-                    />
-                  </div>
+                {!isAdmin && (
+                  isOutsider ? (
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-200">
+                        Band / Studio / Organization
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.organization}
+                        onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
+                        placeholder="e.g. The SJEC Collective / Independent"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-200">USN / Student ID</label>
+                      <input
+                        type="text"
+                        value={formData.usn}
+                        onChange={(e) => setFormData({ ...formData, usn: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs uppercase font-mono focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+                  )
                 )}
               </div>
 
-              {/* Department & Year (Students) OR City & Contact (Musicians) */}
-              {!isOutsider ? (
+              {/* Department & Year (Students Only) OR City & Contact (Musicians) OR Phone (Admin) */}
+              {isAdmin ? (
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-200">Contact Phone Number</label>
+                  <input
+                    type="text"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="+91 98765 43210"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+              ) : isOutsider ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-200">City / Location</label>
+                    <input
+                      type="text"
+                      value={formData.city}
+                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      placeholder="e.g. Mangaluru / Udupi"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-200">Phone Number</label>
+                    <input
+                      type="text"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="+91 98765 43210"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+                </div>
+              ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-semibold text-slate-200">Department</label>
@@ -416,77 +466,61 @@ export const ProfilePage = () => {
                     </select>
                   </div>
                 </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-200">City / Location</label>
-                    <input
-                      type="text"
-                      value={formData.city}
-                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                      placeholder="e.g. Mangaluru / Udupi"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-200">Phone Number</label>
-                    <input
-                      type="text"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="+91 98765 43210"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
-                    />
-                  </div>
-                </div>
               )}
 
-              {/* Instrument & Phone (Students) */}
-              {!isOutsider ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Instrument & Phone (Students / Musicians Only) */}
+              {!isAdmin && (
+                !isOutsider ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-200">Primary Instrument</label>
+                      <input
+                        type="text"
+                        value={formData.instrument}
+                        onChange={(e) => setFormData({ ...formData, instrument: e.target.value })}
+                        placeholder="e.g. Lead Guitar / Vocals"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-200">Phone Number</label>
+                      <input
+                        type="text"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder="+91 98765 43210"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+                  </div>
+                ) : (
                   <div className="space-y-1">
                     <label className="text-xs font-semibold text-slate-200">Primary Instrument</label>
                     <input
                       type="text"
                       value={formData.instrument}
                       onChange={(e) => setFormData({ ...formData, instrument: e.target.value })}
-                      placeholder="e.g. Lead Guitar / Vocals"
+                      placeholder="e.g. Drums / Bass / Lead Guitar / Vocals"
                       className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
                     />
                   </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-200">Phone Number</label>
-                    <input
-                      type="text"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="+91 98765 43210"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-200">Primary Instrument</label>
-                  <input
-                    type="text"
-                    value={formData.instrument}
-                    onChange={(e) => setFormData({ ...formData, instrument: e.target.value })}
-                    placeholder="e.g. Drums / Bass / Lead Guitar / Vocals"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
-                  />
-                </div>
+                )
               )}
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-200">Musician Bio</label>
+                <label className="text-xs font-semibold text-slate-200">
+                  {isAdmin ? 'Admin / Custodian Bio' : 'Musician Bio'}
+                </label>
                 <textarea
                   rows={3}
                   value={formData.bio}
                   onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  placeholder="Share your musical journey, genres, band experience, or studio background..."
+                  placeholder={
+                    isAdmin
+                      ? 'Studio administration, sound engineering supervision, and Jam Room logistics...'
+                      : 'Share your musical journey, genres, band experience, or studio background...'
+                  }
                   className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
                 />
               </div>
