@@ -20,9 +20,19 @@ import {
   Mail,
   Ticket,
   Zap,
+  X,
+  Plus,
 } from 'lucide-react';
 
-export const BookingModal = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
+export const BookingModal = ({
+  isOpen,
+  onClose,
+  slots = [],
+  availableSlots = [],
+  onSlotsChange = null,
+  date,
+  onSuccess,
+}) => {
   const { user } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
@@ -35,6 +45,10 @@ export const BookingModal = ({ isOpen, onClose, slots = [], date, onSuccess }) =
   const [rulesAccepted, setRulesAccepted] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingResults, setBookingResults] = useState(null);
+
+  const otherAvailableSlots = availableSlots.filter(
+    (as) => !slots.some((s) => s.startTime === as.startTime)
+  );
 
   useEffect(() => {
     if (isOpen && user) {
@@ -365,7 +379,7 @@ export const BookingModal = ({ isOpen, onClose, slots = [], date, onSuccess }) =
         /* ================= BOOKING FORM SCREEN ================= */
         <form id="booking-modal-form" onSubmit={handleBookingSubmit} className="space-y-3.5">
           {/* Selected Slots Summary Banner */}
-          <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/25 space-y-2">
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-amber-500/15 via-dark-900 to-amber-950/30 border border-amber-500/30 space-y-2.5">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
@@ -373,24 +387,71 @@ export const BookingModal = ({ isOpen, onClose, slots = [], date, onSuccess }) =
                   {formatDate(date, 'EEEE, dd MMMM yyyy')}
                 </span>
               </div>
-              <span className="px-2.5 py-0.5 rounded-full bg-amber-400 text-dark-950 text-[10px] font-extrabold">
-                {totalHours} {totalHours === 1 ? 'Slot' : 'Slots'}
+              <span className="px-2.5 py-0.5 rounded-full bg-amber-400 text-dark-950 text-[10px] font-extrabold shadow-sm">
+                {totalHours} {totalHours === 1 ? 'Hour Session' : 'Hours Session'}
               </span>
             </div>
 
-            <div className="flex flex-wrap gap-1.5 pt-0.5">
-              {slots.map((s) => (
-                <div
-                  key={s.startTime}
-                  className="px-2.5 py-1 rounded-xl bg-dark-950/70 border border-amber-400/30 text-amber-300 text-xs font-semibold flex items-center gap-1.5 shadow-sm"
-                >
-                  <Clock className="w-3 h-3 text-amber-400" />
-                  <span>
-                    {formatTime12h(s.startTime)} – {formatTime12h(s.endTime)}
-                  </span>
-                </div>
-              ))}
+            {/* Currently Selected Slots */}
+            <div>
+              <div className="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1.5 flex items-center gap-1">
+                <Clock className="w-3 h-3 text-amber-400" />
+                <span>Reserved Timing:</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {slots.map((s) => (
+                  <div
+                    key={s.startTime}
+                    className="px-2.5 py-1.5 rounded-xl bg-dark-950/90 border border-amber-400/40 text-amber-300 text-xs font-bold flex items-center gap-1.5 shadow-sm"
+                  >
+                    <span>
+                      {formatTime12h(s.startTime)} – {formatTime12h(s.endTime)}
+                    </span>
+                    {slots.length > 1 && onSlotsChange && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = slots.filter((item) => item.startTime !== s.startTime);
+                          onSlotsChange(updated);
+                        }}
+                        className="p-0.5 rounded-md hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 transition-colors cursor-pointer"
+                        title="Remove this slot"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
+
+            {/* Quick Add More Hours on the Same Date */}
+            {otherAvailableSlots.length > 0 && onSlotsChange && (
+              <div className="pt-2 border-t border-white/10 space-y-1.5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1">
+                  <Plus className="w-3 h-3 text-amber-400" />
+                  <span>Add another hour on this date:</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
+                  {otherAvailableSlots.map((s) => (
+                    <button
+                      key={s.startTime}
+                      type="button"
+                      onClick={() => {
+                        const updated = [...slots, s].sort((a, b) =>
+                          a.startTime.localeCompare(b.startTime)
+                        );
+                        onSlotsChange(updated);
+                      }}
+                      className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-amber-400/20 border border-white/10 hover:border-amber-400/40 text-[11px] font-medium text-slate-300 hover:text-amber-300 flex items-center gap-1 transition-all cursor-pointer"
+                    >
+                      <Plus className="w-2.5 h-2.5 text-amber-400" />
+                      <span>{formatTime12h(s.startTime)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Pricing Row */}

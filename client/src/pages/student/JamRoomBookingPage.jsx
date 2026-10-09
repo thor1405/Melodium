@@ -22,6 +22,7 @@ import {
   ArrowRight,
   X,
   Check,
+  Zap,
 } from 'lucide-react';
 
 export const JamRoomBookingPage = () => {
@@ -110,6 +111,23 @@ export const JamRoomBookingPage = () => {
     }, 60);
   };
 
+  const handleDirectBookSlot = (slot) => {
+    if (!isAuthenticated) {
+      toast.info('Please log in with your student account to reserve slots.');
+      navigate('/login', { state: { from: { pathname: '/jam-room' } } });
+      return;
+    }
+
+    setSelectedSlots((prev) => {
+      const exists = prev.some((s) => s.startTime === slot.startTime);
+      if (exists && prev.length > 0) {
+        return prev;
+      }
+      return [slot];
+    });
+    setIsModalOpen(true);
+  };
+
   const handleToggleSlot = (slot) => {
     if (!isAuthenticated) {
       toast.info('Please log in with your student account to select slots.');
@@ -140,6 +158,7 @@ export const JamRoomBookingPage = () => {
     }
     const freeSlots = (availability?.slots || []).filter((s) => s.status === 'AVAILABLE');
     setSelectedSlots(freeSlots);
+    setIsModalOpen(true);
   };
 
   const handleOpenBookingModal = () => {
@@ -156,7 +175,6 @@ export const JamRoomBookingPage = () => {
 
   const handleCloseBookingModal = () => {
     setIsModalOpen(false);
-    setSelectedSlots([]);
     fetchSlots(selectedDate);
   };
 
@@ -251,6 +269,40 @@ export const JamRoomBookingPage = () => {
           </div>
         </div>
 
+        {/* Selected Slots Inline Action Banner */}
+        {selectedSlots.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/25 via-amber-950/40 to-yellow-500/20 border-2 border-amber-400/80 shadow-glow-yellow/30 flex flex-wrap items-center justify-between gap-3"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-amber-400 text-dark-950 font-black text-sm flex items-center justify-center shadow-glow-yellow shrink-0">
+                {selectedSlots.length}
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs sm:text-sm font-extrabold text-white flex items-center gap-1.5 truncate">
+                  <span>{selectedSlots.length} {selectedSlots.length === 1 ? 'Slot Ready' : 'Slots Ready'}</span>
+                  <span className="text-amber-300">({selectedSlots.map((s) => formatTime12h(s.startTime)).join(', ')})</span>
+                </div>
+                <div className="text-[11px] text-slate-300">
+                  Tap below to open your pass and complete reservation
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleOpenBookingModal}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer shimmer-btn"
+            >
+              <Zap className="w-4 h-4 fill-current text-dark-950" />
+              <span>Open Booking Pass Popup</span>
+              <ArrowRight className="w-4 h-4 text-dark-950 stroke-[3]" />
+            </button>
+          </motion.div>
+        )}
+
         {loading ? (
           <SlotSkeleton />
         ) : (
@@ -258,6 +310,7 @@ export const JamRoomBookingPage = () => {
             slots={availability?.slots || []}
             selectedSlots={selectedSlots}
             onToggleSlot={handleToggleSlot}
+            onBookSlot={handleDirectBookSlot}
           />
         )}
       </div>
@@ -305,7 +358,7 @@ export const JamRoomBookingPage = () => {
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className="fixed bottom-3 sm:bottom-8 inset-x-0 z-40 max-w-2xl mx-auto px-2 sm:px-4 pointer-events-none"
           >
-            <div className="glass-panel p-2.5 sm:p-3.5 rounded-2xl border border-amber-400/50 bg-dark-950/95 shadow-2xl backdrop-blur-2xl flex items-center justify-between gap-2 sm:gap-3 pointer-events-auto ring-1 ring-amber-400/40">
+            <div className="glass-panel p-2.5 sm:p-3.5 rounded-2xl border-2 border-amber-400/80 bg-dark-950/95 shadow-2xl backdrop-blur-2xl flex items-center justify-between gap-2 sm:gap-3 pointer-events-auto ring-2 ring-amber-400/50">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                 <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-400 text-dark-950 flex items-center justify-center font-black text-xs sm:text-sm shadow-glow-yellow shrink-0">
                   {selectedSlots.length}
@@ -334,8 +387,9 @@ export const JamRoomBookingPage = () => {
                 <button
                   type="button"
                   onClick={handleOpenBookingModal}
-                  className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-black text-xs shadow-glow-yellow transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                  className="px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-black text-xs shadow-glow-yellow transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center gap-1.5 cursor-pointer whitespace-nowrap shimmer-btn animate-pulse"
                 >
+                  <Zap className="w-3.5 h-3.5 fill-current text-dark-950" />
                   <span>Reserve Pass</span>
                   <ArrowRight className="w-3.5 h-3.5 text-dark-950 stroke-[3]" />
                 </button>
@@ -350,6 +404,8 @@ export const JamRoomBookingPage = () => {
         isOpen={isModalOpen}
         onClose={handleCloseBookingModal}
         slots={selectedSlots}
+        availableSlots={(availability?.slots || []).filter((s) => s.status === 'AVAILABLE')}
+        onSlotsChange={setSelectedSlots}
         date={selectedDate}
         onSuccess={handleBookingSuccess}
       />

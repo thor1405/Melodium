@@ -1,12 +1,13 @@
 import React from 'react';
 import { formatTime12h } from '../../utils/dateUtils';
-import { Clock, CheckCircle2, Lock, Ban, Plus, Check } from 'lucide-react';
+import { Clock, CheckCircle2, Lock, Ban, Plus, Check, Zap, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const SlotGrid = ({
   slots = [],
   selectedSlots = [],
   onToggleSlot = () => {},
+  onBookSlot = null,
 }) => {
   if (slots.length === 0) {
     return (
@@ -18,6 +19,14 @@ export const SlotGrid = ({
 
   const isSlotSelected = (slot) => {
     return selectedSlots.some((s) => s.startTime === slot.startTime);
+  };
+
+  const handleSlotAction = (slot) => {
+    if (onBookSlot) {
+      onBookSlot(slot);
+    } else {
+      onToggleSlot(slot);
+    }
   };
 
   return (
@@ -43,17 +52,13 @@ export const SlotGrid = ({
           </div>
         </div>
 
-        {selectedSlots.length > 0 && (
-          <div className="flex items-center gap-1.5 w-full sm:w-auto">
-            <span className="text-amber-300 text-[11px] sm:text-xs font-semibold">
-              💡 {selectedSlots.length} {selectedSlots.length === 1 ? 'slot' : 'slots'} chosen
-            </span>
-          </div>
-        )}
+        <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+          <span>💡 Tap any available slot to instantly open the booking pass</span>
+        </div>
       </div>
 
       {/* Slots Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
         {slots.map((slot, idx) => {
           const isSelected = isSlotSelected(slot);
           const isAvailable = slot.status === 'AVAILABLE';
@@ -66,7 +71,7 @@ export const SlotGrid = ({
 
           if (isSelected) {
             cardStyle =
-              'bg-gradient-to-br from-amber-500/25 via-amber-900/40 to-dark-900 border-amber-400 shadow-glow-yellow text-white ring-2 ring-amber-400/80 cursor-pointer';
+              'bg-gradient-to-br from-amber-500/30 via-amber-900/50 to-dark-900 border-amber-400 shadow-glow-yellow text-white ring-2 ring-amber-400 cursor-pointer';
             badge = (
               <span className="px-2 py-0.5 rounded-md bg-amber-400 text-dark-950 text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow-sm">
                 <Check className="w-3 h-3 stroke-[3]" /> Selected
@@ -74,7 +79,7 @@ export const SlotGrid = ({
             );
           } else if (isAvailable) {
             cardStyle =
-              'bg-emerald-950/20 hover:bg-emerald-950/40 border-emerald-500/30 hover:border-amber-400 hover:shadow-glow-yellow text-slate-200 cursor-pointer transition-all active:scale-[0.98]';
+              'bg-gradient-to-br from-emerald-950/30 via-dark-900/90 to-emerald-950/20 hover:from-amber-950/30 hover:to-dark-900 border-emerald-500/40 hover:border-amber-400 hover:shadow-glow-yellow text-slate-200 cursor-pointer transition-all active:scale-[0.98] group';
             badge = (
               <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
                 <Plus className="w-2.5 h-2.5" /> Available
@@ -112,54 +117,83 @@ export const SlotGrid = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.01 }}
               onClick={() => {
-                if (isAvailable) onToggleSlot(slot);
+                if (isAvailable || isSelected) handleSlotAction(slot);
               }}
-              className={`p-3 sm:p-4 rounded-2xl border backdrop-blur-md relative flex flex-col justify-between min-h-[105px] sm:min-h-[115px] select-none ${cardStyle}`}
+              className={`p-3.5 sm:p-4 rounded-2xl border backdrop-blur-md relative flex flex-col justify-between min-h-[140px] select-none ${cardStyle}`}
             >
               {/* Header */}
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
-                  <Clock className={`w-3.5 h-3.5 ${isSelected ? 'text-amber-300' : 'text-amber-400'}`} />
-                  <span>1 Hour Session</span>
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+                    <Clock className={`w-3.5 h-3.5 ${isSelected ? 'text-amber-300' : 'text-amber-400'}`} />
+                    <span>1 Hour Session</span>
+                  </div>
+                  {badge}
                 </div>
-                {badge}
+
+                {/* Timing Display */}
+                <div className="my-2">
+                  <div className="font-display font-black text-lg sm:text-xl text-white tracking-wide">
+                    {formatTime12h(slot.startTime)}
+                  </div>
+                  <div className="text-[11px] text-slate-400 font-medium">
+                    until {formatTime12h(slot.endTime)}
+                  </div>
+                </div>
               </div>
 
-              {/* Timing Display */}
-              <div className="my-1.5 sm:my-2">
-                <div className="font-display font-bold text-base sm:text-lg text-white">
-                  {formatTime12h(slot.startTime)}
-                </div>
-                <div className="text-[10px] sm:text-[11px] text-slate-400">
-                  to {formatTime12h(slot.endTime)}
-                </div>
-              </div>
-
-              {/* Sub-label */}
-              <div className="text-[10px] sm:text-[11px] truncate">
+              {/* Interactive Direct Action Button / Status Sub-label */}
+              <div className="pt-2 border-t border-white/5">
                 {isSelected && (
-                  <span className="text-amber-300 font-semibold flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> Selected (Tap to deselect)
-                  </span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSlotAction(slot);
+                    }}
+                    className="w-full py-2 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-dark-950 font-black text-xs shadow-glow-yellow flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer animate-pulse"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-dark-950" />
+                    <span>Open Pass (Book Now) →</span>
+                  </button>
                 )}
+
                 {!isSelected && isAvailable && (
-                  <span className="text-emerald-400 font-medium">Tap to select slot</span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSlotAction(slot);
+                    }}
+                    className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-black text-xs shadow-glow-yellow flex items-center justify-center gap-1.5 transition-all group-hover:scale-[1.02] active:scale-[0.98] cursor-pointer shimmer-btn"
+                  >
+                    <Zap className="w-3.5 h-3.5 fill-current text-dark-950" />
+                    <span>Book Pass</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-dark-950 stroke-[3]" />
+                  </button>
                 )}
+
                 {isBooked && (
-                  <span className="text-amber-400/80 font-medium truncate block">
+                  <div className="text-[11px] text-amber-400/80 font-semibold truncate py-1 text-center">
                     {slot.isMine
                       ? 'Pass issued to you'
                       : slot.student?.name
                       ? `Booked by ${slot.student.name}`
-                      : 'Booked Rehearsal'}
-                  </span>
+                      : 'Reserved Session'}
+                  </div>
                 )}
+
                 {isBlocked && (
-                  <span className="text-slate-400 truncate block">
+                  <div className="text-[11px] text-slate-400 truncate py-1 text-center">
                     {slot.reason || 'Blocked by Admin'}
-                  </span>
+                  </div>
                 )}
-                {isPast && <span className="text-slate-500">Session Expired</span>}
+
+                {isPast && (
+                  <div className="text-[11px] text-slate-500 py-1 text-center font-medium">
+                    Session Expired
+                  </div>
+                )}
               </div>
             </motion.div>
           );
