@@ -198,10 +198,10 @@ export const AboutPage = () => {
           <div className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">
             <div className="font-bold text-white flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>Cancellation Cutoff</span>
+              <span>Instant Cancellation</span>
             </div>
             <p className="text-slate-400">
-              If unable to attend, cancel at least 2 hours in advance from your "My Bookings" page so other student bands can utilize the open slot.
+              If unable to attend, cancel anytime before your slot begins from your "My Bookings" page so other student bands can utilize the open slot.
             </p>
           </div>
         </div>

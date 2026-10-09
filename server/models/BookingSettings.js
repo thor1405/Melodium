@@ -32,7 +32,7 @@ const bookingSettingsSchema = new mongoose.Schema(
     },
     cancellationCutoffHours: {
       type: Number,
-      default: 2,
+      default: 0,
     },
     requireAdminApproval: {
       type: Boolean,
@@ -74,8 +74,8 @@ const bookingSettingsSchema = new mongoose.Schema(
       type: [String],
       default: [
         'Bookings operate in strict 1-hour slots.',
-        'Maximum 1 booking per student per day.',
-        'Cancellations permitted up to 2 hours before the session.',
+        'You can book multiple slots across different days anytime.',
+        'Instant cancellation permitted anytime before your scheduled session starts.',
         'Keep equipment in pristine condition and report damages immediately.',
         'No food or open beverages permitted near amplifiers and pedalboards.',
       ],

@@ -4,9 +4,9 @@ export const defaultBookingSettings = {
   slotDurationMinutes: 60,
   availableDays: [1, 2, 3, 4, 5, 6], // Monday through Saturday (Sunday is a weekly holiday)
   maxAdvanceBookingDays: 31, // Full 1-month advance window
-  maxDailyBookingsPerStudent: 8, // Multiple slots permitted on the same active day
+  maxDailyBookingsPerStudent: 8, // Multiple slots permitted on the same day
   maxWeeklyBookingsPerStudent: 14,
-  cancellationCutoffHours: 2,
+  cancellationCutoffHours: 0,
   requireAdminApproval: false,
   isBookingEnabled: true,
   maintenanceNotice: "",
@@ -18,9 +18,8 @@ export const defaultBookingSettings = {
   maxParticipants: 8,
   rulesSummary: [
     "Bookings operate in strict 1-hour slots.",
-    "You can book multiple slots on your selected rehearsal day.",
-    "Active reservations are limited to 1 date at a time until completed or cancelled.",
-    "Cancellations permitted up to 2 hours before the session.",
+    "You can book multiple slots across different days anytime.",
+    "Instant cancellation permitted anytime before your scheduled session starts.",
     "Keep equipment in pristine condition and report damages immediately.",
     "No food or open beverages permitted near amplifiers and pedalboards."
   ],

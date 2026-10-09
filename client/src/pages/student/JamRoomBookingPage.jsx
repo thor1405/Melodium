@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DateSelector } from '../../components/booking/DateSelector';
 import { SlotGrid } from '../../components/booking/SlotGrid';
@@ -35,6 +35,7 @@ export const JamRoomBookingPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSlots, setSelectedSlots] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const slotsSectionRef = useRef(null);
 
   // Fetch live global booking parameters once on mount
   useEffect(() => {
@@ -89,6 +90,12 @@ export const JamRoomBookingPage = () => {
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
     setSelectedSlots([]);
+    // Automatically smooth-scroll to slot timings section
+    setTimeout(() => {
+      if (slotsSectionRef.current) {
+        slotsSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
   };
 
   const handleToggleSlot = (slot) => {
@@ -193,7 +200,11 @@ export const JamRoomBookingPage = () => {
       )}
 
       {/* Slots Section */}
-      <div className="space-y-3 sm:space-y-4">
+      <div
+        ref={slotsSectionRef}
+        id="slot-timings-section"
+        className="space-y-3 sm:space-y-4 scroll-mt-20 sm:scroll-mt-24"
+      >
         <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-3">
           <div className="flex items-center gap-1.5 sm:gap-2">
             <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
@@ -258,10 +269,10 @@ export const JamRoomBookingPage = () => {
         <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-white/5 space-y-1.5 sm:space-y-2">
           <h3 className="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0" />
-            <span>1 Active Date Policy</span>
+            <span>Flexible Multi-Day Booking</span>
           </h3>
           <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
-            Musicians can reserve multiple slots on their chosen day, but cannot book other future dates until current sessions complete or are cancelled.
+            Reserve slots across multiple dates in advance. No restrictions on scheduling separate practice sessions on different days.
           </p>
         </div>
       </div>

@@ -171,34 +171,7 @@ export const createBooking = async (req, res, next) => {
       });
     }
 
-    // 4. Check student 1-active-date booking policy (unless admin)
-    // A student can book any number of slots on the SAME date.
-    // But they cannot book slots on a DIFFERENT future date until all sessions on their active date have passed or been cancelled.
-    if (req.user.role !== 'ADMIN') {
-      const activeFutureBookings = await Booking.find({
-        userId: req.user._id,
-        date: { $gte: currentDateString },
-        status: { $in: ['CONFIRMED', 'PENDING'] },
-      }).select('date startTime');
-
-      if (activeFutureBookings.length > 0) {
-        const activeDates = [...new Set(activeFutureBookings.map((b) => b.date))];
-        const differentActiveDate = activeDates.find((d) => d !== date);
-
-        if (differentActiveDate) {
-          const formattedActiveDate = new Date(`${differentActiveDate}T00:00:00`).toLocaleDateString('en-US', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-          });
-          return res.status(400).json({
-            success: false,
-            message: `You already have active reservations on ${formattedActiveDate}. You can reserve more slots on that same day, but you cannot book a different date until your sessions on ${formattedActiveDate} are completed or cancelled.`,
-          });
-        }
-      }
-    }
+    // Multi-day and multi-slot bookings are freely permitted without 1-date restrictions.
 
     const slotDuration = settings.slotDurationMinutes || 60;
     const openMinutes = timeToMinutes(settings.openingTime);
@@ -519,17 +492,16 @@ export const cancelBooking = async (req, res, next) => {
     const settings = await getActiveSettings();
     const { currentDateString, currentTimeString } = getNowInTimezone(settings.operatingTimezone);
 
-    // If student, check cancellation cutoff
+    // Students can cancel anytime before the session start time
     if (!isAdmin) {
-      const slotDateTime = new Date(`${booking.date}T${booking.startTime}:00Z`);
-      const currentDateTime = new Date(`${currentDateString}T${currentTimeString}:00Z`);
+      const isPast =
+        booking.date < currentDateString ||
+        (booking.date === currentDateString && booking.startTime <= currentTimeString);
 
-      const diffHours = (slotDateTime.getTime() - currentDateTime.getTime()) / (1000 * 60 * 60);
-
-      if (diffHours < settings.cancellationCutoffHours) {
+      if (isPast) {
         return res.status(400).json({
           success: false,
-          message: `Bookings cannot be cancelled less than ${settings.cancellationCutoffHours} hours before the scheduled time slot.`,
+          message: 'Cannot cancel a session that has already started or concluded.',
         });
       }
     }

@@ -49,12 +49,12 @@ const createTransporter = async () => {
     });
   }
 
-  // Fallback / Dev mode: create test account or log-based transporter
+  // Fallback / Dev mode: log-based simulated transporter
   return null;
 };
 
 /**
- * Send Jam Room booking confirmation email to the user
+ * 1. Send Jam Room booking confirmation email to the user
  */
 export const sendBookingConfirmationEmail = async ({ user, bookings = [], settings = {} }) => {
   if (!user?.email || bookings.length === 0) return { success: false, reason: 'Missing user email or bookings' };
@@ -68,7 +68,9 @@ export const sendBookingConfirmationEmail = async ({ user, bookings = [], settin
     (!user.email.endsWith('@sjec.ac.in') && user.role !== 'ADMIN');
 
   const roomName = settings.roomName || 'Melodium SJEC Jam Room (Studio 1)';
-  const roomLocation = settings.roomLocation || 'Academic Block 3, Ground Floor, St. Joseph Engineering College, Vamanjoor, Mangaluru, Karnataka 575028';
+  const roomLocation =
+    settings.roomLocation ||
+    'Academic Block 3, Ground Floor, St. Joseph Engineering College, Vamanjoor, Mangaluru';
 
   const totalFee = isOutsider ? 500 : 0;
   const paymentStatus = firstBooking.paymentStatus || (isOutsider ? 'PAID' : 'FREE');
@@ -85,6 +87,8 @@ export const sendBookingConfirmationEmail = async ({ user, bookings = [], settin
     ? `🎸 Studio 1 Jam Room Pass Confirmed (Pass: ${passIds}) | Melodium SJEC`
     : `🎵 Jam Room Slot Confirmed (Pass: ${passIds}) | Melodium SJEC`;
 
+  const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+
   const htmlContent = `
 <!DOCTYPE html>
 <html>
@@ -92,127 +96,152 @@ export const sendBookingConfirmationEmail = async ({ user, bookings = [], settin
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${subject}</title>
-  <style>
-    body { margin: 0; padding: 0; background-color: #0b0f19; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #e2e8f0; }
-    .container { max-width: 600px; margin: 20px auto; background-color: #131826; border-radius: 16px; border: 1px solid rgba(236, 231, 95, 0.25); overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    .header { background: linear-gradient(135deg, #181f33 0%, #0b0f19 100%); padding: 32px 24px; text-align: center; border-bottom: 2px solid #ece75f; }
-    .logo-badge { display: inline-block; background-color: #ece75f; color: #0b0f19; font-weight: 900; font-size: 11px; letter-spacing: 1.5px; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; margin-bottom: 12px; }
-    .title { color: #ffffff; font-size: 24px; font-weight: 800; margin: 0 0 6px 0; }
-    .subtitle { color: #94a3b8; font-size: 13px; margin: 0; }
-    .content { padding: 28px 24px; }
-    .greeting { font-size: 16px; color: #ffffff; margin-bottom: 16px; }
-    .card { background-color: #1a2236; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 18px; margin-bottom: 20px; }
-    .card-title { color: #ece75f; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-    .slot-item { background-color: #0b0f19; border: 1px solid rgba(236, 231, 95, 0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; }
-    .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-    .badge-sjec { background-color: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
-    .badge-outsider { background-color: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
-    .guidelines { background-color: rgba(236, 231, 95, 0.05); border-left: 3px solid #ece75f; padding: 12px 16px; border-radius: 4px 8px 8px 4px; margin-top: 20px; font-size: 12px; color: #cbd5e1; line-height: 1.5; }
-    .footer { background-color: #0b0f19; padding: 20px 24px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 11px; color: #64748b; }
-  </style>
 </head>
-<body>
-  <div class="container">
-    <div class="header">
-      <div class="logo-badge">MELODIUM SJEC</div>
-      <h1 class="title">Rehearsal Session Confirmed! 🎵</h1>
-      <p class="subtitle">Your reservation for Studio 1 is active and saved in the schedule.</p>
-    </div>
-
-    <div class="content">
-      <div class="greeting">
-        Hey <strong>${user.name || 'Musician'}</strong>,
-      </div>
-      <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6; margin-bottom: 20px;">
-        Your booking request at <strong>${roomName}</strong> has been successfully confirmed. Below are your pass and session details:
-      </p>
-
-      <!-- Booking Summary Card -->
-      <div class="card">
-        <div class="card-title">Reservation Details</div>
-        <table width="100%" cellpadding="6" cellspacing="0" style="font-size: 13px;">
+<body style="margin: 0; padding: 0; background-color: #0b0f19; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #f1f5f9; -webkit-font-smoothing: antialiased;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #0b0f19; padding: 24px 12px;">
+    <tr>
+      <td align="center">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #131826; border-radius: 16px; border: 1px solid rgba(250, 204, 21, 0.3); overflow: hidden; box-shadow: 0 12px 35px rgba(0,0,0,0.6);">
+          
+          <!-- Header Banner -->
           <tr>
-            <td style="color: #94a3b8;">Pass ID(s):</td>
-            <td style="color: #ece75f; font-weight: 700; text-align: right; font-family: monospace;">${passIds}</td>
-          </tr>
-          <tr>
-            <td style="color: #94a3b8;">Rehearsal Date:</td>
-            <td style="color: #ffffff; font-weight: 600; text-align: right;">${dateFormatted}</td>
-          </tr>
-          <tr>
-            <td style="color: #94a3b8;">Studio Room:</td>
-            <td style="color: #ffffff; font-weight: 600; text-align: right;">${roomName}</td>
-          </tr>
-          <tr>
-            <td style="color: #94a3b8;">Location:</td>
-            <td style="color: #ffffff; text-align: right;">${roomLocation}</td>
-          </tr>
-          <tr>
-            <td style="color: #94a3b8;">Session Purpose:</td>
-            <td style="color: #ffffff; text-align: right;">${firstBooking.purpose || 'Band Rehearsal'}</td>
-          </tr>
-          <tr>
-            <td style="color: #94a3b8;">Membership Type:</td>
-            <td style="text-align: right;">
-              <span class="badge ${isOutsider ? 'badge-outsider' : 'badge-sjec'}">
-                ${isOutsider ? 'Outsider Day Pass' : 'SJEC Student (100% Free)'}
-              </span>
+            <td style="background: linear-gradient(135deg, #182035 0%, #0b0f19 100%); padding: 32px 24px; text-align: center; border-bottom: 2px solid #facc15;">
+              <div style="display: inline-block; background-color: #facc15; color: #0b0f19; font-weight: 900; font-size: 11px; letter-spacing: 1.5px; padding: 4px 14px; border-radius: 20px; text-transform: uppercase; margin-bottom: 12px;">
+                MELODIUM SJEC
+              </div>
+              <h1 style="color: #ffffff; font-size: 24px; font-weight: 800; margin: 0 0 6px 0; line-height: 1.3;">
+                Rehearsal Session Confirmed! 🎵
+              </h1>
+              <p style="color: #94a3b8; font-size: 13px; margin: 0;">
+                Your reservation for Studio 1 is active and saved in the schedule.
+              </p>
             </td>
           </tr>
+
+          <!-- Main Content -->
           <tr>
-            <td style="color: #94a3b8;">Fee Paid / Status:</td>
-            <td style="color: #ffffff; font-weight: 600; text-align: right;">
-              ${isOutsider ? `₹${totalFee} (${paymentStatus} via ${paymentMethod})` : '₹0 (Free Student Pass)'}
+            <td style="padding: 28px 24px;">
+              <p style="font-size: 16px; color: #ffffff; font-weight: 700; margin: 0 0 12px 0;">
+                Hey <span style="color: #facc15;">${user.name || 'Musician'}</span>,
+              </p>
+              <p style="font-size: 14px; color: #e2e8f0; line-height: 1.6; margin: 0 0 20px 0;">
+                Your booking request at <strong style="color: #ffffff;">${roomName}</strong> has been successfully confirmed. Below are your pass and session details:
+              </p>
+
+              <!-- Reservation Details Card -->
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #1a2236; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; margin-bottom: 20px; overflow: hidden;">
+                <tr>
+                  <td style="padding: 16px;">
+                    <div style="color: #facc15; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">
+                      RESERVATION DETAILS
+                    </div>
+                    <table width="100%" cellpadding="6" cellspacing="0" style="font-size: 13px;">
+                      <tr>
+                        <td style="color: #94a3b8; width: 40%;">Pass ID(s):</td>
+                        <td style="color: #facc15; font-weight: 800; text-align: right; font-family: monospace; font-size: 14px;">${passIds}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #94a3b8;">Rehearsal Date:</td>
+                        <td style="color: #ffffff; font-weight: 700; text-align: right;">${dateFormatted}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #94a3b8;">Studio Room:</td>
+                        <td style="color: #ffffff; font-weight: 600; text-align: right;">${roomName}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #94a3b8;">Location:</td>
+                        <td style="color: #e2e8f0; text-align: right;">${roomLocation}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #94a3b8;">Session Purpose:</td>
+                        <td style="color: #ffffff; font-weight: 600; text-align: right;">${firstBooking.purpose || 'Band Rehearsal'}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #94a3b8;">Pass Type:</td>
+                        <td style="text-align: right;">
+                          <span style="display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; ${isOutsider ? 'background-color: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4);' : 'background-color: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);'}">
+                            ${isOutsider ? 'Outsider Day Pass' : 'SJEC Student (100% Free)'}
+                          </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="color: #94a3b8;">Fee / Status:</td>
+                        <td style="color: #ffffff; font-weight: 700; text-align: right;">
+                          ${isOutsider ? `₹${totalFee} (${paymentStatus} via ${paymentMethod})` : '₹0 (Free Student Pass)'}
+                        </td>
+                      </tr>
+                      ${firstBooking.participantCount ? `
+                      <tr>
+                        <td style="color: #94a3b8;">Band Musicians:</td>
+                        <td style="color: #ffffff; font-weight: 600; text-align: right;">${firstBooking.participantCount} Members</td>
+                      </tr>` : ''}
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Booked Slots Card -->
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #1a2236; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; margin-bottom: 20px; overflow: hidden;">
+                <tr>
+                  <td style="padding: 16px;">
+                    <div style="color: #facc15; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">
+                      BOOKED TIMELINE (${slotsSummary.length} Slot${slotsSummary.length > 1 ? 's' : ''})
+                    </div>
+                    ${slotsSummary
+                      .map(
+                        (s) => `
+                      <div style="background-color: #0b0f19; border: 1px solid rgba(250, 204, 21, 0.25); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px;">
+                        <table width="100%" cellpadding="0" cellspacing="0" style="font-size: 13px;">
+                          <tr>
+                            <td style="color: #ffffff; font-weight: 700;">🕒 ${s.time}</td>
+                            <td style="color: #94a3b8; text-align: right; font-weight: 600;">${s.duration}</td>
+                          </tr>
+                        </table>
+                      </div>`
+                      )
+                      .join('')}
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Studio Guidelines -->
+              <div style="background-color: rgba(250, 204, 21, 0.08); border-left: 4px solid #facc15; padding: 14px 16px; border-radius: 4px 8px 8px 4px; margin-bottom: 24px;">
+                <div style="color: #facc15; font-weight: 800; font-size: 13px; margin-bottom: 6px;">
+                  ⚡ Studio House Rules & Entry Protocol:
+                </div>
+                <div style="color: #e2e8f0; font-size: 12px; line-height: 1.7;">
+                  • Please arrive 5 minutes prior to your slot time.<br>
+                  • Show this email or your Digital Pass in the Melodium app at the Studio 1 desk.<br>
+                  • Handle all acoustic and electrical gear (amps, drumkits, mics, mixing desk) with respect.<br>
+                  • Food and sugary beverages are strictly prohibited inside the sound-treated room.<br>
+                  • Ensure all cables and amps are powered down neatly after your session.
+                </div>
+              </div>
+
+              <!-- Button CTA -->
+              <div style="text-align: center; margin: 28px 0 10px 0;">
+                <a href="${clientUrl}/jam-room" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #facc15 0%, #f59e0b 100%); color: #0b0f19 !important; text-decoration: none; font-weight: 900; font-size: 13px; padding: 14px 28px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);">
+                  View Live Schedule & Passes
+                </a>
+              </div>
             </td>
           </tr>
-          ${firstBooking.participantCount ? `
+
+          <!-- Footer -->
           <tr>
-            <td style="color: #94a3b8;">Band Members:</td>
-            <td style="color: #ffffff; text-align: right;">${firstBooking.participantCount} Musicians</td>
-          </tr>` : ''}
+            <td style="background-color: #0b0f19; padding: 20px 24px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+              <p style="margin: 0 0 6px 0; color: #94a3b8; font-size: 12px;">
+                St. Joseph Engineering College, Vamanjoor, Mangaluru - 575028
+              </p>
+              <p style="margin: 0; color: #64748b; font-size: 11px;">
+                © ${new Date().getFullYear()} Melodium SJEC. All rights reserved.
+              </p>
+            </td>
+          </tr>
         </table>
-      </div>
-
-      <!-- Booked Slots -->
-      <div class="card">
-        <div class="card-title">Booked Slot Timeline (${slotsSummary.length} Slot${slotsSummary.length > 1 ? 's' : ''})</div>
-        ${slotsSummary
-          .map(
-            (s) => `
-          <div class="slot-item">
-            <table width="100%" cellpadding="0" cellspacing="0" style="font-size: 13px;">
-              <tr>
-                <td style="color: #ffffff; font-weight: 700;">🕒 ${s.time}</td>
-                <td style="color: #94a3b8; text-align: right;">${s.duration}</td>
-              </tr>
-            </table>
-          </div>`
-          )
-          .join('')}
-      </div>
-
-      <!-- Studio Guidelines -->
-      <div class="guidelines">
-        <strong style="color: #ece75f;">⚡ Studio House Rules & Entry Protocol:</strong><br>
-        • Please arrive 5 minutes prior to your slot time.<br>
-        • Show this email or your Digital Pass in the Melodium app at the Studio 1 desk.<br>
-        • Handle all acoustic and electrical equipment (amps, drumkits, mics, mixing console) with respect.<br>
-        • Food and sugary beverages are strictly prohibited inside the sound-treated rehearsal area.<br>
-        • Ensure all cables and equipment are powered down neatly after your session.
-      </div>
-
-      <div style="text-align: center; margin-top: 24px;">
-        <a href="${process.env.CLIENT_URL || 'http://localhost:5173'}/jam-room" style="display: inline-block; background: linear-gradient(135deg, #ece75f 0%, #f59e0b 100%); color: #0b0f19; text-decoration: none; font-weight: 800; font-size: 13px; padding: 12px 24px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
-          View Live Schedule & Passes
-        </a>
-      </div>
-    </div>
-
-    <div class="footer">
-      <p style="margin: 0 0 6px 0;">St. Joseph Engineering College, Vamanjoor, Mangaluru - 575028</p>
-      <p style="margin: 0;">© ${new Date().getFullYear()} Melodium SJEC. All rights reserved.</p>
-    </div>
-  </div>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
   `;
@@ -242,7 +271,7 @@ STUDIO RULES:
 - Show your pass ID at the studio entrance.
 - Treat all instruments and recording equipment with care.
 
-Manage your bookings anytime at ${process.env.CLIENT_URL || 'http://localhost:5173'}/jam-room
+Manage your bookings anytime at ${clientUrl}/jam-room
   `;
 
   try {
@@ -260,11 +289,7 @@ Manage your bookings anytime at ${process.env.CLIENT_URL || 'http://localhost:51
       console.log(`✉️ [EMAIL SENT] Booking confirmation delivered to ${user.email} (MessageId: ${info.messageId})`);
       return { success: true, messageId: info.messageId };
     } else {
-      console.log(`✉️ [EMAIL DISPATCHED - DEV MODE] (No SMTP credentials configured in .env)`);
-      console.log(`   To: ${user.email}`);
-      console.log(`   Subject: ${subject}`);
-      console.log(`   Pass IDs: ${passIds}`);
-      console.log(`   Date: ${dateFormatted} | Slots: ${slotsSummary.map((s) => s.time).join(', ')}`);
+      console.log(`✉️ [EMAIL DISPATCHED - DEV MODE] Booking confirmation to ${user.email}`);
       return { success: true, simulated: true };
     }
   } catch (error) {
@@ -274,7 +299,7 @@ Manage your bookings anytime at ${process.env.CLIENT_URL || 'http://localhost:51
 };
 
 /**
- * Send Jam Room booking cancellation email to the user
+ * 2. Send Jam Room booking cancellation email to the user (HIGH CONTRAST & BULLETPROOF INLINE STYLES)
  */
 export const sendBookingCancellationEmail = async ({ user, booking, reason }) => {
   if (!user?.email || !booking) return { success: false, reason: 'Missing user email or booking' };
@@ -282,29 +307,133 @@ export const sendBookingCancellationEmail = async ({ user, booking, reason }) =>
   const dateFormatted = formatDateString(booking.date);
   const slotTime = `${formatTime12h(booking.startTime)} – ${formatTime12h(booking.endTime)}`;
   const subject = `❌ Jam Room Reservation Cancelled (${booking.bookingId}) | Melodium SJEC`;
+  const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 
   const htmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <style>
-    body { background-color: #0b0f19; font-family: sans-serif; color: #e2e8f0; margin: 0; padding: 20px; }
-    .container { max-width: 550px; margin: 0 auto; background: #131826; border-radius: 12px; border: 1px solid rgba(244,63,94,0.3); padding: 24px; }
-    .title { color: #f43f5e; font-size: 20px; font-weight: 800; margin-top: 0; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${subject}</title>
 </head>
-<body>
-  <div class="container">
-    <h2 class="title">Reservation Cancelled</h2>
-    <p>Hello <strong>${user.name || 'Musician'}</strong>,</p>
-    <p>Your Studio 1 Jam Room reservation <strong>${booking.bookingId}</strong> for <strong>${dateFormatted}</strong> at <strong>${slotTime}</strong> has been cancelled.</p>
-    ${reason ? `<p><strong>Reason:</strong> ${reason}</p>` : ''}
-    <p>You can reserve an alternative slot anytime on the Melodium platform.</p>
-    <p style="color: #64748b; font-size: 11px; margin-top: 24px;">Melodium SJEC • St. Joseph Engineering College</p>
-  </div>
+<body style="margin: 0; padding: 0; background-color: #0b0f19; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #f1f5f9; -webkit-font-smoothing: antialiased;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #0b0f19; padding: 24px 12px;">
+    <tr>
+      <td align="center">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 580px; background-color: #131826; border-radius: 16px; border: 1px solid rgba(244, 63, 94, 0.4); overflow: hidden; box-shadow: 0 12px 35px rgba(0,0,0,0.6);">
+          
+          <!-- Header Banner -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #22121d 0%, #0b0f19 100%); padding: 32px 24px; text-align: center; border-bottom: 2px solid #f43f5e;">
+              <div style="display: inline-block; background-color: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.4); font-weight: 900; font-size: 11px; letter-spacing: 1.5px; padding: 4px 14px; border-radius: 20px; text-transform: uppercase; margin-bottom: 12px;">
+                MELODIUM SJEC • CANCELLATION NOTICE
+              </div>
+              <h1 style="color: #ff4b6e; font-size: 24px; font-weight: 800; margin: 0 0 6px 0; line-height: 1.3;">
+                Reservation Cancelled
+              </h1>
+              <p style="color: #94a3b8; font-size: 13px; margin: 0;">
+                Your Studio 1 Jam Room session has been cancelled.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Main Content -->
+          <tr>
+            <td style="padding: 28px 24px;">
+              <p style="font-size: 16px; color: #ffffff; font-weight: 700; margin: 0 0 12px 0;">
+                Hello <span style="color: #facc15;">${user.name || 'Musician'}</span>,
+              </p>
+              
+              <p style="font-size: 14px; color: #e2e8f0; line-height: 1.6; margin: 0 0 20px 0;">
+                Your Studio 1 Jam Room reservation <strong style="color: #facc15; font-family: monospace;">${booking.bookingId}</strong> for <strong style="color: #ffffff;">${dateFormatted}</strong> at <strong style="color: #ffffff;">${slotTime}</strong> has been cancelled.
+              </p>
+
+              <!-- Cancellation Details Box -->
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #1a2236; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; margin-bottom: 20px; overflow: hidden;">
+                <tr>
+                  <td style="padding: 16px;">
+                    <div style="color: #f43f5e; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">
+                      CANCELLED SESSION DETAILS
+                    </div>
+                    <table width="100%" cellpadding="6" cellspacing="0" style="font-size: 13px;">
+                      <tr>
+                        <td style="color: #94a3b8; width: 35%;">Pass ID:</td>
+                        <td style="color: #facc15; font-weight: 800; text-align: right; font-family: monospace;">${booking.bookingId}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #94a3b8;">Date:</td>
+                        <td style="color: #ffffff; font-weight: 700; text-align: right;">${dateFormatted}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #94a3b8;">Slot Time:</td>
+                        <td style="color: #ffffff; font-weight: 700; text-align: right;">${slotTime}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #94a3b8;">Status:</td>
+                        <td style="color: #f43f5e; font-weight: 800; text-align: right; text-transform: uppercase;">
+                          Cancelled
+                        </td>
+                      </tr>
+                      ${
+                        reason
+                          ? `
+                      <tr>
+                        <td style="color: #94a3b8; vertical-align: top; padding-top: 10px;">Reason:</td>
+                        <td style="color: #fecdd3; font-weight: 600; text-align: right; padding-top: 10px;">${reason}</td>
+                      </tr>`
+                          : ''
+                      }
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Notice Box -->
+              <div style="background-color: rgba(244, 63, 94, 0.08); border-left: 4px solid #f43f5e; padding: 14px 16px; border-radius: 4px 8px 8px 4px; margin-bottom: 24px;">
+                <p style="margin: 0; color: #f1f5f9; font-size: 13px; line-height: 1.6;">
+                  You can reserve an alternative rehearsal slot anytime on the Melodium SJEC platform.
+                </p>
+              </div>
+
+              <!-- Button CTA -->
+              <div style="text-align: center; margin: 28px 0 10px 0;">
+                <a href="${clientUrl}/jam-room" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #facc15 0%, #f59e0b 100%); color: #0b0f19 !important; text-decoration: none; font-weight: 900; font-size: 13px; padding: 14px 28px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);">
+                  Book Alternative Slot
+                </a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #0b0f19; padding: 20px 24px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+              <p style="margin: 0 0 6px 0; color: #94a3b8; font-size: 12px;">
+                Melodium SJEC • St. Joseph Engineering College, Mangaluru
+              </p>
+              <p style="margin: 0; color: #64748b; font-size: 11px;">
+                © ${new Date().getFullYear()} Melodium SJEC. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
+  `;
+
+  const textContent = `
+Melodium SJEC — Reservation Cancelled
+
+Hello ${user.name || 'Musician'},
+
+Your Studio 1 Jam Room reservation ${booking.bookingId} for ${dateFormatted} at ${slotTime} has been cancelled.
+${reason ? `Reason: ${reason}\n` : ''}
+You can reserve an alternative slot anytime on the Melodium platform: ${clientUrl}/jam-room
+
+Melodium SJEC • St. Joseph Engineering College, Mangaluru
   `;
 
   try {
@@ -316,7 +445,7 @@ export const sendBookingCancellationEmail = async ({ user, booking, reason }) =>
         from: `"Melodium SJEC Studio" <${fromAddress}>`,
         to: user.email,
         subject,
-        text: `Your reservation ${booking.bookingId} for ${dateFormatted} (${slotTime}) has been cancelled.`,
+        text: textContent,
         html: htmlContent,
       });
       console.log(`✉️ [EMAIL SENT] Cancellation email sent to ${user.email}`);
@@ -331,7 +460,7 @@ export const sendBookingCancellationEmail = async ({ user, booking, reason }) =>
 };
 
 /**
- * Send password reset email with secure verification link
+ * 3. Send password reset email with secure verification link
  */
 export const sendPasswordResetEmail = async ({ user, resetUrl, expiresInMinutes = 30 }) => {
   if (!user?.email) return { success: false, reason: 'Missing user email' };
@@ -345,68 +474,86 @@ export const sendPasswordResetEmail = async ({ user, resetUrl, expiresInMinutes 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${subject}</title>
-  <style>
-    body { margin: 0; padding: 0; background-color: #0b0f19; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #e2e8f0; }
-    .container { max-width: 580px; margin: 20px auto; background-color: #131826; border-radius: 16px; border: 1px solid rgba(236, 231, 95, 0.25); overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    .header { background: linear-gradient(135deg, #181f33 0%, #0b0f19 100%); padding: 32px 24px; text-align: center; border-bottom: 2px solid #ece75f; }
-    .logo-badge { display: inline-block; background-color: #ece75f; color: #0b0f19; font-weight: 900; font-size: 11px; letter-spacing: 1.5px; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; margin-bottom: 12px; }
-    .title { color: #ffffff; font-size: 24px; font-weight: 800; margin: 0 0 6px 0; }
-    .subtitle { color: #94a3b8; font-size: 13px; margin: 0; }
-    .content { padding: 28px 24px; }
-    .greeting { font-size: 16px; color: #ffffff; margin-bottom: 16px; }
-    .card { background-color: #1a2236; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 18px; margin-bottom: 24px; }
-    .btn-container { text-align: center; margin: 28px 0; }
-    .btn { display: inline-block; background: linear-gradient(135deg, #ece75f 0%, #f59e0b 100%); color: #0b0f19 !important; text-decoration: none; font-weight: 800; font-size: 14px; padding: 14px 32px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(236, 231, 95, 0.3); }
-    .expiry-note { background-color: rgba(236, 231, 95, 0.08); border-left: 3px solid #ece75f; padding: 12px 16px; border-radius: 4px 8px 8px 4px; margin: 20px 0; font-size: 12px; color: #cbd5e1; line-height: 1.5; }
-    .security-note { font-size: 12px; color: #94a3b8; line-height: 1.6; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 18px; margin-top: 20px; }
-    .link-box { word-break: break-all; background-color: #0b0f19; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 10px 14px; font-family: monospace; font-size: 11px; color: #ece75f; margin-top: 8px; }
-    .footer { background-color: #0b0f19; padding: 20px 24px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 11px; color: #64748b; }
-  </style>
 </head>
-<body>
-  <div class="container">
-    <div class="header">
-      <div class="logo-badge">MELODIUM SJEC</div>
-      <h1 class="title">Password Reset Request 🔐</h1>
-      <p class="subtitle">Secure verification for your Melodium account</p>
-    </div>
+<body style="margin: 0; padding: 0; background-color: #0b0f19; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #f1f5f9; -webkit-font-smoothing: antialiased;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #0b0f19; padding: 24px 12px;">
+    <tr>
+      <td align="center">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 580px; background-color: #131826; border-radius: 16px; border: 1px solid rgba(250, 204, 21, 0.3); overflow: hidden; box-shadow: 0 12px 35px rgba(0,0,0,0.6);">
+          
+          <!-- Header Banner -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #182035 0%, #0b0f19 100%); padding: 32px 24px; text-align: center; border-bottom: 2px solid #facc15;">
+              <div style="display: inline-block; background-color: #facc15; color: #0b0f19; font-weight: 900; font-size: 11px; letter-spacing: 1.5px; padding: 4px 14px; border-radius: 20px; text-transform: uppercase; margin-bottom: 12px;">
+                MELODIUM SJEC
+              </div>
+              <h1 style="color: #ffffff; font-size: 24px; font-weight: 800; margin: 0 0 6px 0; line-height: 1.3;">
+                Password Reset Request 🔐
+              </h1>
+              <p style="color: #94a3b8; font-size: 13px; margin: 0;">
+                Secure verification for your Melodium account
+              </p>
+            </td>
+          </tr>
 
-    <div class="content">
-      <div class="greeting">
-        Hello <strong>${user.name || 'Musician'}</strong>,
-      </div>
-      <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6; margin-bottom: 20px;">
-        We received a request to reset the password for your Melodium account associated with <strong style="color: #ece75f;">${user.email}</strong>.
-      </p>
+          <!-- Main Content -->
+          <tr>
+            <td style="padding: 28px 24px;">
+              <p style="font-size: 16px; color: #ffffff; font-weight: 700; margin: 0 0 12px 0;">
+                Hello <span style="color: #facc15;">${user.name || 'Musician'}</span>,
+              </p>
+              
+              <p style="font-size: 14px; color: #e2e8f0; line-height: 1.6; margin: 0 0 20px 0;">
+                We received a request to reset the password for your Melodium account associated with <strong style="color: #facc15;">${user.email}</strong>.
+              </p>
 
-      <div class="btn-container">
-        <a href="${resetUrl}" class="btn" target="_blank">
-          Reset My Password ➜
-        </a>
-      </div>
+              <!-- Reset Button CTA -->
+              <div style="text-align: center; margin: 28px 0;">
+                <a href="${resetUrl}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #facc15 0%, #f59e0b 100%); color: #0b0f19 !important; text-decoration: none; font-weight: 900; font-size: 14px; padding: 14px 32px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.35);">
+                  Reset My Password ➜
+                </a>
+              </div>
 
-      <div class="expiry-note">
-        <strong style="color: #ece75f;">⏳ Important Expiration Notice:</strong><br>
-        This password reset link is valid for <strong>${expiresInMinutes} minutes</strong> from the time it was requested. Once expired, you will need to request a new link.
-      </div>
+              <!-- Expiry Note -->
+              <div style="background-color: rgba(250, 204, 21, 0.08); border-left: 4px solid #facc15; padding: 14px 16px; border-radius: 4px 8px 8px 4px; margin: 20px 0;">
+                <div style="color: #facc15; font-weight: 800; font-size: 13px; margin-bottom: 4px;">
+                  ⏳ Important Expiration Notice:
+                </div>
+                <div style="color: #e2e8f0; font-size: 12px; line-height: 1.6;">
+                  This password reset link is valid for <strong style="color: #ffffff;">${expiresInMinutes} minutes</strong> from the time it was requested. Once expired, you will need to request a new link.
+                </div>
+              </div>
 
-      <p style="font-size: 12px; color: #94a3b8; margin-bottom: 6px;">
-        If the button above does not work, copy and paste this direct link into your browser:
-      </p>
-      <div class="link-box">
-        ${resetUrl}
-      </div>
+              <!-- Direct link fallback -->
+              <p style="font-size: 12px; color: #94a3b8; margin: 0 0 6px 0;">
+                If the button above does not work, copy and paste this direct link into your browser:
+              </p>
+              <div style="word-break: break-all; background-color: #0b0f19; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 10px 14px; font-family: monospace; font-size: 11px; color: #facc15; margin-bottom: 20px;">
+                ${resetUrl}
+              </div>
 
-      <div class="security-note">
-        <strong>🛡️ Security Notice:</strong> If you did not request a password reset, you can safely ignore this email. Your password will remain unchanged and your account remains secure.
-      </div>
-    </div>
+              <!-- Security Note -->
+              <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 18px; margin-top: 20px; font-size: 12px; color: #94a3b8; line-height: 1.6;">
+                <strong style="color: #ffffff;">🛡️ Security Notice:</strong> If you did not request a password reset, you can safely ignore this email. Your password will remain unchanged and your account remains secure.
+              </div>
+            </td>
+          </tr>
 
-    <div class="footer">
-      <p style="margin: 0 0 6px 0;">St. Joseph Engineering College, Vamanjoor, Mangaluru - 575028</p>
-      <p style="margin: 0;">© ${new Date().getFullYear()} Melodium SJEC. All rights reserved.</p>
-    </div>
-  </div>
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #0b0f19; padding: 20px 24px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+              <p style="margin: 0 0 6px 0; color: #94a3b8; font-size: 12px;">
+                St. Joseph Engineering College, Vamanjoor, Mangaluru - 575028
+              </p>
+              <p style="margin: 0; color: #64748b; font-size: 11px;">
+                © ${new Date().getFullYear()} Melodium SJEC. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
   `;
@@ -443,9 +590,7 @@ Melodium SJEC • St. Joseph Engineering College, Mangaluru
       console.log(`✉️ [EMAIL SENT] Password reset email delivered to ${user.email} (MessageId: ${info.messageId})`);
       return { success: true, messageId: info.messageId };
     } else {
-      console.log(`✉️ [EMAIL DISPATCHED - DEV MODE] (No SMTP credentials configured)`);
-      console.log(`   To: ${user.email}`);
-      console.log(`   Reset URL: ${resetUrl}`);
+      console.log(`✉️ [EMAIL DISPATCHED - DEV MODE] Password reset URL for ${user.email}: ${resetUrl}`);
       return { success: true, simulated: true };
     }
   } catch (error) {
@@ -453,4 +598,3 @@ Melodium SJEC • St. Joseph Engineering College, Mangaluru
     return { success: false, error: error.message };
   }
 };
-

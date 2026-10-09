@@ -220,7 +220,7 @@ export const BookingPassCard = ({ booking, onCancel }) => {
       {onCancel && isConfirmed && (
         <div className="pt-3 sm:pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           <span className="text-[11px] text-slate-400">
-            Need to reschedule? Cancellation available up to 2 hours prior.
+            Need to reschedule? Cancellation is available anytime before session start.
           </span>
           <button
             onClick={() => onCancel(booking)}
