@@ -149,7 +149,7 @@ export const HomePage = () => {
             className="flex flex-wrap items-center justify-center gap-4 pt-2"
           >
             <Link
-              to="/jam-room"
+              to="/jam-room#booking-calendar"
               className="flex items-center gap-2.5 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-sm shadow-glow-yellow transition-all hover:scale-105 active:scale-95 shimmer-btn"
             >
               <Radio className="w-4 h-4 text-dark-950 animate-pulse" />
@@ -224,7 +224,7 @@ export const HomePage = () => {
 
               <div className="pt-2 flex flex-wrap items-center gap-4">
                 <Link
-                  to="/jam-room"
+                  to="/jam-room#booking-calendar"
                   className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all hover:scale-105 active:scale-95 shimmer-btn"
                 >
                   Book a Slot for Today
@@ -437,7 +437,7 @@ export const HomePage = () => {
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-white/10">
                 <Link
-                  to="/jam-room"
+                  to="/jam-room#booking-calendar"
                   className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all flex items-center gap-2 hover:scale-105 active:scale-95 shimmer-btn"
                 >
                   <Radio className="w-4 h-4 text-dark-950" />
@@ -577,7 +577,7 @@ export const HomePage = () => {
               Create Musician Account
             </Link>
             <Link
-              to="/jam-room"
+              to="/jam-room#booking-calendar"
               className="px-8 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 hover:text-white font-bold text-xs border border-white/10 transition-all hover:scale-105 active:scale-95"
             >
               Book Studio Rehearsal

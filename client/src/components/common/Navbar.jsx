@@ -104,6 +104,18 @@ export const Navbar = () => {
     document.body.scrollTop = 0;
   };
 
+  const handleBookJamRoomClick = (e) => {
+    setIsMobileMenuOpen(false);
+    setIsUserMenuOpen(false);
+    if (location.pathname === '/jam-room') {
+      e.preventDefault();
+      const el = document.getElementById('booking-calendar');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
+
   const handleLogout = async () => {
     setIsMobileMenuOpen(false);
     setIsUserMenuOpen(false);
@@ -174,9 +186,9 @@ export const Navbar = () => {
 
           {/* Jam Room Booking Direct CTA Button */}
           <Link
-            to="/jam-room"
-            onClick={handleNavClick}
-            className="ml-1.5 flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all hover:scale-[1.03] active:scale-[0.97] shimmer-btn"
+            to="/jam-room#booking-calendar"
+            onClick={handleBookJamRoomClick}
+            className="ml-1.5 flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all hover:scale-[1.03] active:scale-[0.97] shimmer-btn cursor-pointer"
           >
             <Radio className="w-3.5 h-3.5 animate-pulse text-dark-950" />
             <span>Book Jam Room</span>
@@ -511,9 +523,9 @@ export const Navbar = () => {
 
               {/* Mobile Jam Room Big Banner */}
               <Link
-                to="/jam-room"
-                onClick={handleNavClick}
-                className="flex items-center justify-between px-4 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 border border-amber-400/40 text-dark-950 font-black text-sm mt-2 shadow-glow-yellow active:scale-[0.98] transition-all"
+                to="/jam-room#booking-calendar"
+                onClick={handleBookJamRoomClick}
+                className="flex items-center justify-between px-4 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 border border-amber-400/40 text-dark-950 font-black text-sm mt-2 shadow-glow-yellow active:scale-[0.98] transition-all cursor-pointer"
               >
                 <div className="flex items-center gap-2">
                   <Radio className="w-4 h-4 text-dark-950 animate-pulse" />

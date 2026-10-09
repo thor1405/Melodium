@@ -259,7 +259,7 @@ export const TeamPage = () => {
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
               <Link
-                to="/jam-room"
+                to="/jam-room#booking-calendar"
                 className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all flex items-center gap-2 hover:scale-105 active:scale-95 shimmer-btn"
               >
                 <Radio className="w-4 h-4 text-dark-950" />

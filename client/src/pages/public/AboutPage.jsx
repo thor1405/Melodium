@@ -284,7 +284,7 @@ export const AboutPage = () => {
         <div className="pt-4 flex items-center justify-between border-t border-white/10">
           <span className="text-xs text-slate-400">Ready to jam?</span>
           <Link
-            to="/jam-room"
+            to="/jam-room#booking-calendar"
             className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all shimmer-btn hover:scale-105 active:scale-95"
           >
             Check Available Slots

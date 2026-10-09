@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { DateSelector } from '../../components/booking/DateSelector';
 import { SlotGrid } from '../../components/booking/SlotGrid';
 import { BookingModal } from '../../components/booking/BookingModal';
@@ -27,6 +27,7 @@ import {
 export const JamRoomBookingPage = () => {
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
 
   const [selectedDate, setSelectedDate] = useState(() => getTodayString());
@@ -35,7 +36,18 @@ export const JamRoomBookingPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSlots, setSelectedSlots] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const calendarRef = useRef(null);
   const slotsSectionRef = useRef(null);
+
+  // Auto-scroll directly to the Calendar on page load / navigation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (calendarRef.current) {
+        calendarRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [location.pathname, location.hash]);
 
   // Fetch live global booking parameters once on mount
   useEffect(() => {
@@ -161,7 +173,7 @@ export const JamRoomBookingPage = () => {
             Jam Room Multi-Slot Reservation
           </h1>
           <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
-            Select an active date on the calendar, tap available time slots for your band rehearsal, and proceed to reserve your pass.
+            Select an active date on the calendar below, tap available time slots for your band rehearsal, and proceed to reserve your pass.
           </p>
         </div>
 
@@ -177,16 +189,22 @@ export const JamRoomBookingPage = () => {
         </div>
       </div>
 
-      {/* Full Month Interactive Calendar Date Selector */}
-      <DateSelector
-        selectedDate={selectedDate}
-        onSelectDate={handleDateChange}
-        availableDays={
-          availability?.settings?.availableDays ||
-          globalSettings?.availableDays ||
-          [0, 1, 2, 3, 4, 5, 6]
-        }
-      />
+      {/* Full Month Interactive Calendar Date Selector (Direct Focus Target) */}
+      <div
+        ref={calendarRef}
+        id="booking-calendar"
+        className="scroll-mt-20 sm:scroll-mt-24"
+      >
+        <DateSelector
+          selectedDate={selectedDate}
+          onSelectDate={handleDateChange}
+          availableDays={
+            availability?.settings?.availableDays ||
+            globalSettings?.availableDays ||
+            [0, 1, 2, 3, 4, 5, 6]
+          }
+        />
+      </div>
 
       {/* Booking Notice / Maintenance Alert (if any) */}
       {availability && !availability.isAvailable && (
@@ -338,3 +356,5 @@ export const JamRoomBookingPage = () => {
     </div>
   );
 };
+
+export default JamRoomBookingPage;
