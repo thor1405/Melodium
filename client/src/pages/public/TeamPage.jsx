@@ -22,7 +22,7 @@ export const TeamPage = () => {
     name: 'Lionel',
     role: 'Sound Engineer & Studio Custodian',
     photo: '/team/lionel.jpg',
-    bio: 'Official Resident Sound Engineer for Melodium SJEC. Manages live rehearsal acoustics, multitrack studio recording, digital mixing console routing, and audio calibration at Jam Room 1 (Academic Block 3).',
+    bio: 'Official Resident Sound Engineer for Melodium SJEC. Manages live rehearsal acoustics, multitrack studio recording, digital mixing console routing, and audio calibration at Jam Room (Academic Block 3).',
     instrument: 'Live Sound, Multitrack DAW & Studio Acoustics',
     department: 'Studio Audio Engineering',
   });
@@ -61,7 +61,7 @@ export const TeamPage = () => {
       title: 'Sound-Treated Live Rehearsal Hall',
       desc: 'Acoustically isolated rehearsal space at SJEC featuring wood flooring and bass absorption.',
       image: '/gallery/sound_treated_live_room.png',
-      tag: 'Jam Room 1',
+      tag: 'Jam Room',
     },
     {
       title: 'Large-Diaphragm Gold Condenser Mic',
@@ -151,7 +151,7 @@ export const TeamPage = () => {
               </h3>
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
                 {engineer.bio ||
-                  'Official Resident Sound Engineer for Melodium SJEC. Manages live rehearsal acoustics, multitrack studio recording, digital mixing console routing, and audio calibration at Jam Room 1 (Academic Block 3).'}
+                  'Official Resident Sound Engineer for Melodium SJEC. Manages live rehearsal acoustics, multitrack studio recording, digital mixing console routing, and audio calibration at Jam Room (Academic Block 3).'}
               </p>
             </div>
 
@@ -193,7 +193,7 @@ export const TeamPage = () => {
                   <span>Studio Equipment Custody</span>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Maintaining tube guitar heads, condenser capsules, active subwoofers, and cables in Jam Room 1.
+                  Maintaining tube guitar heads, condenser capsules, active subwoofers, and cables in the Jam Room.
                 </p>
               </div>
             </div>
@@ -284,7 +284,7 @@ export const TeamPage = () => {
           <div className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">
             <div className="font-bold text-white">1. Arrive 5 Mins Early</div>
             <p className="text-slate-400">
-              Check in with Lionel at Jam Room 1 to set channel inputs, plug in your instruments, and perform a line check.
+              Check in with Lionel at the Jam Room to set channel inputs, plug in your instruments, and perform a line check.
             </p>
           </div>
           <div className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">

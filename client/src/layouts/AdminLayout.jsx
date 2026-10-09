@@ -37,7 +37,7 @@ export const AdminLayout = () => {
       case '/admin/bookings':
         return 'All Student Bookings';
       case '/admin/calendar':
-        return 'Studio 1 Calendar Schedule';
+        return 'Studio Calendar Schedule';
       case '/admin/users':
         return 'Registered Students & Musicians';
       case '/admin/gallery':

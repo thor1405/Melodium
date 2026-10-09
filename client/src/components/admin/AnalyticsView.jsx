@@ -62,7 +62,7 @@ export const AnalyticsView = ({ analytics }) => {
           <div className="text-2xl font-display font-black text-white">
             {overview.utilizationRate || 0}%
           </div>
-          <div className="text-[11px] text-purple-300">Studio 1 Capacity Used</div>
+          <div className="text-[11px] text-purple-300">Studio Capacity Used</div>
         </div>
 
         <div className="p-5 rounded-2xl glass-panel border border-white/5 space-y-2">

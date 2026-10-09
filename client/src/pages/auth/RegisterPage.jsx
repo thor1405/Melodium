@@ -133,7 +133,7 @@ export const RegisterPage = () => {
             Create an Account
           </h2>
           <p className="text-xs text-slate-400 max-w-md mx-auto">
-            Reserve Jam Room 1 rehearsal passes and studio sessions
+            Reserve Jam Room rehearsal passes and studio sessions
           </p>
         </div>
 

@@ -386,7 +386,7 @@ export const Navbar = () => {
               >
                 <div className="flex items-center gap-2">
                   <Radio className="w-4 h-4 text-dark-950 animate-pulse" />
-                  <span>Jam Room Studio 1</span>
+                  <span>Jam Room Studio</span>
                 </div>
                 <span className="text-xs font-bold px-2 py-0.5 rounded bg-dark-950 text-amber-300">
                   Book Slot

@@ -238,7 +238,7 @@ const BookingModalForm = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
       isOpen={isOpen}
       onClose={resetAndClose}
       title={bookingResults ? 'Booking Confirmed! 🎉' : isOutsider ? 'Book Jam Room (Stripe Checkout)' : 'Book Jam Room'}
-      subtitle={bookingResults ? 'Pass Issued' : 'Studio 1'}
+      subtitle={bookingResults ? 'Pass Issued' : 'Studio'}
       maxWidth="max-w-xl"
       footer={bookingResults ? successFooter : formFooter}
     >
@@ -318,7 +318,7 @@ const BookingModalForm = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
             <div className="pt-2 border-t border-white/10 text-xs">
               <div className="flex items-center gap-1 text-slate-300">
                 <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span className="font-semibold">Academic Block 3, Ground Floor (Studio 1)</span>
+                <span className="font-semibold">Academic Block 3, Ground Floor (Jam Room)</span>
               </div>
             </div>
           </div>

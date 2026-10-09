@@ -88,7 +88,7 @@ export const MyBookingsPage = () => {
             My Jam Room Bookings
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Manage your Studio 1 rehearsal passes, check status, or release slots.
+            Manage your Jam Room rehearsal passes, check status, or release slots.
           </p>
         </div>
 
@@ -177,7 +177,7 @@ export const MyBookingsPage = () => {
       <Modal
         isOpen={passModalOpen}
         onClose={() => setPassModalOpen(false)}
-        title="Digital Studio 1 Pass"
+        title="Digital Studio Pass"
         maxWidth="max-w-2xl"
       >
         <BookingPassCard

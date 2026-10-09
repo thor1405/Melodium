@@ -105,8 +105,8 @@ export const register = async (req, res, next) => {
       userId: user._id,
       title: effectiveUserType === 'SJEC_STUDENT' ? 'Welcome to Melodium SJEC! 🎸' : 'Welcome, Guest Musician! 🎵',
       message: effectiveUserType === 'SJEC_STUDENT'
-        ? `Hey ${user.name}! Welcome to Melodium SJEC. As a verified SJEC student, your Jam Room 1 rehearsal slots are 100% Free.`
-        : `Hey ${user.name}! Welcome to Melodium SJEC Jam Room. You can now reserve Studio 1 rehearsal passes (₹500 Flat Day Pass).`,
+        ? `Hey ${user.name}! Welcome to Melodium SJEC. As a verified SJEC student, your Jam Room rehearsal slots are 100% Free.`
+        : `Hey ${user.name}! Welcome to Melodium SJEC Jam Room. You can now reserve Studio rehearsal passes (₹500 Flat Day Pass).`,
       type: 'ANNOUNCEMENT',
     });
 

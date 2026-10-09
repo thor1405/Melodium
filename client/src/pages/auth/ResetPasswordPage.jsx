@@ -90,7 +90,7 @@ export const ResetPasswordPage = () => {
               <div>
                 <h4 className="text-base font-bold text-white">You're All Set!</h4>
                 <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                  Your credentials have been securely updated in the Melodium system. You can now sign in to reserve Jam Room 1 sessions.
+                  Your credentials have been securely updated in the Melodium system. You can now sign in to reserve Jam Room sessions.
                 </p>
               </div>
             </div>

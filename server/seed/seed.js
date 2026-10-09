@@ -49,7 +49,7 @@ export const seedDatabase = async () => {
     year: 4,
     phone: '+91 98765 43210',
     instrument: 'Audio Engineering & Production',
-    bio: 'Lead coordinator for Melodium SJEC. Managing Jam Room 1 logistics and stage sound.',
+    bio: 'Lead coordinator for Melodium SJEC. Managing Jam Room logistics and stage sound.',
     avatar: '',
   });
   console.log('👤 Created Authentic Admin Account (admin@sjec.ac.in).');
@@ -60,7 +60,7 @@ export const seedDatabase = async () => {
     role: 'Sound Engineer & Studio Custodian',
     category: 'SOUND_ENGINEER',
     instrument: 'Live Sound, Multitrack DAW & Studio Acoustics',
-    bio: 'Official Resident Sound Engineer for Melodium SJEC. Manages live rehearsal acoustics, multitrack studio recording, digital mixing console routing, and audio calibration at Jam Room 1 (Academic Block 3).',
+    bio: 'Official Resident Sound Engineer for Melodium SJEC. Manages live rehearsal acoustics, multitrack studio recording, digital mixing console routing, and audio calibration at Jam Room (Academic Block 3).',
     photo: '/team/lionel.jpg',
     department: 'Studio Audio Engineering',
     socialLinks: {
@@ -74,12 +74,12 @@ export const seedDatabase = async () => {
   // 3. Populate Authentic Melodium Studio & Jam Room Photographs
   await GalleryItem.create([
     {
-      title: 'Sound-Treated Jam Room 1 Live Rehearsal Hall',
+      title: 'Sound-Treated Jam Room Live Rehearsal Hall',
       category: 'JAM_SESSIONS',
       imageUrl: '/gallery/sound_treated_live_room.png',
       caption: 'Acoustically isolated rehearsal space at SJEC featuring custom sound dampeners, acoustic wood flooring, and studio vocal booth.',
       eventDate: 'October 2026',
-      location: 'Jam Room 1 (Academic Block 3, Ground Floor)',
+      location: 'Jam Room (Academic Block 3, Ground Floor)',
       featured: true,
       likesCount: 0,
       order: 1,
@@ -123,7 +123,7 @@ export const seedDatabase = async () => {
       imageUrl: '/gallery/shure_beta57a_mics.png',
       caption: 'Pair of precision supercardioid Shure Beta 57A microphones ready for guitar cabs, snare drums, and acoustic instruments.',
       eventDate: 'October 2026',
-      location: 'Jam Room 1 Gear Rack',
+      location: 'Jam Room Gear Rack',
       featured: true,
       likesCount: 0,
       order: 5,

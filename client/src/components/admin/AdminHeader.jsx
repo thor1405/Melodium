@@ -31,7 +31,7 @@ export const AdminHeader = ({ onToggleSidebar, title = 'Dashboard Overview' }) =
         <div>
           <h1 className="text-lg font-bold font-display text-white">{title}</h1>
           <div className="flex items-center gap-2 text-xs text-slate-400">
-            <span>Melodium Jam Room Studio 1</span>
+            <span>Melodium Jam Room</span>
             <span>•</span>
             <span className="text-emerald-400 font-medium flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />

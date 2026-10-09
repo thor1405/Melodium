@@ -197,7 +197,7 @@ export const HomePage = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-950/80 via-transparent to-transparent" />
                 <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
                   <span className="font-semibold text-white text-[11px] drop-shadow-md">
-                    Studio 1 • Rehearsal Hall
+                    Studio
                   </span>
                   <span className="px-2 py-0.5 rounded-full bg-amber-500/30 border border-amber-400/40 text-amber-300 text-[10px] font-bold">
                     Academic Block 3

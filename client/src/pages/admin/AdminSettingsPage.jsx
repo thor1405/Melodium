@@ -150,7 +150,7 @@ export const AdminSettingsPage = () => {
         <div className="p-6 rounded-3xl glass-panel-elevated border border-white/10 space-y-4">
           <h3 className="text-sm font-bold text-white font-display flex items-center gap-2">
             <Radio className="w-4 h-4 text-brand-gold" />
-            <span>Studio 1 Global Booking Availability</span>
+            <span>Jam Room Global Booking Availability</span>
           </h3>
 
           <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
@@ -177,7 +177,7 @@ export const AdminSettingsPage = () => {
                 type="text"
                 value={settings.maintenanceNotice || ''}
                 onChange={(e) => handleChange('maintenanceNotice', e.target.value)}
-                placeholder="e.g. Jam Room 1 is closed for annual acoustic panelling upgrade until Monday."
+                placeholder="e.g. Jam Room is closed for annual acoustic panelling upgrade until Monday."
                 className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-brand-purple"
               />
             </div>

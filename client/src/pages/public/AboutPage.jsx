@@ -158,7 +158,7 @@ export const AboutPage = () => {
           </div>
           <div>
             <h2 className="text-2xl font-display font-bold text-white">
-              Studio 1 Jam Room Guidelines & Code of Conduct
+              Jam Room Guidelines & Code of Conduct
             </h2>
             <p className="text-xs text-slate-400">Rules for all student rehearsals</p>
           </div>

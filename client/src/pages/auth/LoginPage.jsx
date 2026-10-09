@@ -63,7 +63,7 @@ export const LoginPage = () => {
           </div>
           <h2 className="text-2xl font-display font-extrabold text-white">Sign In to Melodium</h2>
           <p className="text-xs text-slate-400">
-            Access Jam Room 1 reservations and rehearsal bookings
+            Access Jam Room reservations and rehearsal bookings
           </p>
         </div>
 
