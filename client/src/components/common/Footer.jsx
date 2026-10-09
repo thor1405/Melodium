@@ -4,13 +4,19 @@ import { MelodiumLogo } from './MelodiumLogo';
 import { Music2, Radio, MapPin, Mail, Instagram, Youtube, Linkedin, ExternalLink, Heart } from 'lucide-react';
 
 export const Footer = () => {
+  const handleNavClick = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  };
+
   return (
     <footer className="w-full bg-dark-900 border-t border-white/5 pt-16 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/5">
           {/* Brand & Mission */}
           <div className="lg:col-span-2 space-y-4">
-            <Link to="/" className="flex items-center gap-3 group">
+            <Link to="/" onClick={handleNavClick} className="flex items-center gap-3 group">
               <MelodiumLogo className="w-10 h-10 group-hover:scale-105 transition-transform" showGlow={true} />
               <span className="font-display font-black text-xl tracking-wider text-white">
                 MELODIUM <span className="text-amber-400 text-sm font-semibold">SJEC</span>
@@ -28,27 +34,27 @@ export const Footer = () => {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link to="/" className="text-slate-400 hover:text-white transition-colors">
+                <Link to="/" onClick={handleNavClick} className="text-slate-400 hover:text-white transition-colors">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-slate-400 hover:text-white transition-colors">
+                <Link to="/about" onClick={handleNavClick} className="text-slate-400 hover:text-white transition-colors">
                   About the Club
                 </Link>
               </li>
               <li>
-                <Link to="/gallery" className="text-slate-400 hover:text-white transition-colors">
+                <Link to="/gallery" onClick={handleNavClick} className="text-slate-400 hover:text-white transition-colors">
                   Performance Gallery
                 </Link>
               </li>
               <li>
-                <Link to="/reviews" className="text-slate-400 hover:text-white transition-colors">
+                <Link to="/reviews" onClick={handleNavClick} className="text-slate-400 hover:text-white transition-colors">
                   Musician Reviews
                 </Link>
               </li>
               <li>
-                <Link to="/sound-engineer" className="text-slate-400 hover:text-white transition-colors">
+                <Link to="/sound-engineer" onClick={handleNavClick} className="text-slate-400 hover:text-white transition-colors">
                   Sound Engineer (Lionel)
                 </Link>
               </li>
@@ -62,12 +68,12 @@ export const Footer = () => {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link to="/jam-room" className="text-amber-400 hover:text-amber-300 font-bold transition-colors flex items-center gap-1.5">
+                <Link to="/jam-room" onClick={handleNavClick} className="text-amber-400 hover:text-amber-300 font-bold transition-colors flex items-center gap-1.5">
                   <Radio className="w-3.5 h-3.5" /> Book 1-Hour Slot
                 </Link>
               </li>
               <li>
-                <Link to="/my-bookings" className="text-slate-400 hover:text-white transition-colors">
+                <Link to="/my-bookings" onClick={handleNavClick} className="text-slate-400 hover:text-white transition-colors">
                   My Active Passes
                 </Link>
               </li>
@@ -77,7 +83,7 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/profile" className="text-slate-400 hover:text-white transition-colors">
+                <Link to="/profile" onClick={handleNavClick} className="text-slate-400 hover:text-white transition-colors">
                   Musician ID Profile
                 </Link>
               </li>

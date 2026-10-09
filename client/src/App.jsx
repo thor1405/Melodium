@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
+import { ScrollToTop } from './components/common/ScrollToTop';
 import { HomePage } from './pages/public/HomePage';
 import { AboutPage } from './pages/public/AboutPage';
 import { GalleryPage } from './pages/public/GalleryPage';
@@ -55,6 +56,7 @@ export const App = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <ScrollToTop />
       {!isAdminRoute && <Navbar />}
 
       <div className="flex-1">

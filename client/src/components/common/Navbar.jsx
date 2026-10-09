@@ -94,6 +94,14 @@ export const Navbar = () => {
     } catch (e) {}
   };
 
+  const handleNavClick = () => {
+    setIsMobileMenuOpen(false);
+    setIsUserMenuOpen(false);
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  };
+
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
@@ -106,7 +114,11 @@ export const Navbar = () => {
     <header className="sticky top-0 z-50 w-full glass-panel border-b border-white/5 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-0">
+        <Link
+          to="/"
+          onClick={handleNavClick}
+          className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-0"
+        >
           <div className="relative group-hover:scale-105 transition-transform shrink-0">
             <MelodiumLogo className="w-8 h-8 sm:w-11 sm:h-11" showGlow={true} />
           </div>
@@ -133,6 +145,7 @@ export const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
+                onClick={handleNavClick}
                 className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
                   isActive
                     ? 'text-amber-300 bg-amber-500/15 border border-amber-500/30 font-semibold shadow-inner'
@@ -147,6 +160,7 @@ export const Navbar = () => {
           {/* Jam Room Booking Direct CTA Button */}
           <Link
             to="/jam-room"
+            onClick={handleNavClick}
             className="ml-2 flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-sm shadow-glow-yellow transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             <Radio className="w-4 h-4 animate-pulse text-dark-950" />
@@ -292,6 +306,7 @@ export const Navbar = () => {
                       <div className="py-1 space-y-1">
                         <Link
                           to="/my-bookings"
+                          onClick={handleNavClick}
                           className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
                         >
                           <Calendar className="w-4 h-4 text-amber-400" />
@@ -299,6 +314,7 @@ export const Navbar = () => {
                         </Link>
                         <Link
                           to="/profile"
+                          onClick={handleNavClick}
                           className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
                         >
                           <User className="w-4 h-4 text-slate-300" />
@@ -308,6 +324,7 @@ export const Navbar = () => {
                         {isAdmin && (
                           <Link
                             to="/admin"
+                            onClick={handleNavClick}
                             className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-amber-300 hover:text-white bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 transition-colors"
                           >
                             <Shield className="w-4 h-4 text-amber-400" />
@@ -334,12 +351,14 @@ export const Navbar = () => {
             <div className="flex items-center gap-2">
               <Link
                 to="/login"
+                onClick={handleNavClick}
                 className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-200 hover:text-white hover:bg-white/5 transition-all"
               >
                 Sign In
               </Link>
               <Link
                 to="/register"
+                onClick={handleNavClick}
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-sm shadow-glow-yellow transition-all"
               >
                 Create Account
@@ -462,7 +481,7 @@ export const Navbar = () => {
                   <Link
                     key={link.path}
                     to={link.path}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={handleNavClick}
                     className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-semibold transition-all ${
                       isActive
                         ? 'bg-amber-500/20 text-white font-bold border border-amber-500/30 shadow-inner'
@@ -478,7 +497,7 @@ export const Navbar = () => {
               {/* Mobile Jam Room Big Banner */}
               <Link
                 to="/jam-room"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={handleNavClick}
                 className="flex items-center justify-between px-4 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 border border-amber-400/40 text-dark-950 font-black text-sm mt-2 shadow-glow-yellow active:scale-[0.98] transition-all"
               >
                 <div className="flex items-center gap-2">
@@ -527,7 +546,7 @@ export const Navbar = () => {
                   <div className="grid grid-cols-2 gap-2">
                     <Link
                       to="/my-bookings"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={handleNavClick}
                       className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-center text-xs font-bold text-slate-200 flex items-center justify-center gap-1.5 transition-colors"
                     >
                       <Calendar className="w-3.5 h-3.5 text-amber-400" />
@@ -535,7 +554,7 @@ export const Navbar = () => {
                     </Link>
                     <Link
                       to="/profile"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={handleNavClick}
                       className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-center text-xs font-bold text-slate-200 flex items-center justify-center gap-1.5 transition-colors"
                     >
                       <User className="w-3.5 h-3.5 text-slate-300" />
@@ -546,7 +565,7 @@ export const Navbar = () => {
                   {isAdmin && (
                     <Link
                       to="/admin"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={handleNavClick}
                       className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-bold text-xs transition-colors"
                     >
                       <Shield className="w-4 h-4 text-amber-400" />
@@ -569,14 +588,14 @@ export const Navbar = () => {
                 <div className="flex flex-col gap-2.5 pt-1">
                   <Link
                     to="/login"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={handleNavClick}
                     className="w-full py-3 text-center rounded-2xl bg-white/5 hover:bg-white/10 text-slate-200 font-bold text-sm border border-white/10 transition-colors"
                   >
                     Sign In to Account
                   </Link>
                   <Link
                     to="/register"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={handleNavClick}
                     className="w-full py-3 text-center rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-500 text-dark-950 font-extrabold text-sm shadow-glow-yellow transition-all"
                   >
                     Create Free Student / Musician Account

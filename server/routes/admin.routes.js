@@ -10,6 +10,7 @@ import {
   deleteBlockedSlot,
   getAllUsers,
   updateUserByAdmin,
+  deleteUserByAdmin,
   getAnalytics,
   getActivityLogs,
 } from '../controllers/admin.controller.js';
@@ -31,6 +32,7 @@ router.get('/blocked-slots', getBlockedSlots);
 router.delete('/blocked-slots/:id', deleteBlockedSlot);
 router.get('/users', getAllUsers);
 router.patch('/users/:id', updateUserByAdmin);
+router.delete('/users/:id', deleteUserByAdmin);
 router.get('/analytics', getAnalytics);
 router.get('/activity-logs', getActivityLogs);
 

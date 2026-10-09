@@ -51,6 +51,11 @@ export const adminService = {
     return res.data;
   },
 
+  deleteUser: async (id) => {
+    const res = await api.delete(`/admin/users/${id}`);
+    return res.data;
+  },
+
   getAnalytics: async () => {
     const res = await api.get('/admin/analytics');
     return res.data;

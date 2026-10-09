@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { adminService } from '../../services/adminService';
 import { useToast } from '../../context/ToastContext';
 import { formatDate } from '../../utils/dateUtils';
-import { Users, Search, Shield, ShieldAlert, UserCheck, UserX, Mail } from 'lucide-react';
+import { ConfirmDialog } from '../../components/common/ConfirmDialog';
+import { Users, Search, Shield, ShieldAlert, UserCheck, UserX, Mail, Trash2 } from 'lucide-react';
 
 export const AdminUsersPage = () => {
   const toast = useToast();
@@ -11,6 +12,10 @@ export const AdminUsersPage = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('ALL');
+
+  const [deletingUser, setDeletingUser] = useState(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchUsers = async (page = 1) => {
     setLoading(true);
@@ -63,6 +68,24 @@ export const AdminUsersPage = () => {
       }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to update status.');
+    }
+  };
+
+  const handleDeleteUserConfirm = async () => {
+    if (!deletingUser) return;
+    setIsDeleting(true);
+    try {
+      const res = await adminService.deleteUser(deletingUser._id);
+      if (res.success) {
+        toast.success(res.message || 'User deleted successfully.');
+        setDeleteConfirmOpen(false);
+        setDeletingUser(null);
+        fetchUsers(pagination.page);
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete user.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -157,6 +180,16 @@ export const AdminUsersPage = () => {
                 {u.isActive ? <UserCheck className="w-3.5 h-3.5" /> : <UserX className="w-3.5 h-3.5" />}
                 <span>{u.isActive ? 'Active' : 'Deactivated'}</span>
               </button>
+              <button
+                onClick={() => {
+                  setDeletingUser(u);
+                  setDeleteConfirmOpen(true);
+                }}
+                className="p-1.5 rounded-xl bg-rose-950/30 border border-rose-500/20 text-rose-400 hover:bg-rose-900/50 transition-colors cursor-pointer"
+                title="Delete User & Data"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
         ))}
@@ -225,6 +258,16 @@ export const AdminUsersPage = () => {
                     >
                       {u.isActive ? <UserCheck className="w-4 h-4" /> : <UserX className="w-4 h-4" />}
                     </button>
+                    <button
+                      onClick={() => {
+                        setDeletingUser(u);
+                        setDeleteConfirmOpen(true);
+                      }}
+                      className="p-1.5 rounded-lg bg-rose-950/30 border border-rose-500/20 text-rose-400 hover:bg-rose-900/50 transition-colors cursor-pointer"
+                      title="Delete User Permanently"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -232,6 +275,21 @@ export const AdminUsersPage = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Delete User Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteConfirmOpen}
+        onClose={() => {
+          setDeleteConfirmOpen(false);
+          setDeletingUser(null);
+        }}
+        onConfirm={handleDeleteUserConfirm}
+        title="Delete User Account"
+        message={`Are you sure you want to permanently delete "${deletingUser?.name}" (${deletingUser?.email})? All associated bookings, reviews, and notifications will also be purged.`}
+        confirmText="Delete Permanently"
+        isDestructive={true}
+        isLoading={isDeleting}
+      />
     </div>
   );
 };

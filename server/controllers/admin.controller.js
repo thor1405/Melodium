@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import BlockedSlot from '../models/BlockedSlot.js';
 import Notification from '../models/Notification.js';
 import ActivityLog from '../models/ActivityLog.js';
+import Review from '../models/Review.js';
 import { getJamRoomAnalytics } from '../services/analytics.service.js';
 import {
   calculateDayAvailability,
@@ -616,3 +617,51 @@ export const getActivityLogs = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Permanently delete a user and their associated records
+// @route   DELETE /api/admin/users/:id
+// @access  Private (Admin)
+export const deleteUserByAdmin = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found.',
+      });
+    }
+
+    if (user._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: 'You cannot delete your own logged-in admin account.',
+      });
+    }
+
+    // Delete associated bookings, notifications, reviews
+    await Booking.deleteMany({ userId: user._id });
+    await Notification.deleteMany({ userId: user._id });
+    await Review.deleteMany({ $or: [{ userId: user._id }, { userEmail: user.email }] });
+
+    await User.findByIdAndDelete(user._id);
+
+    await ActivityLog.create({
+      userId: req.user._id,
+      userName: req.user.name,
+      userRole: 'ADMIN',
+      action: 'USER_DELETED',
+      details: `Admin deleted user ${user.name} (${user.email}) and purged associated records`,
+      entityType: 'USER',
+      entityId: user._id.toString(),
+    });
+
+    res.json({
+      success: true,
+      message: `User ${user.name} (${user.email}) and associated records deleted permanently.`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
