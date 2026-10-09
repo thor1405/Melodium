@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { adminService } from '../../services/adminService';
 import { useToast } from '../../context/ToastContext';
 import { formatDate } from '../../utils/dateUtils';
-import { Users, Search, Shield, ShieldAlert, UserCheck, UserX, Mail, Music } from 'lucide-react';
+import { Users, Search, Shield, ShieldAlert, UserCheck, UserX, Mail } from 'lucide-react';
 
 export const AdminUsersPage = () => {
   const toast = useToast();
@@ -124,21 +124,17 @@ export const AdminUsersPage = () => {
               </span>
             </div>
 
-            {/* Academic Info & Instrument */}
+            {/* Academic Info & Sessions */}
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="p-2 rounded-xl bg-white/5 border border-white/5">
+              <div className="p-2.5 rounded-xl bg-white/5 border border-white/5">
                 <span className="text-[10px] text-slate-500 uppercase block font-semibold">USN / Dept</span>
                 <span className="font-mono text-amber-400 font-bold block">{u.usn || '—'}</span>
                 <span className="text-[10px] text-slate-300 truncate block">{u.department} (Yr {u.year})</span>
               </div>
 
-              <div className="p-2 rounded-xl bg-white/5 border border-white/5">
-                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Instrument & Jams</span>
-                <div className="flex items-center gap-1 text-slate-200 mt-0.5">
-                  <Music className="w-3 h-3 text-amber-400 shrink-0" />
-                  <span className="truncate">{u.instrument || 'Musician'}</span>
-                </div>
-                <span className="text-[10px] text-emerald-400 font-bold block mt-0.5">{u.bookingCount || 0} Jam Sessions</span>
+              <div className="p-2.5 rounded-xl bg-white/5 border border-white/5 flex flex-col justify-center">
+                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Jam Sessions</span>
+                <span className="text-sm font-bold text-emerald-400 block mt-0.5">{u.bookingCount || 0} Sessions</span>
               </div>
             </div>
 
@@ -173,7 +169,6 @@ export const AdminUsersPage = () => {
             <tr className="border-b border-white/10 bg-white/5 text-slate-400 font-semibold uppercase tracking-wider text-[10px] whitespace-nowrap">
               <th className="py-4 px-4">Student</th>
               <th className="py-4 px-4">USN & Department</th>
-              <th className="py-4 px-4">Instrument</th>
               <th className="py-4 px-4">Jam Sessions</th>
               <th className="py-4 px-4">Role</th>
               <th className="py-4 px-4 text-right">Actions</th>
@@ -191,13 +186,6 @@ export const AdminUsersPage = () => {
                   <div className="font-mono text-amber-400 font-bold">{u.usn || '—'}</div>
                   <div className="text-[11px] text-slate-400 truncate max-w-xs">
                     {u.department} (Yr {u.year})
-                  </div>
-                </td>
-
-                <td className="py-3.5 px-4 text-slate-300">
-                  <div className="flex items-center gap-1.5">
-                    <Music className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                    <span>{u.instrument || 'Musician'}</span>
                   </div>
                 </td>
 

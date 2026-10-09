@@ -75,6 +75,14 @@ export const cmsService = {
     const res = await api.delete(`/team/${id}`);
     return res.data;
   },
+  uploadTeamPhoto: async (formData) => {
+    const res = await api.post('/team/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  },
 
   // Notifications
   getNotifications: async () => {

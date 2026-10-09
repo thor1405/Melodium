@@ -21,6 +21,7 @@ import { AdminCalendarPage } from './pages/admin/AdminCalendarPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminGalleryPage } from './pages/admin/AdminGalleryPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
+import { AdminTeamPage } from './pages/admin/AdminTeamPage';
 import { AdminAnalyticsPage } from './pages/admin/AdminAnalyticsPage';
 import { AdminLogsPage } from './pages/admin/AdminLogsPage';
 import { NotFoundPage } from './pages/errors/NotFoundPage';
@@ -100,6 +101,8 @@ export const App = () => {
             <Route path="calendar" element={<AdminCalendarPage />} />
             <Route path="users" element={<AdminUsersPage />} />
             <Route path="gallery" element={<AdminGalleryPage />} />
+            <Route path="team" element={<AdminTeamPage />} />
+            <Route path="sound-engineer" element={<AdminTeamPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
             <Route path="logs" element={<AdminLogsPage />} />

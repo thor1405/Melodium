@@ -115,11 +115,13 @@ export const AnalyticsView = ({ analytics }) => {
                   <Tooltip
                     contentStyle={{
                       backgroundColor: '#0C0F17',
-                      borderColor: 'rgba(255,255,255,0.1)',
+                      borderColor: 'rgba(255,255,255,0.15)',
                       borderRadius: '12px',
-                      color: '#fff',
-                      fontSize: '12px',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.8)',
+                      padding: '8px 12px',
                     }}
+                    itemStyle={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: '12px' }}
+                    labelStyle={{ color: '#FACC15', fontWeight: 'bold', fontSize: '11px' }}
                   />
                   <Bar dataKey="count" fill="#ece75f" radius={[6, 6, 0, 0]} />
                 </BarChart>
@@ -157,11 +159,13 @@ export const AnalyticsView = ({ analytics }) => {
                   <Tooltip
                     contentStyle={{
                       backgroundColor: '#0C0F17',
-                      borderColor: 'rgba(255,255,255,0.1)',
+                      borderColor: 'rgba(255,255,255,0.15)',
                       borderRadius: '12px',
-                      color: '#fff',
-                      fontSize: '12px',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.8)',
+                      padding: '8px 12px',
                     }}
+                    itemStyle={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: '12px' }}
+                    labelStyle={{ color: '#FACC15', fontWeight: 'bold', fontSize: '11px' }}
                   />
                   <Area
                     type="monotone"
@@ -208,11 +212,13 @@ export const AnalyticsView = ({ analytics }) => {
                   <Tooltip
                     contentStyle={{
                       backgroundColor: '#0C0F17',
-                      borderColor: 'rgba(255,255,255,0.1)',
+                      borderColor: 'rgba(255,255,255,0.15)',
                       borderRadius: '12px',
-                      color: '#fff',
-                      fontSize: '12px',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.8)',
+                      padding: '8px 12px',
                     }}
+                    itemStyle={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: '12px' }}
+                    labelStyle={{ color: '#FACC15', fontWeight: 'bold', fontSize: '11px' }}
                   />
                 </PieChart>
               </ResponsiveContainer>

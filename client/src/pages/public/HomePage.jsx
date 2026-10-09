@@ -24,6 +24,7 @@ import { motion } from 'framer-motion';
 export const HomePage = () => {
   const [gallery, setGallery] = useState([]);
   const [team, setTeam] = useState([]);
+  const [soundEngineer, setSoundEngineer] = useState(null);
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -36,9 +37,18 @@ export const HomePage = () => {
           bookingService.getBookingSettings(),
         ]);
 
-        if (galleryRes.success) setGallery(galleryRes.data.slice(0, 3));
-        if (teamRes.success) setTeam(teamRes.data.slice(0, 3));
-        if (settingsRes.success) setSettings(settingsRes.data);
+        if (galleryRes.success && galleryRes.data) setGallery(galleryRes.data.slice(0, 3));
+        if (teamRes.success && teamRes.data) {
+          setTeam(teamRes.data.slice(0, 3));
+          const engineer = teamRes.data.find(
+            (m) =>
+              m.category === 'SOUND_ENGINEER' ||
+              m.name?.toLowerCase().includes('lionel') ||
+              m.role?.toLowerCase().includes('sound')
+          ) || teamRes.data[0];
+          if (engineer) setSoundEngineer(engineer);
+        }
+        if (settingsRes.success && settingsRes.data) setSettings(settingsRes.data);
       } catch (err) {
         console.error('Failed to load homepage assets:', err);
       } finally {
@@ -255,13 +265,16 @@ export const HomePage = () => {
 
         <div className="glass-panel-elevated rounded-3xl p-6 sm:p-10 border border-amber-500/20 bg-gradient-to-br from-dark-900/90 via-dark-950 to-dark-900 shadow-2xl relative overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Left: Lionel Photo Card */}
+            {/* Left: Lionel / Sound Engineer Photo Card */}
             <div className="lg:col-span-5 relative group">
               <div className="relative rounded-2xl overflow-hidden border-2 border-amber-500/30 shadow-2xl bg-dark-900 aspect-[3/4] max-w-md mx-auto">
                 <img
-                  src="/team/lionel.jpg"
-                  alt="Lionel - Sound Engineer"
+                  src={soundEngineer?.photo || '/team/lionel.jpg'}
+                  alt={`${soundEngineer?.name || 'Lionel'} - Sound Engineer`}
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.target.src = '/team/lionel.jpg';
+                  }}
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent" />
@@ -275,9 +288,11 @@ export const HomePage = () => {
                 </div>
 
                 <div className="absolute bottom-4 left-4 right-4">
-                  <h3 className="font-display font-black text-2xl text-white">Lionel</h3>
+                  <h3 className="font-display font-black text-2xl text-white">
+                    {soundEngineer?.name || 'Lionel'}
+                  </h3>
                   <p className="text-xs font-semibold text-amber-300">
-                    Chief Sound Engineer & Studio Custodian
+                    {soundEngineer?.role || 'Chief Sound Engineer & Studio Custodian'}
                   </p>
                 </div>
               </div>
@@ -294,7 +309,8 @@ export const HomePage = () => {
                   The Acoustic Mind Behind Every Jam Session
                 </h3>
                 <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-                  Lionel oversees all audio engineering, sound checks, and studio operations at Melodium SJEC. From calibrating 16-channel digital consoles and dialing in studio monitor acoustics to running multitrack DAW recording sessions for student bands and external artists, Lionel ensures every performance is captured with studio clarity.
+                  {soundEngineer?.bio ||
+                    'Lionel oversees all audio engineering, sound checks, and studio operations at Melodium SJEC. From calibrating 16-channel digital consoles and dialing in studio monitor acoustics to running multitrack DAW recording sessions for student bands and external artists, Lionel ensures every performance is captured with studio clarity.'}
                 </p>
               </div>
 

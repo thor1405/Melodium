@@ -12,6 +12,7 @@ import {
   Activity,
   ExternalLink,
   ChevronRight,
+  Headphones,
 } from 'lucide-react';
 
 import { MelodiumLogo } from '../common/MelodiumLogo';
@@ -22,6 +23,7 @@ export const AdminSidebar = ({ isOpen, onClose }) => {
     { name: "Today's Schedule", path: '/admin/today-schedule', icon: Clock },
     { name: 'All Bookings', path: '/admin/bookings', icon: CalendarCheck },
     { name: 'Calendar View', path: '/admin/calendar', icon: CalendarDays },
+    { name: 'Sound Engineer & Team', path: '/admin/team', icon: Headphones },
     { name: 'Students & Users', path: '/admin/users', icon: Users },
     { name: 'Gallery CMS', path: '/admin/gallery', icon: Image },
     { name: 'Jam Room Settings', path: '/admin/settings', icon: Sliders },
