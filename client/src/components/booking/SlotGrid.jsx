@@ -144,10 +144,13 @@ export const SlotGrid = ({
                         e.stopPropagation();
                         onOpenBookingModal();
                       }}
-                      className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-black text-xs shadow-glow-yellow flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer shimmer-btn"
+                      className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-black text-xs shadow-glow-yellow flex items-center justify-center gap-1.5 transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shimmer-btn"
                     >
                       <Zap className="w-3.5 h-3.5 fill-current text-dark-950" />
-                      <span>Book {selectedSlots.length} {selectedSlots.length === 1 ? 'Slot' : 'Slots'} Pass →</span>
+                      <span>
+                        Reserve Pass {selectedSlots.length > 1 ? `(${selectedSlots.length} Slots)` : ''}
+                      </span>
+                      <ArrowRight className="w-3.5 h-3.5 text-dark-950 stroke-[3]" />
                     </button>
                     <div className="text-[10px] text-amber-300/80 text-center font-medium">
                       Tap card to unselect
