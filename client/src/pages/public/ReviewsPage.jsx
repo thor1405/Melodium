@@ -10,30 +10,12 @@ import {
   Sparkles,
   MessageSquare,
   ThumbsUp,
-  Filter,
   Search,
   CheckCircle2,
-  Radio,
-  SlidersHorizontal,
   PenSquare,
-  Music2,
   ShieldCheck,
-  Heart,
-  Volume2,
-  Mic2,
-  Layers,
   Award,
-  TrendingUp,
-  X,
 } from 'lucide-react';
-
-const CATEGORIES = [
-  { id: 'ALL', label: 'All Reviews', icon: Layers },
-  { id: 'STUDIO_EXPERIENCE', label: 'Studio & Rehearsal', icon: Radio },
-  { id: 'JAM_ROOM_EQUIPMENT', label: 'Gear & Instruments', icon: Music2 },
-  { id: 'EVENTS_CONCERTS', label: 'Live Events', icon: Volume2 },
-  { id: 'GENERAL', label: 'General', icon: MessageSquare },
-];
 
 const RATING_DESCRIPTIONS = {
   1: 'Poor / Needs Improvement',
@@ -57,7 +39,6 @@ export const ReviewsPage = () => {
   const [loading, setLoading] = useState(true);
 
   // Filters
-  const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedRating, setSelectedRating] = useState('ALL');
   const [sortBy, setSortBy] = useState('newest');
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,7 +50,7 @@ export const ReviewsPage = () => {
     rating: 5,
     title: '',
     comment: '',
-    category: 'STUDIO_EXPERIENCE',
+    category: 'GENERAL',
     userName: '',
     userEmail: '',
     userRole: '',
@@ -80,7 +61,6 @@ export const ReviewsPage = () => {
     setLoading(true);
     try {
       const res = await reviewService.getPublicReviews({
-        category: selectedCategory !== 'ALL' ? selectedCategory : undefined,
         rating: selectedRating !== 'ALL' ? selectedRating : undefined,
         sortBy,
         search: searchQuery.trim() || undefined,
@@ -101,7 +81,7 @@ export const ReviewsPage = () => {
 
   useEffect(() => {
     fetchReviews();
-  }, [selectedCategory, selectedRating, sortBy]);
+  }, [selectedRating, sortBy]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -299,30 +279,8 @@ export const ReviewsPage = () => {
         </div>
       </section>
 
-      {/* 2. CATEGORY TABS & FILTER BAR */}
+      {/* 2. FILTER & SEARCH BAR */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-6">
-        {/* Category Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-          {CATEGORIES.map((cat) => {
-            const Icon = cat.icon;
-            const isSelected = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 shrink-0 transition-all cursor-pointer border ${
-                  isSelected
-                    ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-dark-950 border-amber-400 shadow-glow-yellow font-extrabold'
-                    : 'bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border-white/5'
-                }`}
-              >
-                <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-dark-950' : 'text-amber-400'}`} />
-                <span>{cat.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
         {/* Filter Controls Row */}
         <div className="glass-panel p-3.5 sm:p-4 rounded-2xl border border-white/10 flex flex-col md:flex-row items-center gap-3 justify-between">
           {/* Search Box */}
@@ -469,12 +427,8 @@ export const ReviewsPage = () => {
                   </div>
                 </div>
 
-                {/* Footer: Category Tag & Helpful Like Button */}
-                <div className="pt-3 border-t border-white/5 flex items-center justify-between gap-2 text-xs">
-                  <span className="text-[10px] font-semibold text-slate-400 px-2 py-0.5 rounded-md bg-white/5">
-                    {rev.category?.replace(/_/g, ' ')}
-                  </span>
-
+                {/* Footer: Helpful Like Button */}
+                <div className="pt-3 border-t border-white/5 flex items-center justify-end gap-2 text-xs">
                   <button
                     type="button"
                     onClick={() => handleLikeReview(rev._id)}
@@ -534,30 +488,6 @@ export const ReviewsPage = () => {
             </div>
             <div className="text-xs font-bold text-amber-300 font-display">
               {RATING_DESCRIPTIONS[hoverRating || formData.rating]}
-            </div>
-          </div>
-
-          {/* Category Selector */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-300">Review Category</label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {CATEGORIES.filter((c) => c.id !== 'ALL').map((c) => {
-                const isSelected = formData.category === c.id;
-                return (
-                  <button
-                    type="button"
-                    key={c.id}
-                    onClick={() => setFormData({ ...formData, category: c.id })}
-                    className={`px-2.5 py-2 rounded-xl text-[11px] font-bold border transition-all text-center cursor-pointer ${
-                      isSelected
-                        ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow-glow-yellow'
-                        : 'bg-white/5 border-white/5 text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    {c.label}
-                  </button>
-                );
-              })}
             </div>
           </div>
 

@@ -27,7 +27,6 @@ export const AdminReviewsPage = () => {
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
-  const [categoryFilter, setCategoryFilter] = useState('ALL');
 
   const [deletingReview, setDeletingReview] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -40,7 +39,6 @@ export const AdminReviewsPage = () => {
         limit: 20,
         search: search.trim() || undefined,
         status: statusFilter !== 'ALL' ? statusFilter : undefined,
-        category: categoryFilter !== 'ALL' ? categoryFilter : undefined,
       });
 
       if (res.success && res.data) {
@@ -56,7 +54,7 @@ export const AdminReviewsPage = () => {
 
   useEffect(() => {
     fetchReviews(1);
-  }, [statusFilter, categoryFilter]);
+  }, [statusFilter]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -160,18 +158,6 @@ export const AdminReviewsPage = () => {
             <option value="PENDING">Pending</option>
             <option value="FLAGGED">Flagged</option>
           </select>
-
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-3.5 py-2.5 rounded-xl bg-dark-900 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
-          >
-            <option value="ALL">All Categories</option>
-            <option value="STUDIO_EXPERIENCE">Studio & Rehearsal</option>
-            <option value="JAM_ROOM_EQUIPMENT">Gear & Instruments</option>
-            <option value="EVENTS_CONCERTS">Live Events</option>
-            <option value="GENERAL">General</option>
-          </select>
         </div>
       </div>
 
@@ -192,7 +178,6 @@ export const AdminReviewsPage = () => {
                   <th className="py-3.5 px-4">Reviewer</th>
                   <th className="py-3.5 px-4">Rating</th>
                   <th className="py-3.5 px-4">Headline & Feedback</th>
-                  <th className="py-3.5 px-4">Category</th>
                   <th className="py-3.5 px-4">Status</th>
                   <th className="py-3.5 px-4">Spotlight</th>
                   <th className="py-3.5 px-4 text-right">Actions</th>
@@ -231,13 +216,6 @@ export const AdminReviewsPage = () => {
                         <ThumbsUp className="w-3 h-3" />
                         <span>{rev.likesCount || 0} helpful votes</span>
                       </div>
-                    </td>
-
-                    {/* Category */}
-                    <td className="py-3.5 px-4">
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-white/5 border border-white/5 text-slate-300">
-                        {rev.category?.replace(/_/g, ' ')}
-                      </span>
                     </td>
 
                     {/* Status */}
