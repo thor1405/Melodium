@@ -53,7 +53,6 @@ const reviewSchema = new mongoose.Schema(
       enum: [
         'STUDIO_EXPERIENCE',
         'JAM_ROOM_EQUIPMENT',
-        'ACOUSTICS_SOUND',
         'EVENTS_CONCERTS',
         'GENERAL',
       ],

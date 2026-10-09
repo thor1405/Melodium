@@ -31,7 +31,6 @@ const CATEGORIES = [
   { id: 'ALL', label: 'All Reviews', icon: Layers },
   { id: 'STUDIO_EXPERIENCE', label: 'Studio & Rehearsal', icon: Radio },
   { id: 'JAM_ROOM_EQUIPMENT', label: 'Gear & Instruments', icon: Music2 },
-  { id: 'ACOUSTICS_SOUND', label: 'Acoustics & Booth', icon: Mic2 },
   { id: 'EVENTS_CONCERTS', label: 'Live Events', icon: Volume2 },
   { id: 'GENERAL', label: 'General', icon: MessageSquare },
 ];
@@ -111,14 +110,11 @@ export const ReviewsPage = () => {
 
   const handleOpenWriteModal = () => {
     if (isAuthenticated && user) {
-      const roleParts = [];
-      if (user.instrument && user.instrument !== 'None') roleParts.push(user.instrument);
-      if (user.department) roleParts.push(`SJEC ${user.department}`);
       setFormData((prev) => ({
         ...prev,
         userName: prev.userName || user.name || '',
         userEmail: prev.userEmail || user.email || '',
-        userRole: prev.userRole || (roleParts.join(' • ') || 'SJEC Musician'),
+        userRole: prev.userRole || user.department || 'Computer Science & Engineering',
       }));
     }
     setIsModalOpen(true);
@@ -126,16 +122,13 @@ export const ReviewsPage = () => {
 
   const handleAutofillUser = () => {
     if (!user) return;
-    const roleParts = [];
-    if (user.instrument && user.instrument !== 'None') roleParts.push(user.instrument);
-    if (user.department) roleParts.push(`SJEC ${user.department}`);
     setFormData((prev) => ({
       ...prev,
       userName: user.name || '',
       userEmail: user.email || '',
-      userRole: roleParts.join(' • ') || 'SJEC Student Musician',
+      userRole: user.department || 'Computer Science & Engineering',
     }));
-    toast.info('Auto-filled with your verified SJEC profile.');
+    toast.info('Auto-filled with your department details.');
   };
 
   const handleSubmitReview = async (e) => {

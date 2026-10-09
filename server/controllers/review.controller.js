@@ -159,18 +159,7 @@ export const createReview = async (req, res, next) => {
       isVerified = true;
 
       if (!userRole || userRole === 'Musician / SJEC Student') {
-        const parts = [];
-        if (req.user.instrument && req.user.instrument !== 'None') {
-          parts.push(req.user.instrument);
-        }
-        if (req.user.department) {
-          parts.push(`SJEC ${req.user.department}`);
-        } else if (req.user.role === 'ADMIN') {
-          parts.push('Melodium Admin');
-        } else {
-          parts.push('SJEC Musician');
-        }
-        effectiveRole = parts.join(' • ') || 'SJEC Student Musician';
+        effectiveRole = req.user.department || 'Computer Science & Engineering';
       }
     }
 

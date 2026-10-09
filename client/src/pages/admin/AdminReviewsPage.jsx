@@ -169,7 +169,6 @@ export const AdminReviewsPage = () => {
             <option value="ALL">All Categories</option>
             <option value="STUDIO_EXPERIENCE">Studio & Rehearsal</option>
             <option value="JAM_ROOM_EQUIPMENT">Gear & Instruments</option>
-            <option value="ACOUSTICS_SOUND">Acoustics & Booth</option>
             <option value="EVENTS_CONCERTS">Live Events</option>
             <option value="GENERAL">General</option>
           </select>

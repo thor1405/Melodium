@@ -18,7 +18,7 @@ const activityLogSchema = new mongoose.Schema(
     },
     entityType: {
       type: String,
-      enum: ['BOOKING', 'SLOT_BLOCK', 'SETTINGS', 'EVENT', 'GALLERY', 'TEAM', 'USER', 'SYSTEM'],
+      enum: ['BOOKING', 'SLOT_BLOCK', 'SETTINGS', 'EVENT', 'GALLERY', 'TEAM', 'USER', 'REVIEW', 'SYSTEM'],
       default: 'SYSTEM',
     },
     entityId: String,

@@ -151,7 +151,7 @@ export const seedDatabase = async () => {
       rating: 5,
       title: 'The Best Vocal Isolation Booth on Campus',
       comment: 'The gold condenser mic and quiet noise floor made tracking vocals so smooth. No ambient hallway noise, crystal-clear monitoring headphones, and instant booking without delays.',
-      category: 'ACOUSTICS_SOUND',
+      category: 'STUDIO_EXPERIENCE',
       status: 'APPROVED',
       isFeatured: true,
       likesCount: 9,
