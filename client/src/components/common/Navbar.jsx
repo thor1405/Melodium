@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import { cmsService } from '../../services/cmsService';
 import { MelodiumLogo } from './MelodiumLogo';
 import {
@@ -22,6 +23,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export const Navbar = () => {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
+  const toast = useToast();
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -100,6 +102,14 @@ export const Navbar = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
+  };
+
+  const handleLogout = async () => {
+    setIsMobileMenuOpen(false);
+    setIsUserMenuOpen(false);
+    toast.success('You have been logged out successfully. See you next session! 🎸');
+    await logout({ showLoading: true });
+    navigate('/');
   };
 
   const navLinks = [
@@ -335,7 +345,7 @@ export const Navbar = () => {
 
                       <div className="pt-1 border-t border-white/10">
                         <button
-                          onClick={logout}
+                          onClick={handleLogout}
                           className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors text-left cursor-pointer"
                         >
                           <LogOut className="w-4 h-4" />
@@ -574,10 +584,7 @@ export const Navbar = () => {
                   )}
 
                   <button
-                    onClick={() => {
-                      logout();
-                      setIsMobileMenuOpen(false);
-                    }}
+                    onClick={handleLogout}
                     className="w-full p-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 font-semibold text-xs text-center flex items-center justify-center gap-2 cursor-pointer transition-colors"
                   >
                     <LogOut className="w-3.5 h-3.5" />

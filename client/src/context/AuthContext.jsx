@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   });
   const [token, setToken] = useState(() => localStorage.getItem('melodium_token') || null);
   const [loading, setLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     const initAuth = async () => {
@@ -23,7 +24,7 @@ export const AuthProvider = ({ children }) => {
           }
         } catch (err) {
           console.warn('Session expired or invalid. Logging out.');
-          logout();
+          logout({ showLoading: false });
         }
       }
       setLoading(false);
@@ -54,11 +55,21 @@ export const AuthProvider = ({ children }) => {
     return res;
   };
 
-  const logout = () => {
+  const logout = async (options = { showLoading: true }) => {
+    if (options?.showLoading) {
+      setIsLoggingOut(true);
+      await new Promise((resolve) => setTimeout(resolve, 750));
+    }
+
     setUser(null);
     setToken(null);
     localStorage.removeItem('melodium_token');
     localStorage.removeItem('melodium_user');
+
+    if (options?.showLoading) {
+      await new Promise((resolve) => setTimeout(resolve, 350));
+      setIsLoggingOut(false);
+    }
   };
 
   const updateProfile = async (data) => {
@@ -87,6 +98,7 @@ export const AuthProvider = ({ children }) => {
     user,
     token,
     loading,
+    isLoggingOut,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'ADMIN',
     login,

@@ -1,5 +1,7 @@
 import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import {
   LayoutDashboard,
   Clock,
@@ -14,11 +16,22 @@ import {
   ChevronRight,
   Headphones,
   Star,
+  LogOut,
 } from 'lucide-react';
 
 import { MelodiumLogo } from '../common/MelodiumLogo';
 
 export const AdminSidebar = ({ isOpen, onClose }) => {
+  const { logout } = useAuth();
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    if (onClose) onClose();
+    toast.success('Admin signed out successfully.');
+    await logout({ showLoading: true });
+    navigate('/');
+  };
   const links = [
     { name: 'Overview', path: '/admin', icon: LayoutDashboard, exact: true },
     { name: "Today's Schedule", path: '/admin/today-schedule', icon: Clock },
@@ -96,8 +109,8 @@ export const AdminSidebar = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Bottom Switch to Public Site */}
-        <div className="p-4 border-t border-white/5">
+        {/* Bottom Actions: Public Site & Logout */}
+        <div className="p-4 border-t border-white/5 space-y-2">
           <Link
             to="/"
             className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-semibold transition-all border border-white/5"
@@ -105,6 +118,13 @@ export const AdminSidebar = ({ isOpen, onClose }) => {
             <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
             <span>Switch to Public Website</span>
           </Link>
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 text-xs font-semibold transition-all cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
+          </button>
         </div>
       </aside>
     </>
