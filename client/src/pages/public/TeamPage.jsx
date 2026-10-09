@@ -17,6 +17,15 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 export const TeamPage = () => {
   const [engineer, setEngineer] = useState({
     name: 'Lionel',
@@ -77,12 +86,13 @@ export const TeamPage = () => {
         ]);
 
         if (teamRes.success && teamRes.data && teamRes.data.length > 0) {
-          const found = teamRes.data.find(
-            (m) =>
-              m.name.toLowerCase().includes('lionel') ||
-              m.role.toLowerCase().includes('sound') ||
-              m.category === 'SOUND_ENGINEER'
-          ) || teamRes.data[0];
+          const found =
+            teamRes.data.find(
+              (m) =>
+                m.name.toLowerCase().includes('lionel') ||
+                m.role.toLowerCase().includes('sound') ||
+                m.category === 'SOUND_ENGINEER'
+            ) || teamRes.data[0];
           if (found) setEngineer((prev) => ({ ...prev, ...found }));
         }
 
@@ -101,7 +111,12 @@ export const TeamPage = () => {
   return (
     <div className="space-y-16 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
       {/* Page Header */}
-      <div className="text-center space-y-3 max-w-2xl mx-auto">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={fadeInUp}
+        className="text-center space-y-3 max-w-2xl mx-auto"
+      >
         <span className="text-xs font-bold uppercase tracking-widest text-amber-400 flex items-center justify-center gap-1.5">
           <Headphones className="w-3.5 h-3.5" />
           Studio Sound & Audio Production
@@ -110,16 +125,27 @@ export const TeamPage = () => {
           Meet the Sound Engineer
         </h1>
         <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-          The acoustic mind behind live rehearsal sound checks, digital console routing, and multitrack studio recordings at St. Joseph Engineering College.
+          The acoustic mind behind live rehearsal sound checks, digital console routing, and
+          multitrack studio recordings at St. Joseph Engineering College.
         </p>
-      </div>
+      </motion.div>
 
       {/* Main Hero Spotlight Card */}
-      <div className="glass-panel-elevated rounded-3xl p-6 sm:p-10 border border-amber-500/20 bg-gradient-to-br from-dark-900/95 via-dark-950 to-dark-900 shadow-2xl relative overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="glass-panel-elevated rounded-3xl p-6 sm:p-10 border border-amber-500/20 bg-gradient-to-br from-dark-900/95 via-dark-950 to-dark-900 shadow-2xl relative overflow-hidden"
+      >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Photo Showcase */}
           <div className="lg:col-span-5">
-            <div className="relative rounded-2xl overflow-hidden border-2 border-amber-500/40 shadow-2xl bg-dark-900 aspect-[3/4] max-w-md mx-auto group">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.4 }}
+              className="relative rounded-2xl overflow-hidden border-2 border-amber-500/40 shadow-2xl bg-dark-900 aspect-[3/4] max-w-md mx-auto group"
+            >
               <img
                 src={engineer.photo || '/team/lionel.jpg'}
                 alt={engineer.name}
@@ -152,7 +178,7 @@ export const TeamPage = () => {
                   Academic Block 3, Ground Floor, SJEC
                 </p>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Detailed Sound Engineer Profile */}
@@ -173,70 +199,92 @@ export const TeamPage = () => {
 
             {/* Core Responsibilities Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5">
+              <motion.div
+                whileHover={{ y: -3, scale: 1.02 }}
+                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/30 transition-all"
+              >
                 <div className="font-bold text-white text-xs flex items-center gap-2">
                   <Sliders className="w-4 h-4 text-amber-400 shrink-0" />
                   <span>Digital Mixing & EQ</span>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Dynamic channel fader balancing, parametric equalizers, noise gates, and monitor foldbacks.
+                  Dynamic channel fader balancing, parametric equalizers, noise gates, and monitor
+                  foldbacks.
                 </p>
-              </div>
+              </motion.div>
 
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5">
+              <motion.div
+                whileHover={{ y: -3, scale: 1.02 }}
+                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/30 transition-all"
+              >
                 <div className="font-bold text-white text-xs flex items-center gap-2">
                   <Mic2 className="w-4 h-4 text-amber-400 shrink-0" />
                   <span>Multitrack DAW Recording</span>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Direct stem audio tracking via Logic Pro & Ableton Live for band demos and contest entries.
+                  Direct stem audio tracking via Logic Pro & Ableton Live for band demos and contest
+                  entries.
                 </p>
-              </div>
+              </motion.div>
 
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5">
+              <motion.div
+                whileHover={{ y: -3, scale: 1.02 }}
+                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/30 transition-all"
+              >
                 <div className="font-bold text-white text-xs flex items-center gap-2">
                   <Volume2 className="w-4 h-4 text-amber-400 shrink-0" />
                   <span>Live Rehearsal Soundchecks</span>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Pre-session gain staging, feedback suppression, instrument isolation, and acoustic tuning.
+                  Pre-session gain staging, feedback suppression, instrument isolation, and acoustic
+                  tuning.
                 </p>
-              </div>
+              </motion.div>
 
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5">
+              <motion.div
+                whileHover={{ y: -3, scale: 1.02 }}
+                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/30 transition-all"
+              >
                 <div className="font-bold text-white text-xs flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
                   <span>Studio Equipment Custody</span>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Maintaining tube guitar heads, condenser capsules, active subwoofers, and cables in the Jam Room.
+                  Maintaining tube guitar heads, condenser capsules, active subwoofers, and cables
+                  in the Jam Room.
                 </p>
-              </div>
+              </motion.div>
             </div>
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
               <Link
                 to="/jam-room"
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all flex items-center gap-2 hover:scale-[1.02]"
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all flex items-center gap-2 hover:scale-105 active:scale-95 shimmer-btn"
               >
                 <Radio className="w-4 h-4 text-dark-950" />
                 <span>Book Jam Room Session</span>
               </Link>
               <Link
                 to="/about#jam-room-rules"
-                className="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs transition-all flex items-center gap-2"
+                className="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs transition-all flex items-center gap-2 hover:scale-105 active:scale-95 group"
               >
                 <span>Read Studio Guidelines</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Studio Equipment Calibrated by Lionel */}
-      <div className="space-y-6">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="space-y-6"
+      >
         <div className="space-y-1">
           <span className="text-xs font-bold uppercase tracking-widest text-amber-400">
             Studio Command
@@ -253,8 +301,9 @@ export const TeamPage = () => {
           {studioGear.map((gear, idx) => (
             <motion.div
               key={idx}
-              whileHover={{ y: -4 }}
-              className="glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-amber-500/30 transition-all flex flex-col h-full group"
+              whileHover={{ y: -6, scale: 1.015 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-amber-500/40 hover:shadow-glow-yellow/10 transition-all flex flex-col h-full group"
             >
               <div className="relative aspect-[16/10] w-full bg-dark-950 overflow-hidden shrink-0">
                 <img
@@ -274,17 +323,25 @@ export const TeamPage = () => {
                 <h3 className="font-display font-bold text-sm text-white group-hover:text-amber-400 transition-colors line-clamp-2 min-h-[2.5rem] flex items-start">
                   {gear.title}
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed line-clamp-3 min-h-[3rem]">{gear.desc}</p>
+                <p className="text-xs text-slate-400 leading-relaxed line-clamp-3 min-h-[3rem]">
+                  {gear.desc}
+                </p>
               </div>
             </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Rehearsal Etiquette with Sound Engineer */}
-      <div className="glass-panel rounded-3xl p-8 sm:p-10 border border-white/10 space-y-6">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="glass-panel rounded-3xl p-8 sm:p-10 border border-white/10 space-y-6"
+      >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shadow-glow-yellow/30">
             <CheckCircle2 className="w-5 h-5 text-amber-400" />
           </div>
           <div>
@@ -298,27 +355,40 @@ export const TeamPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300">
-          <div className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">
+          <motion.div
+            whileHover={{ y: -3 }}
+            className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1 hover:border-amber-400/20 transition-all"
+          >
             <div className="font-bold text-white">1. Arrive 5 Mins Early</div>
             <p className="text-slate-400">
-              Check in with Lionel at the Jam Room to set channel inputs, plug in your instruments, and perform a line check.
+              Check in with Lionel at the Jam Room to set channel inputs, plug in your instruments,
+              and perform a line check.
             </p>
-          </div>
-          <div className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">
+          </motion.div>
+          <motion.div
+            whileHover={{ y: -3 }}
+            className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1 hover:border-amber-400/20 transition-all"
+          >
             <div className="font-bold text-white">2. Master Volume Handling</div>
             <p className="text-slate-400">
-              Never unplug live guitar cables without turning amplifier master dials to zero to prevent speaker damage.
+              Never unplug live guitar cables without turning amplifier master dials to zero to
+              prevent speaker damage.
             </p>
-          </div>
-          <div className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">
+          </motion.div>
+          <motion.div
+            whileHover={{ y: -3 }}
+            className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1 hover:border-amber-400/20 transition-all"
+          >
             <div className="font-bold text-white">3. Multitrack Export Request</div>
             <p className="text-slate-400">
-              If your band requires raw DAW audio stems or rough mixdown exports, notify Lionel at the start of the session.
+              If your band requires raw DAW audio stems or rough mixdown exports, notify Lionel at
+              the start of the session.
             </p>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
 
+export default TeamPage;

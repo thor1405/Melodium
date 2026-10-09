@@ -22,9 +22,11 @@ export const GalleryLightbox = ({ items = [] }) => {
         {items.map((item, idx) => (
           <motion.div
             key={item._id}
-            whileHover={{ y: -5 }}
+            whileHover={{ y: -6, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
             onClick={() => setSelectedIndex(idx)}
-            className="group relative rounded-3xl overflow-hidden glass-panel border border-white/10 cursor-pointer aspect-[4/3] sm:aspect-auto sm:h-80"
+            className="group relative rounded-3xl overflow-hidden glass-panel border border-white/10 hover:border-amber-400/40 hover:shadow-glow-yellow/15 cursor-pointer aspect-[4/3] sm:aspect-auto sm:h-80 transition-all"
           >
             <img
               src={item.imageUrl}

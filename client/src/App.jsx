@@ -1,10 +1,13 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import { ScrollToTop } from './components/common/ScrollToTop';
 import { LogoutOverlay } from './components/common/LogoutOverlay';
 import { BrandIntro } from './components/common/BrandIntro';
+import { StudioAmbience } from './components/common/StudioAmbience';
+import { PageTransition } from './components/common/PageTransition';
 import { HomePage } from './pages/public/HomePage';
 import { AboutPage } from './pages/public/AboutPage';
 import { GalleryPage } from './pages/public/GalleryPage';
@@ -57,71 +60,155 @@ export const App = () => {
   const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen relative selection:bg-amber-400 selection:text-dark-950">
+      <StudioAmbience />
       <BrandIntro />
       <ScrollToTop />
       <LogoutOverlay />
       {!isAdminRoute && <Navbar />}
 
-      <div className="flex-1">
-        <Routes>
-          {/* Public Website Routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/events" element={<Navigate to="/" replace />} />
-          <Route path="/events/*" element={<Navigate to="/" replace />} />
-          <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/reviews" element={<ReviewsPage />} />
-          <Route path="/sound-engineer" element={<TeamPage />} />
-          <Route path="/team" element={<TeamPage />} />
+      <div className="flex-1 relative z-10">
+        <AnimatePresence mode="wait" initial={false}>
+          <Routes location={location} key={location.pathname}>
+            {/* Public Website Routes */}
+            <Route
+              path="/"
+              element={
+                <PageTransition>
+                  <HomePage />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <PageTransition>
+                  <AboutPage />
+                </PageTransition>
+              }
+            />
+            <Route path="/events" element={<Navigate to="/" replace />} />
+            <Route path="/events/*" element={<Navigate to="/" replace />} />
+            <Route
+              path="/gallery"
+              element={
+                <PageTransition>
+                  <GalleryPage />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/reviews"
+              element={
+                <PageTransition>
+                  <ReviewsPage />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/sound-engineer"
+              element={
+                <PageTransition>
+                  <TeamPage />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/team"
+              element={
+                <PageTransition>
+                  <TeamPage />
+                </PageTransition>
+              }
+            />
 
-          {/* Auth Routes */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+            {/* Auth Routes */}
+            <Route
+              path="/login"
+              element={
+                <PageTransition>
+                  <LoginPage />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <PageTransition>
+                  <RegisterPage />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/forgot-password"
+              element={
+                <PageTransition>
+                  <ForgotPasswordPage />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/reset-password/:token"
+              element={
+                <PageTransition>
+                  <ResetPasswordPage />
+                </PageTransition>
+              }
+            />
 
-          {/* Jam Room Booking (Open to view, login required to submit) */}
-          <Route path="/jam-room" element={<JamRoomBookingPage />} />
+            {/* Jam Room Booking (Open to view, login required to submit) */}
+            <Route
+              path="/jam-room"
+              element={
+                <PageTransition>
+                  <JamRoomBookingPage />
+                </PageTransition>
+              }
+            />
 
-          {/* Protected Student Routes */}
-          <Route
-            path="/my-bookings"
-            element={
-              <ProtectedRoute>
-                <MyBookingsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
+            {/* Protected Student Routes */}
+            <Route
+              path="/my-bookings"
+              element={
+                <ProtectedRoute>
+                  <PageTransition>
+                    <MyBookingsPage />
+                  </PageTransition>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <PageTransition>
+                    <ProfilePage />
+                  </PageTransition>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Admin Protected Console */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminOverviewPage />} />
-            <Route path="today-schedule" element={<AdminTodaySchedulePage />} />
-            <Route path="bookings" element={<AdminBookingsPage />} />
-            <Route path="calendar" element={<AdminCalendarPage />} />
-            <Route path="users" element={<AdminUsersPage />} />
-            <Route path="gallery" element={<AdminGalleryPage />} />
-            <Route path="reviews" element={<AdminReviewsPage />} />
-            <Route path="team" element={<AdminTeamPage />} />
-            <Route path="sound-engineer" element={<AdminTeamPage />} />
-            <Route path="settings" element={<AdminSettingsPage />} />
-            <Route path="analytics" element={<AdminAnalyticsPage />} />
-            <Route path="logs" element={<AdminLogsPage />} />
-          </Route>
+            {/* Admin Protected Console */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminOverviewPage />} />
+              <Route path="today-schedule" element={<AdminTodaySchedulePage />} />
+              <Route path="bookings" element={<AdminBookingsPage />} />
+              <Route path="calendar" element={<AdminCalendarPage />} />
+              <Route path="users" element={<AdminUsersPage />} />
+              <Route path="gallery" element={<AdminGalleryPage />} />
+              <Route path="reviews" element={<AdminReviewsPage />} />
+              <Route path="team" element={<AdminTeamPage />} />
+              <Route path="sound-engineer" element={<AdminTeamPage />} />
+              <Route path="settings" element={<AdminSettingsPage />} />
+              <Route path="analytics" element={<AdminAnalyticsPage />} />
+              <Route path="logs" element={<AdminLogsPage />} />
+            </Route>
 
-          {/* Errors */}
-          <Route path="/forbidden" element={<ForbiddenPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            {/* Errors */}
+            <Route path="/forbidden" element={<ForbiddenPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </AnimatePresence>
       </div>
 
       {!isAdminRoute && <Footer />}

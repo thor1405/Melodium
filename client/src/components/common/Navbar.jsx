@@ -148,7 +148,7 @@ export const Navbar = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+        <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 p-1 rounded-2xl bg-white/[0.03] border border-white/5">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
             return (
@@ -156,13 +156,18 @@ export const Navbar = () => {
                 key={link.path}
                 to={link.path}
                 onClick={handleNavClick}
-                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
-                  isActive
-                    ? 'text-amber-300 bg-amber-500/15 border border-amber-500/30 font-semibold shadow-inner'
-                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                className={`relative px-3.5 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                  isActive ? 'text-amber-300' : 'text-slate-300 hover:text-white'
                 }`}
               >
-                {link.name}
+                {isActive && (
+                  <motion.div
+                    layoutId="navbar-indicator"
+                    className="absolute inset-0 rounded-xl bg-amber-500/15 border border-amber-500/30 shadow-inner"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{link.name}</span>
               </Link>
             );
           })}
@@ -171,9 +176,9 @@ export const Navbar = () => {
           <Link
             to="/jam-room"
             onClick={handleNavClick}
-            className="ml-2 flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-sm shadow-glow-yellow transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="ml-1.5 flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all hover:scale-[1.03] active:scale-[0.97] shimmer-btn"
           >
-            <Radio className="w-4 h-4 animate-pulse text-dark-950" />
+            <Radio className="w-3.5 h-3.5 animate-pulse text-dark-950" />
             <span>Book Jam Room</span>
           </Link>
         </nav>
