@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { cmsService } from '../../services/cmsService';
 import { useToast } from '../../context/ToastContext';
+import { Modal } from '../../components/common/Modal';
 import {
   Upload,
   Link2,
@@ -275,7 +276,7 @@ export const AdminTeamPage = () => {
   };
 
   const handleSaveGear = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!gearFormData.title.trim()) {
       toast.error('Please enter an equipment title.');
       return;
@@ -770,238 +771,216 @@ export const AdminTeamPage = () => {
       )}
 
       {/* ==================== MODAL: ADD / EDIT EQUIPMENT CARD ==================== */}
-      {editingGear && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/80 backdrop-blur-md overflow-y-auto">
-          <div className="relative w-full max-w-xl glass-panel-elevated bg-dark-900 border border-amber-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 my-8">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <div className="flex items-center gap-2.5">
-                <span className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
-                  <Sliders className="w-5 h-5" />
-                </span>
-                <div>
-                  <h3 className="text-lg font-bold font-display text-white">
-                    {isNewGear ? 'Add New Studio Equipment' : 'Edit Equipment Card'}
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    Customize the image, title, badge tag, and engineering description.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                onClick={closeGearModal}
-                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Modal Form */}
-            <form onSubmit={handleSaveGear} className="space-y-5">
-              {/* Picture Preview & Upload Section */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-slate-200">Equipment Picture *</label>
-                  <div className="flex items-center gap-1 p-0.5 rounded-lg bg-dark-950 border border-white/10 text-xs">
-                    <button
-                      type="button"
-                      onClick={() => setGearPhotoMode('upload')}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
-                        gearPhotoMode === 'upload'
-                          ? 'bg-amber-500 text-dark-950'
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      Upload from Device
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setGearPhotoMode('url')}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
-                        gearPhotoMode === 'url'
-                          ? 'bg-amber-500 text-dark-950'
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      Image URL
-                    </button>
-                  </div>
-                </div>
-
-                {/* Picture Preview Box */}
-                {gearFormData.image && (
-                  <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/15 bg-dark-950">
-                    <img
-                      src={gearFormData.image}
-                      alt="Gear Preview"
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover object-center"
-                    />
-                    <div className="absolute top-2.5 left-2.5">
-                      <span className="px-2 py-0.5 rounded-md bg-dark-950/80 text-amber-300 text-[10px] font-bold">
-                        {gearFormData.tag || 'Preview'}
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Photo Upload Mode */}
-                {gearPhotoMode === 'upload' ? (
-                  <div>
-                    <input
-                      type="file"
-                      ref={gearFileInputRef}
-                      onChange={handleGearPhotoSelect}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => gearFileInputRef.current?.click()}
-                      disabled={gearUploadLoading}
-                      className="w-full py-4 px-4 border-2 border-dashed border-white/20 hover:border-amber-400/60 rounded-2xl bg-white/5 hover:bg-amber-500/5 text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5"
-                    >
-                      {gearUploadLoading ? (
-                        <>
-                          <div className="w-5 h-5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
-                          <span className="text-xs font-bold text-slate-300">Uploading photo...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="w-5 h-5 text-amber-400" />
-                          <span className="text-xs font-bold text-white">
-                            Click to upload gear picture from PC / Phone
-                          </span>
-                          <span className="text-[10px] text-slate-400">
-                            JPG, PNG, WEBP (stored in /uploads/gallery/)
-                          </span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-1">
-                    <input
-                      type="url"
-                      value={gearFormData.image}
-                      onChange={(e) => setGearFormData({ ...gearFormData, image: e.target.value })}
-                      placeholder="https://... or /gallery/..."
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-dark-950 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Title & Badge Tag */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-200">Equipment Title *</label>
-                  <input
-                    type="text"
-                    required
-                    value={gearFormData.title}
-                    onChange={(e) => setGearFormData({ ...gearFormData, title: e.target.value })}
-                    placeholder="e.g. Digital Mixing Console & Desk"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-dark-950 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-200">Badge Tag *</label>
-                  <input
-                    type="text"
-                    required
-                    value={gearFormData.tag}
-                    onChange={(e) => setGearFormData({ ...gearFormData, tag: e.target.value })}
-                    placeholder="e.g. Mixer Console"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-dark-950 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
-                  />
-                </div>
-              </div>
-
-              {/* Tag Quick Presets */}
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold text-slate-400">Quick Tag Presets:</label>
-                <div className="flex flex-wrap gap-1.5">
-                  {TAG_PRESETS.map((preset) => (
-                    <button
-                      key={preset}
-                      type="button"
-                      onClick={() => setGearFormData((prev) => ({ ...prev, tag: preset }))}
-                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
-                        gearFormData.tag === preset
-                          ? 'bg-amber-500 text-dark-950'
-                          : 'bg-white/5 hover:bg-white/10 text-slate-300'
-                      }`}
-                    >
-                      {preset}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Description */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-200">Acoustic & Gear Description</label>
-                <textarea
-                  rows={3}
-                  value={gearFormData.desc}
-                  onChange={(e) => setGearFormData({ ...gearFormData, desc: e.target.value })}
-                  placeholder="e.g. 16/32-channel digital console with motorized faders, aux monitor routing, and parametric EQ."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-dark-950 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 leading-relaxed"
-                />
-              </div>
-
-              {/* Order & Active Toggle */}
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-dark-950 border border-white/10">
-                <div className="flex items-center gap-3">
-                  <label className="text-xs font-bold text-slate-300">Display Order</label>
-                  <input
-                    type="number"
-                    value={gearFormData.order}
-                    onChange={(e) =>
-                      setGearFormData({ ...gearFormData, order: parseInt(e.target.value) || 0 })
-                    }
-                    className="w-16 px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-white text-xs text-center focus:outline-none focus:border-amber-400"
-                  />
-                </div>
-
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={gearFormData.isActive}
-                    onChange={(e) =>
-                      setGearFormData({ ...gearFormData, isActive: e.target.checked })
-                    }
-                    className="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 bg-dark-900 border-white/20"
-                  />
-                  <span className="text-xs font-bold text-white">Visible on Public Page</span>
-                </label>
-              </div>
-
-              {/* Modal Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+      <Modal
+        isOpen={Boolean(editingGear)}
+        onClose={closeGearModal}
+        title={isNewGear ? 'Add New Studio Equipment' : 'Edit Equipment Card'}
+        subtitle="Customize the image, title, badge tag, and engineering description."
+        maxWidth="max-w-xl"
+        footer={
+          <div className="flex items-center justify-end gap-3">
+            <button
+              type="button"
+              onClick={closeGearModal}
+              className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleSaveGear}
+              disabled={isSavingGear || gearUploadLoading}
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            >
+              <Save className="w-4 h-4 text-dark-950 stroke-[2.5]" />
+              <span>{isSavingGear ? 'Saving...' : isNewGear ? 'Add Equipment' : 'Save Changes'}</span>
+            </button>
+          </div>
+        }
+      >
+        <form onSubmit={handleSaveGear} className="space-y-4">
+          {/* Picture Preview & Upload Section */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-200">Equipment Picture *</label>
+              <div className="flex items-center gap-1 p-0.5 rounded-lg bg-dark-950 border border-white/10 text-xs">
                 <button
                   type="button"
-                  onClick={closeGearModal}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all cursor-pointer"
+                  onClick={() => setGearPhotoMode('upload')}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+                    gearPhotoMode === 'upload'
+                      ? 'bg-amber-500 text-dark-950'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
                 >
-                  Cancel
+                  Upload from Device
                 </button>
                 <button
-                  type="submit"
-                  disabled={isSavingGear || gearUploadLoading}
-                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  type="button"
+                  onClick={() => setGearPhotoMode('url')}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+                    gearPhotoMode === 'url'
+                      ? 'bg-amber-500 text-dark-950'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
                 >
-                  <Save className="w-4 h-4 text-dark-950 stroke-[2.5]" />
-                  <span>{isSavingGear ? 'Saving...' : isNewGear ? 'Add Equipment' : 'Save Changes'}</span>
+                  Image URL
                 </button>
               </div>
-            </form>
+            </div>
+
+            {/* Picture Preview Box */}
+            {gearFormData.image && (
+              <div className="relative aspect-video max-h-48 rounded-2xl overflow-hidden border border-white/15 bg-dark-950">
+                <img
+                  src={gearFormData.image}
+                  alt="Gear Preview"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover object-center"
+                />
+                <div className="absolute top-2.5 left-2.5">
+                  <span className="px-2 py-0.5 rounded-md bg-dark-950/80 text-amber-300 text-[10px] font-bold shadow-sm">
+                    {gearFormData.tag || 'Preview'}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Photo Upload Mode */}
+            {gearPhotoMode === 'upload' ? (
+              <div>
+                <input
+                  type="file"
+                  ref={gearFileInputRef}
+                  onChange={handleGearPhotoSelect}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => gearFileInputRef.current?.click()}
+                  disabled={gearUploadLoading}
+                  className="w-full py-3.5 px-4 border-2 border-dashed border-white/20 hover:border-amber-400/60 rounded-2xl bg-white/5 hover:bg-amber-500/5 text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5"
+                >
+                  {gearUploadLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                      <span className="text-xs font-bold text-slate-300">Uploading photo...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-5 h-5 text-amber-400" />
+                      <span className="text-xs font-bold text-white">
+                        Click to upload gear picture from PC / Phone
+                      </span>
+                      <span className="text-[10px] text-slate-400">
+                        JPG, PNG, WEBP (stored in /uploads/gallery/)
+                      </span>
+                    </>
+                  )}
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                <input
+                  type="url"
+                  value={gearFormData.image}
+                  onChange={(e) => setGearFormData({ ...gearFormData, image: e.target.value })}
+                  placeholder="https://... or /gallery/..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-dark-950 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                />
+              </div>
+            )}
           </div>
-        </div>
-      )}
+
+          {/* Title & Badge Tag */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-200">Equipment Title *</label>
+              <input
+                type="text"
+                required
+                value={gearFormData.title}
+                onChange={(e) => setGearFormData({ ...gearFormData, title: e.target.value })}
+                placeholder="e.g. Digital Mixing Console & Desk"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-dark-950 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-200">Badge Tag *</label>
+              <input
+                type="text"
+                required
+                value={gearFormData.tag}
+                onChange={(e) => setGearFormData({ ...gearFormData, tag: e.target.value })}
+                placeholder="e.g. Mixer Console"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-dark-950 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+              />
+            </div>
+          </div>
+
+          {/* Tag Quick Presets */}
+          <div className="space-y-1.5">
+            <label className="text-[11px] font-semibold text-slate-400">Quick Tag Presets:</label>
+            <div className="flex flex-wrap gap-1.5">
+              {TAG_PRESETS.map((preset) => (
+                <button
+                  key={preset}
+                  type="button"
+                  onClick={() => setGearFormData((prev) => ({ ...prev, tag: preset }))}
+                  className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                    gearFormData.tag === preset
+                      ? 'bg-amber-500 text-dark-950'
+                      : 'bg-white/5 hover:bg-white/10 text-slate-300'
+                  }`}
+                >
+                  {preset}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-slate-200">Acoustic & Gear Description</label>
+            <textarea
+              rows={3}
+              value={gearFormData.desc}
+              onChange={(e) => setGearFormData({ ...gearFormData, desc: e.target.value })}
+              placeholder="e.g. 16/32-channel digital console with motorized faders, aux monitor routing, and parametric EQ."
+              className="w-full px-3.5 py-2.5 rounded-xl bg-dark-950 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 leading-relaxed"
+            />
+          </div>
+
+          {/* Order & Active Toggle */}
+          <div className="flex items-center justify-between p-3 rounded-xl bg-dark-950 border border-white/10">
+            <div className="flex items-center gap-3">
+              <label className="text-xs font-bold text-slate-300">Display Order</label>
+              <input
+                type="number"
+                value={gearFormData.order}
+                onChange={(e) =>
+                  setGearFormData({ ...gearFormData, order: parseInt(e.target.value) || 0 })
+                }
+                className="w-16 px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-white text-xs text-center focus:outline-none focus:border-amber-400"
+              />
+            </div>
+
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={gearFormData.isActive}
+                onChange={(e) =>
+                  setGearFormData({ ...gearFormData, isActive: e.target.checked })
+                }
+                className="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 bg-dark-900 border-white/20"
+              />
+              <span className="text-xs font-bold text-white">Visible on Public Page</span>
+            </label>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };
