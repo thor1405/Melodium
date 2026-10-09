@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { adminService } from '../../services/adminService';
+import { bookingService } from '../../services/bookingService';
 import { TodayTimeline } from '../../components/admin/TodayTimeline';
 import { BlockSlotModal } from '../../components/admin/BlockSlotModal';
 import { ManualBookingModal } from '../../components/admin/ManualBookingModal';
@@ -82,13 +83,34 @@ export const AdminOverviewPage = () => {
 
   const handleViewDetails = async (bookingId) => {
     try {
-      const b = data.recentBookings?.find((x) => x._id === bookingId) ||
-        data.todaySchedule?.find((s) => s.bookingDbId === bookingId);
-      if (b) {
-        setSelectedBookingDetails(b);
+      const res = await bookingService.getBookingDetails(bookingId);
+      if (res && res.success && res.booking) {
+        setSelectedBookingDetails(res.booking);
         setDetailsModalOpen(true);
+        return;
       }
     } catch (e) {}
+
+    // Fallback lookup from overview state
+    const b =
+      data?.recentBookings?.find((x) => x._id === bookingId || x.bookingId === bookingId) ||
+      data?.todaySchedule?.find((s) => s.bookingDbId === bookingId || s.bookingId === bookingId);
+
+    if (b) {
+      const normalized = {
+        ...b,
+        date: b.date || data?.todayDate,
+        userId: b.userId || (b.student ? {
+          name: b.student.name,
+          email: b.student.email,
+          usn: b.student.usn,
+          phone: b.student.phone,
+          department: b.student.department,
+        } : null),
+      };
+      setSelectedBookingDetails(normalized);
+      setDetailsModalOpen(true);
+    }
   };
 
   if (loading) {

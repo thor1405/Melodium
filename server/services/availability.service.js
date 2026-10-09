@@ -131,7 +131,7 @@ export const calculateDayAvailability = async (dateString, currentUserId = null,
   const activeBookings = await Booking.find({
     date: dateString,
     status: { $in: ['CONFIRMED', 'PENDING'] },
-  }).populate('userId', 'name email usn department instrument avatar');
+  }).populate('userId', 'name email usn department phone instrument avatar userType organization city year');
 
   // Fetch blocked slots for this date
   const blockedSlots = await BlockedSlot.find({ date: dateString });
@@ -157,6 +157,7 @@ export const calculateDayAvailability = async (dateString, currentUserId = null,
     if (blocked) {
       return {
         ...slot,
+        date: dateString,
         status: 'BLOCKED',
         statusLabel: 'Blocked / Unavailable',
         reason: blocked.reason || 'Reserved for College / Maintenance',
@@ -171,6 +172,7 @@ export const calculateDayAvailability = async (dateString, currentUserId = null,
       const isMine = currentUserId && booking.userId && booking.userId._id.toString() === currentUserId.toString();
       return {
         ...slot,
+        date: dateString,
         status: 'BOOKED',
         statusLabel: isMine ? 'Your Booking' : 'Booked',
         bookingId: booking.bookingId,
@@ -178,12 +180,34 @@ export const calculateDayAvailability = async (dateString, currentUserId = null,
         isMine,
         bookingStatus: booking.status,
         purpose: isAdmin || isMine ? booking.purpose : 'Reserved Band Session',
+        bookerName: booking.bookerName || booking.userId?.name,
+        userType: booking.userType,
+        feeAmount: booking.feeAmount,
+        participants: booking.participants || [],
+        participantCount: booking.participantCount || 1,
+        razorpayPaymentId: booking.razorpayPaymentId,
+        razorpayOrderId: booking.razorpayOrderId,
+        userId: booking.userId
+          ? {
+              _id: booking.userId._id,
+              name: booking.userId.name,
+              email: booking.userId.email,
+              usn: booking.userId.usn,
+              phone: booking.userId.phone,
+              department: booking.userId.department,
+              year: booking.userId.year,
+              city: booking.userId.city,
+              organization: booking.userId.organization,
+              avatar: booking.userId.avatar,
+            }
+          : null,
         student: isAdmin
           ? {
               name: booking.userId?.name,
               usn: booking.userId?.usn,
               department: booking.userId?.department,
               email: booking.userId?.email,
+              phone: booking.userId?.phone,
               avatar: booking.userId?.avatar,
             }
           : isMine

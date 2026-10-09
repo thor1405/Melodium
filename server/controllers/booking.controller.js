@@ -426,7 +426,7 @@ export const getBookingDetails = async (req, res, next) => {
   try {
     const booking = await Booking.findById(req.params.id).populate(
       'userId',
-      'name email usn department phone instrument avatar'
+      'name email usn department phone instrument avatar userType organization city year'
     );
 
     if (!booking) {

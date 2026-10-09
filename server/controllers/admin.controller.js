@@ -38,7 +38,7 @@ export const getAdminOverview = async (req, res, next) => {
     const recentBookings = await Booking.find()
       .sort({ createdAt: -1 })
       .limit(5)
-      .populate('userId', 'name email usn department instrument avatar');
+      .populate('userId', 'name email usn department phone instrument avatar userType organization city year');
 
     // Recent activity logs
     const recentLogs = await ActivityLog.find()

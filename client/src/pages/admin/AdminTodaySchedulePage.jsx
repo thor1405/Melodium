@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { adminService } from '../../services/adminService';
+import { bookingService } from '../../services/bookingService';
 import { TodayTimeline } from '../../components/admin/TodayTimeline';
 import { BlockSlotModal } from '../../components/admin/BlockSlotModal';
 import { ManualBookingModal } from '../../components/admin/ManualBookingModal';
@@ -69,10 +70,32 @@ export const AdminTodaySchedulePage = () => {
     }
   };
 
-  const handleViewDetails = (bookingId) => {
-    const b = scheduleData?.bookings?.find((x) => x._id === bookingId);
+  const handleViewDetails = async (bookingId) => {
+    try {
+      const res = await bookingService.getBookingDetails(bookingId);
+      if (res && res.success && res.booking) {
+        setSelectedBooking(res.booking);
+        setDetailsModalOpen(true);
+        return;
+      }
+    } catch (e) {}
+
+    const b =
+      scheduleData?.bookings?.find((x) => x._id === bookingId || x.bookingId === bookingId) ||
+      scheduleData?.schedule?.find((s) => s.bookingDbId === bookingId || s.bookingId === bookingId);
     if (b) {
-      setSelectedBooking(b);
+      const normalized = {
+        ...b,
+        date: b.date || date,
+        userId: b.userId || (b.student ? {
+          name: b.student.name,
+          email: b.student.email,
+          usn: b.student.usn,
+          phone: b.student.phone,
+          department: b.student.department,
+        } : null),
+      };
+      setSelectedBooking(normalized);
       setDetailsModalOpen(true);
     }
   };

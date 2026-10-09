@@ -19,6 +19,51 @@ export const BookingPassCard = ({ booking, onCancel }) => {
   const isPending = booking.status === 'PENDING';
   const isConfirmed = booking.status === 'CONFIRMED' || booking.status === 'COMPLETED';
 
+  // Robust field extractions supporting both full booking models and timeline slot objects
+  const dateValue =
+    booking.date ||
+    booking.bookingDate ||
+    (typeof booking.createdAt === 'string' ? booking.createdAt.split('T')[0] : '');
+
+  const bookerName =
+    booking.bookerName ||
+    booking.userId?.name ||
+    booking.student?.name ||
+    booking.userName ||
+    'Musician';
+
+  const usn =
+    booking.userId?.usn ||
+    booking.student?.usn ||
+    booking.usn ||
+    booking.userId?.organization ||
+    booking.student?.organization ||
+    booking.organization ||
+    'N/A';
+
+  const phone =
+    booking.userId?.phone ||
+    booking.student?.phone ||
+    booking.phone ||
+    booking.bookerPhone ||
+    '';
+
+  const email =
+    booking.userId?.email ||
+    booking.student?.email ||
+    booking.email ||
+    booking.bookerEmail ||
+    '';
+
+  const department =
+    booking.userId?.department ||
+    booking.student?.department ||
+    booking.department ||
+    'Computer Science & Engineering';
+
+  const year = booking.userId?.year || booking.student?.year || booking.year;
+  const city = booking.userId?.city || booking.student?.city || booking.city;
+
   return (
     <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden glass-panel-elevated border border-white/10 shadow-2xl p-4 sm:p-8">
       {/* Top Background Ambient Glow */}
@@ -68,7 +113,7 @@ export const BookingPassCard = ({ booking, onCancel }) => {
             Pass Reference ID
           </span>
           <span className="font-mono text-sm sm:text-base font-extrabold text-amber-400 tracking-wide">
-            {booking.bookingId}
+            {booking.bookingId || 'MEL-PASS'}
           </span>
         </div>
 
@@ -78,7 +123,7 @@ export const BookingPassCard = ({ booking, onCancel }) => {
           </span>
           <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-white">
             <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" />
-            <span>{formatDate(booking.date, 'EEEE, dd MMM yyyy')}</span>
+            <span>{dateValue ? formatDate(dateValue, 'EEEE, dd MMM yyyy') : 'Scheduled Slot'}</span>
           </div>
         </div>
 
@@ -130,7 +175,7 @@ export const BookingPassCard = ({ booking, onCancel }) => {
               Booker / Student Name
             </span>
             <div className="font-bold text-white text-sm truncate">
-              {booking.bookerName || booking.userId?.name || 'Musician'}
+              {bookerName}
             </div>
           </div>
 
@@ -140,7 +185,7 @@ export const BookingPassCard = ({ booking, onCancel }) => {
               USN / Organization
             </span>
             <div className="font-mono font-bold text-amber-300 text-sm truncate">
-              {booking.userId?.usn || (booking.userId?.organization ? booking.userId.organization : 'N/A')}
+              {usn}
             </div>
           </div>
 
@@ -150,9 +195,9 @@ export const BookingPassCard = ({ booking, onCancel }) => {
               Phone Number
             </span>
             <div className="font-semibold text-white text-sm truncate">
-              {booking.userId?.phone ? (
-                <a href={`tel:${booking.userId.phone}`} className="hover:text-amber-400 transition-colors">
-                  {booking.userId.phone}
+              {phone ? (
+                <a href={`tel:${phone}`} className="hover:text-amber-400 transition-colors">
+                  {phone}
                 </a>
               ) : (
                 <span className="text-slate-500 font-normal">Not provided</span>
@@ -166,9 +211,9 @@ export const BookingPassCard = ({ booking, onCancel }) => {
               Email Address
             </span>
             <div className="text-slate-200 truncate font-mono text-[11px]">
-              {booking.userId?.email ? (
-                <a href={`mailto:${booking.userId.email}`} className="hover:text-amber-400 transition-colors">
-                  {booking.userId.email}
+              {email ? (
+                <a href={`mailto:${email}`} className="hover:text-amber-400 transition-colors">
+                  {email}
                 </a>
               ) : (
                 'N/A'
@@ -188,9 +233,9 @@ export const BookingPassCard = ({ booking, onCancel }) => {
                 </span>
               ) : (
                 <>
-                  {booking.userId?.department || 'Computer Science & Engineering'}
-                  {booking.userId?.year ? ` (Year ${booking.userId.year})` : ''}
-                  {booking.userId?.city ? ` • ${booking.userId.city}` : ''}
+                  {department}
+                  {year ? ` (Year ${year})` : ''}
+                  {city ? ` • ${city}` : ''}
                 </>
               )}
             </div>
