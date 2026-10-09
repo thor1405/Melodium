@@ -84,6 +84,36 @@ export const cmsService = {
     return res.data;
   },
 
+  // Equipment & Calibration Gear
+  getEquipment: async () => {
+    const res = await api.get('/equipment');
+    return res.data;
+  },
+  getAdminEquipment: async () => {
+    const res = await api.get('/equipment/admin');
+    return res.data;
+  },
+  createEquipment: async (data) => {
+    const res = await api.post('/equipment', data);
+    return res.data;
+  },
+  updateEquipment: async (id, data) => {
+    const res = await api.put(`/equipment/${id}`, data);
+    return res.data;
+  },
+  deleteEquipment: async (id) => {
+    const res = await api.delete(`/equipment/${id}`);
+    return res.data;
+  },
+  uploadEquipmentPhoto: async (formData) => {
+    const res = await api.post('/equipment/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  },
+
   // Notifications
   getNotifications: async () => {
     const res = await api.get('/notifications');

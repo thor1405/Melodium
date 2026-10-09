@@ -28,60 +28,75 @@ export const TeamPage = () => {
   });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchEngineer = async () => {
-      try {
-        const res = await cmsService.getTeam();
-        if (res.success && res.data && res.data.length > 0) {
-          const found = res.data.find(
-            (m) =>
-              m.name.toLowerCase().includes('lionel') ||
-              m.role.toLowerCase().includes('sound') ||
-              m.category === 'SOUND_ENGINEER'
-          ) || res.data[0];
-          if (found) setEngineer((prev) => ({ ...prev, ...found }));
-        }
-      } catch (err) {
-        console.error('Error loading sound engineer details:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchEngineer();
-  }, []);
-
-  const studioGear = [
+  const DEFAULT_GEAR = [
     {
+      _id: 'default-1',
       title: 'Digital Mixing Console & Audio Control Desk',
       desc: '16/32-channel digital console with motorized faders, aux monitor routing, and parametric EQ.',
       image: '/gallery/sound_engineer_console.png',
       tag: 'Mixer Console',
     },
     {
+      _id: 'default-2',
       title: 'Sound-Treated Live Rehearsal Hall',
       desc: 'Acoustically isolated rehearsal space at SJEC featuring wood flooring and bass absorption.',
       image: '/gallery/sound_treated_live_room.png',
       tag: 'Jam Room',
     },
     {
+      _id: 'default-3',
       title: 'Large-Diaphragm Gold Condenser Mic',
       desc: 'High-precision vocal recording microphone with elastic shockmount and studio monitoring.',
       image: '/gallery/gold_condenser_mic.png',
       tag: 'Vocal Booth',
     },
     {
+      _id: 'default-4',
       title: 'Logic Pro DAW & Multitrack Station',
       desc: 'Production workstation for zero-latency stem recording and post-rehearsal mastering.',
       image: '/gallery/logic_pro_daw_station.png',
       tag: 'DAW Station',
     },
     {
+      _id: 'default-5',
       title: 'Shure Beta 57A Dynamic Microphones',
       desc: 'Supercardioid precision mics for guitar cabinets, acoustic instruments, and drum snares.',
       image: '/gallery/shure_beta57a_mics.png',
       tag: 'Instrument Mics',
     },
   ];
+
+  const [studioGear, setStudioGear] = useState(DEFAULT_GEAR);
+
+  useEffect(() => {
+    const fetchPageData = async () => {
+      try {
+        const [teamRes, equipRes] = await Promise.all([
+          cmsService.getTeam(),
+          cmsService.getEquipment(),
+        ]);
+
+        if (teamRes.success && teamRes.data && teamRes.data.length > 0) {
+          const found = teamRes.data.find(
+            (m) =>
+              m.name.toLowerCase().includes('lionel') ||
+              m.role.toLowerCase().includes('sound') ||
+              m.category === 'SOUND_ENGINEER'
+          ) || teamRes.data[0];
+          if (found) setEngineer((prev) => ({ ...prev, ...found }));
+        }
+
+        if (equipRes.success && equipRes.data && equipRes.data.length > 0) {
+          setStudioGear(equipRes.data);
+        }
+      } catch (err) {
+        console.error('Error loading sound engineer & equipment details:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPageData();
+  }, []);
 
   return (
     <div className="space-y-16 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
