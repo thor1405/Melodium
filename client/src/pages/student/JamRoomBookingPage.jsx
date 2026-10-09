@@ -142,30 +142,30 @@ export const JamRoomBookingPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 pb-36">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-10 pb-40 sm:pb-44">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/5">
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider">
-            <Radio className="w-3.5 h-3.5 animate-pulse" />
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6 pb-4 sm:pb-6 border-b border-white/5">
+        <div className="space-y-1.5 sm:space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+            <Radio className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-pulse" />
             <span>Melodium Jam Room</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-display font-extrabold text-white">
+          <h1 className="text-2xl sm:text-4xl font-display font-extrabold text-white leading-tight">
             Jam Room Multi-Slot Reservation
           </h1>
           <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
-            Select an active date on the calendar, choose one or multiple available time slots for your band rehearsal, and proceed to reserve your studio pass.
+            Select an active date on the calendar, tap available time slots for your band rehearsal, and proceed to reserve your pass.
           </p>
         </div>
 
         {/* Studio Location & Rules Badge */}
-        <div className="p-4 rounded-2xl glass-panel border border-white/10 space-y-1.5 text-xs text-slate-300">
-          <div className="flex items-center gap-2 font-bold text-white">
-            <MapPin className="w-4 h-4 text-amber-400" />
-            <span>Academic Block 3, Ground Floor</span>
+        <div className="p-3 sm:p-4 rounded-2xl glass-panel border border-white/10 space-y-1 text-xs text-slate-300 shrink-0">
+          <div className="flex items-center gap-1.5 font-bold text-white text-xs sm:text-sm">
+            <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" />
+            <span>Academic Block 3, Ground Flr</span>
           </div>
-          <div className="text-[11px] text-slate-400">
-            Operating: 09:00 AM – 06:00 PM • 60 Mins/Slot
+          <div className="text-[10px] sm:text-[11px] text-slate-400">
+            09:00 AM – 06:00 PM • 60 Mins/Slot
           </div>
         </div>
       </div>
@@ -183,30 +183,30 @@ export const JamRoomBookingPage = () => {
 
       {/* Booking Notice / Maintenance Alert (if any) */}
       {availability && !availability.isAvailable && (
-        <div className="p-5 rounded-2xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs flex items-start gap-3">
-          <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+        <div className="p-4 sm:p-5 rounded-2xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs flex items-start gap-2.5 sm:gap-3">
+          <ShieldAlert className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0 mt-0.5" />
           <div>
-            <div className="font-bold text-sm text-white mb-0.5">Booking Notice</div>
+            <div className="font-bold text-xs sm:text-sm text-white mb-0.5">Booking Notice</div>
             <p className="leading-relaxed">{availability.reason}</p>
           </div>
         </div>
       )}
 
       {/* Slots Section */}
-      <div className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-amber-400" />
-            <h2 className="text-base font-bold text-white font-display">
-              Available Rehearsal Slots for {formatDate(selectedDate, 'MMMM d, yyyy')}
+      <div className="space-y-3 sm:space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
+            <h2 className="text-sm sm:text-base font-bold text-white font-display">
+              Available Slots for {formatDate(selectedDate, 'dd MMMM yyyy')}
             </h2>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {availability && (
-              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-300">
-                <strong className="text-emerald-400">{availability.availableSlotsCount}</strong> of{' '}
-                {availability.totalSlots} Slots Free
+              <span className="text-[11px] sm:text-xs font-semibold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/5 border border-white/10 text-slate-300">
+                <strong className="text-emerald-400">{availability.availableSlotsCount}</strong> /{' '}
+                {availability.totalSlots} Free
               </span>
             )}
 
@@ -214,9 +214,9 @@ export const JamRoomBookingPage = () => {
               <button
                 type="button"
                 onClick={handleSelectAllFreeSlots}
-                className="text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-colors"
+                className="text-[11px] sm:text-xs font-semibold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-colors cursor-pointer"
               >
-                Select All Free Slots
+                Select All Free
               </button>
             )}
           </div>
@@ -234,33 +234,33 @@ export const JamRoomBookingPage = () => {
       </div>
 
       {/* Jam Room Guidelines Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-        <div className="glass-panel rounded-2xl p-5 border border-white/5 space-y-2">
-          <h3 className="font-bold text-sm text-white flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 pt-2 sm:pt-4">
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-white/5 space-y-1.5 sm:space-y-2">
+          <h3 className="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>SJEC Students: 100% Free</span>
           </h3>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
             All 1-hour rehearsal slots on your active date are completely free for verified SJEC student & faculty musicians.
           </p>
         </div>
 
-        <div className="glass-panel rounded-2xl p-5 border border-white/5 space-y-2">
-          <h3 className="font-bold text-sm text-white flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-amber-400" />
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-white/5 space-y-1.5 sm:space-y-2">
+          <h3 className="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
             <span>Outsiders: Flat ₹500 / Day Pass</span>
           </h3>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            External bands and guest musicians pay a single flat ₹500 fee covering all reserved slots for that entire day.
+          <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+            External bands and guest musicians pay a single flat ₹500 Razorpay fee covering all reserved slots for that entire day.
           </p>
         </div>
 
-        <div className="glass-panel rounded-2xl p-5 border border-white/5 space-y-2">
-          <h3 className="font-bold text-sm text-white flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-yellow-400" />
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-white/5 space-y-1.5 sm:space-y-2">
+          <h3 className="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0" />
             <span>1 Active Date Policy</span>
           </h3>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
             Musicians can reserve multiple slots on their chosen day, but cannot book other future dates until current sessions complete or are cancelled.
           </p>
         </div>
@@ -274,45 +274,40 @@ export const JamRoomBookingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="fixed bottom-8 sm:bottom-10 inset-x-0 z-40 max-w-3xl mx-auto px-4 pointer-events-none"
+            className="fixed bottom-3 sm:bottom-8 inset-x-0 z-40 max-w-2xl mx-auto px-2 sm:px-4 pointer-events-none"
           >
-            <div className="glass-panel p-3 sm:p-3.5 rounded-2xl border border-amber-400/50 bg-dark-950/95 shadow-2xl backdrop-blur-xl flex flex-wrap items-center justify-between gap-3 pointer-events-auto ring-1 ring-amber-400/40">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-400 text-dark-950 flex items-center justify-center font-bold text-sm shadow-glow-yellow shrink-0">
+            <div className="glass-panel p-2.5 sm:p-3.5 rounded-2xl border border-amber-400/50 bg-dark-950/95 shadow-2xl backdrop-blur-2xl flex items-center justify-between gap-2 sm:gap-3 pointer-events-auto ring-1 ring-amber-400/40">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-400 text-dark-950 flex items-center justify-center font-black text-xs sm:text-sm shadow-glow-yellow shrink-0">
                   {selectedSlots.length}
                 </div>
-                <div>
-                  <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                    <span>{selectedSlots.length} {selectedSlots.length === 1 ? 'Slot' : 'Slots'} Selected</span>
-                    <span className="text-amber-400">({selectedSlots.length} {selectedSlots.length === 1 ? 'Hour' : 'Hours'} Total)</span>
+                <div className="min-w-0">
+                  <div className="text-[11px] sm:text-xs font-bold text-white flex items-center gap-1 truncate">
+                    <span>{selectedSlots.length} {selectedSlots.length === 1 ? 'Slot' : 'Slots'}</span>
+                    <span className="text-amber-400 hidden xs:inline">({selectedSlots.length} {selectedSlots.length === 1 ? 'Hr' : 'Hrs'})</span>
                   </div>
-                  <div className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5 truncate max-w-xs sm:max-w-md">
-                    <span>{formatDate(selectedDate, 'MMM d')}:</span>
-                    <span className="text-slate-300 truncate">
-                      {selectedSlots
-                        .map((s) => `${formatTime12h(s.startTime)}`)
-                        .join(', ')}
-                    </span>
+                  <div className="text-[10px] text-slate-400 truncate max-w-[130px] sm:max-w-xs">
+                    {formatDate(selectedDate, 'MMM d')}: {selectedSlots.map((s) => formatTime12h(s.startTime)).join(', ')}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 ml-auto">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <button
                   type="button"
                   onClick={handleClearSlots}
-                  className="px-3 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 transition-colors flex items-center gap-1 cursor-pointer"
+                  className="px-2 sm:px-3 py-2 rounded-xl text-[11px] sm:text-xs font-medium text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 transition-colors flex items-center gap-1 cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
-                  <span>Clear</span>
+                  <span className="hidden xs:inline">Clear</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handleOpenBookingModal}
-                  className="px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+                  className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-black text-xs shadow-glow-yellow transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
                 >
-                  <span>Next: Proceed to Reserve</span>
+                  <span>Reserve Pass</span>
                   <ArrowRight className="w-3.5 h-3.5 text-dark-950 stroke-[3]" />
                 </button>
               </div>

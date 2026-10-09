@@ -80,10 +80,23 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       default: 'STUDENT_FREE_PASS',
     },
-    stripePaymentIntentId: {
+    razorpayOrderId: {
       type: String,
       default: '',
       index: true,
+    },
+    razorpayPaymentId: {
+      type: String,
+      default: '',
+      index: true,
+    },
+    razorpaySignature: {
+      type: String,
+      default: '',
+    },
+    stripePaymentIntentId: {
+      type: String,
+      default: '',
     },
     stripeReceiptUrl: {
       type: String,

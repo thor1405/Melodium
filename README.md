@@ -122,7 +122,7 @@ Melodium SJEC is fully optimized for **Raspberry Pi 3 / 4 / 5 and Raspberry Pi Z
    git clone <your-repo-url> melodium-sjec
    cd melodium-sjec
    cp .env.example .env
-   # Edit .env with your MongoDB Atlas URI, JWT Secret, and Stripe keys
+   # Edit .env with your MongoDB Atlas URI, JWT Secret, and Razorpay keys
    nano .env
    ```
 

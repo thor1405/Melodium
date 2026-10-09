@@ -16,6 +16,7 @@ import {
   CheckCircle,
   Radio,
   ChevronDown,
+  ChevronRight,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -26,6 +27,7 @@ export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [isMobileNotifOpen, setIsMobileNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -37,7 +39,20 @@ export const Navbar = () => {
     setIsMobileMenuOpen(false);
     setIsUserMenuOpen(false);
     setIsNotifOpen(false);
+    setIsMobileNotifOpen(false);
   }, [location.pathname]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
 
   // Click outside to close dropdowns
   useEffect(() => {
@@ -59,7 +74,7 @@ export const Navbar = () => {
     try {
       const res = await cmsService.getNotifications();
       if (res.success) {
-        setNotifications(res.data);
+        setNotifications(res.data || []);
         setUnreadCount(res.unreadCount || 0);
       }
     } catch (e) {}
@@ -87,23 +102,23 @@ export const Navbar = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full glass-panel border-b border-white/5 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full glass-panel border-b border-white/5 backdrop-blur-xl">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="relative group-hover:scale-105 transition-transform">
-            <MelodiumLogo className="w-11 h-11" showGlow={true} />
+        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-0">
+          <div className="relative group-hover:scale-105 transition-transform shrink-0">
+            <MelodiumLogo className="w-8 h-8 sm:w-11 sm:h-11" showGlow={true} />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-display font-extrabold text-xl tracking-wider text-white group-hover:text-amber-300 transition-colors">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="font-display font-black text-base sm:text-xl tracking-wider text-white group-hover:text-amber-300 transition-colors">
                 MELODIUM
               </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              <span className="text-[9px] sm:text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
                 SJEC
               </span>
             </div>
-            <p className="text-[10px] text-slate-400 font-medium tracking-wide">
+            <p className="text-[9px] sm:text-[10px] text-slate-400 font-medium tracking-wide truncate max-w-[125px] xs:max-w-[160px] sm:max-w-none">
               St. Joseph Engineering College
             </p>
           </div>
@@ -138,7 +153,7 @@ export const Navbar = () => {
           </Link>
         </nav>
 
-        {/* Right Action Icons & User Dropdown */}
+        {/* Right Action Icons & User Dropdown (Desktop) */}
         <div className="hidden md:flex items-center gap-3">
           {isAuthenticated ? (
             <>
@@ -303,7 +318,7 @@ export const Navbar = () => {
                       <div className="pt-1 border-t border-white/10">
                         <button
                           onClick={logout}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors text-left"
+                          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors text-left cursor-pointer"
                         >
                           <LogOut className="w-4 h-4" />
                           <span>Sign Out</span>
@@ -332,83 +347,168 @@ export const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
-        <div className="flex md:hidden items-center gap-2">
+        {/* Mobile Header Action Buttons */}
+        <div className="flex md:hidden items-center gap-1.5 sm:gap-2">
           {isAuthenticated && (
             <button
-              onClick={() => setIsNotifOpen(!isNotifOpen)}
-              className="p-2 rounded-xl bg-white/5 text-slate-300 relative"
+              onClick={() => setIsMobileNotifOpen(!isMobileNotifOpen)}
+              className="relative p-2 rounded-xl bg-white/5 text-slate-300 hover:text-white border border-white/5 active:scale-95 transition-all"
+              aria-label="Notifications"
             >
-              <Bell className="w-5 h-5" />
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
               {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-400" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 text-dark-950 text-[9px] font-extrabold flex items-center justify-center border-2 border-dark-950">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
               )}
             </button>
           )}
 
           <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2.5 rounded-xl bg-white/5 text-slate-300 hover:text-white border border-white/5"
+            onClick={() => {
+              setIsMobileMenuOpen(!isMobileMenuOpen);
+              setIsMobileNotifOpen(false);
+            }}
+            className="p-2 sm:p-2.5 rounded-xl bg-white/5 text-slate-200 hover:text-white border border-white/5 active:scale-95 transition-all"
             aria-label="Toggle Menu"
           >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMobileMenuOpen ? (
+              <X className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400" />
+            ) : (
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+            )}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Notifications Bottom Sheet / Overlay */}
+      <AnimatePresence>
+        {isMobileNotifOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="md:hidden glass-panel-elevated border-b border-amber-500/20 px-4 py-3 shadow-2xl space-y-2.5"
+          >
+            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <Bell className="w-4 h-4 text-amber-400" />
+                <h4 className="font-bold text-xs text-white">Notifications</h4>
+                {unreadCount > 0 && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold">
+                    {unreadCount} new
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                {unreadCount > 0 && (
+                  <button
+                    onClick={handleMarkAllRead}
+                    className="text-[11px] text-amber-400 font-semibold hover:underline"
+                  >
+                    Mark read
+                  </button>
+                )}
+                <button
+                  onClick={() => setIsMobileNotifOpen(false)}
+                  className="p-1 rounded-lg text-slate-400 hover:text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="max-h-60 overflow-y-auto space-y-2 pr-1">
+              {notifications.length === 0 ? (
+                <div className="py-6 text-center text-slate-400 text-xs">
+                  No notifications yet.
+                </div>
+              ) : (
+                notifications.slice(0, 5).map((n) => (
+                  <div
+                    key={n._id}
+                    className={`p-2.5 rounded-xl border text-xs ${
+                      n.isRead
+                        ? 'bg-white/5 border-white/5 text-slate-300'
+                        : 'bg-amber-950/30 border-amber-500/30 text-white'
+                    }`}
+                  >
+                    <div className="font-semibold text-amber-400 text-xs">{n.title}</div>
+                    <p className="text-slate-300 text-[11px] leading-relaxed mt-0.5">{n.message}</p>
+                  </div>
+                ))
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Full Mobile Menu Drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: 'calc(100vh - 4rem)' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass-panel-elevated border-b border-white/10 px-4 pt-3 pb-6 space-y-3 overflow-hidden"
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="md:hidden fixed top-16 sm:top-20 inset-x-0 bottom-0 z-50 glass-panel-elevated border-t border-white/10 px-4 pt-3 pb-8 space-y-4 overflow-y-auto overscroll-contain shadow-2xl bg-dark-950/98 backdrop-blur-2xl"
           >
-            <div className="flex flex-col space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`px-4 py-2.5 rounded-xl text-sm font-medium ${
-                    location.pathname === link.path
-                      ? 'bg-amber-500/20 text-white font-bold border border-amber-500/30'
-                      : 'text-slate-300'
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
+            {/* Nav Links */}
+            <div className="flex flex-col space-y-1 pt-1">
+              {navLinks.map((link) => {
+                const isActive = location.pathname === link.path;
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-semibold transition-all ${
+                      isActive
+                        ? 'bg-amber-500/20 text-white font-bold border border-amber-500/30 shadow-inner'
+                        : 'text-slate-300 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <span>{link.name}</span>
+                    <ChevronRight className="w-4 h-4 opacity-50" />
+                  </Link>
+                );
+              })}
 
+              {/* Mobile Jam Room Big Banner */}
               <Link
                 to="/jam-room"
-                className="flex items-center justify-between px-4 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 border border-amber-500/40 text-dark-950 font-extrabold text-sm mt-2 shadow-glow-yellow"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center justify-between px-4 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 border border-amber-400/40 text-dark-950 font-black text-sm mt-2 shadow-glow-yellow active:scale-[0.98] transition-all"
               >
                 <div className="flex items-center gap-2">
                   <Radio className="w-4 h-4 text-dark-950 animate-pulse" />
-                  <span>Jam Room Studio</span>
+                  <span>Book Jam Room Studio</span>
                 </div>
-                <span className="text-xs font-bold px-2 py-0.5 rounded bg-dark-950 text-amber-300">
-                  Book Slot
+                <span className="text-[11px] font-extrabold px-2 py-0.5 rounded-lg bg-dark-950 text-amber-300">
+                  Instant Pass
                 </span>
               </Link>
             </div>
 
-            <div className="pt-3 border-t border-white/10">
+            {/* User Session Section */}
+            <div className="pt-3 border-t border-white/10 space-y-3">
               {isAuthenticated ? (
-                <div className="space-y-2">
-                  <div className="px-3 py-2 bg-white/5 rounded-xl flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center font-bold text-amber-400 border border-amber-500/30 overflow-hidden shrink-0">
-                      {user.avatar ? (
-                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-                      ) : (
-                        user.name[0]
-                      )}
+                <div className="space-y-3">
+                  {/* User Profile Pill */}
+                  <div className="p-3 bg-white/5 rounded-2xl border border-white/5 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-yellow-400 p-0.5 shrink-0 shadow-sm">
+                      <div className="w-full h-full bg-dark-900 rounded-[10px] overflow-hidden flex items-center justify-center font-bold text-amber-400">
+                        {user.avatar ? (
+                          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                        ) : (
+                          user.name?.[0] || 'U'
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <p className="text-xs font-semibold text-white truncate max-w-[150px]">{user.name}</p>
-                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-1">
+                        <p className="text-xs font-bold text-white truncate">{user.name}</p>
+                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0">
                           {isAdmin
                             ? 'ADMIN'
                             : user.userType === 'OUTSIDER' || (!user.email?.endsWith('@sjec.ac.in') && user.role !== 'ADMIN')
@@ -416,55 +516,69 @@ export const Navbar = () => {
                             : 'STUDENT'}
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-400 truncate">{user.usn || user.organization || user.email}</p>
+                      <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                        {user.usn || user.organization || user.email}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 pt-1">
+                  {/* User Actions Grid */}
+                  <div className="grid grid-cols-2 gap-2">
                     <Link
                       to="/my-bookings"
-                      className="p-2.5 rounded-xl bg-white/5 text-center text-xs font-medium text-slate-200"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-center text-xs font-bold text-slate-200 flex items-center justify-center gap-1.5 transition-colors"
                     >
-                      My Bookings
+                      <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                      <span>My Passes</span>
                     </Link>
                     <Link
                       to="/profile"
-                      className="p-2.5 rounded-xl bg-white/5 text-center text-xs font-medium text-slate-200"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-center text-xs font-bold text-slate-200 flex items-center justify-center gap-1.5 transition-colors"
                     >
-                      Profile
+                      <User className="w-3.5 h-3.5 text-slate-300" />
+                      <span>Profile</span>
                     </Link>
                   </div>
 
                   {isAdmin && (
                     <Link
                       to="/admin"
-                      className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-300 font-semibold text-xs"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-bold text-xs transition-colors"
                     >
-                      <Shield className="w-4 h-4" />
-                      <span>Admin Dashboard</span>
+                      <Shield className="w-4 h-4 text-amber-400" />
+                      <span>Admin Dashboard Console</span>
                     </Link>
                   )}
 
                   <button
-                    onClick={logout}
-                    className="w-full p-2.5 rounded-xl bg-white/5 text-slate-300 font-medium text-xs text-center mt-2 hover:bg-white/10"
+                    onClick={() => {
+                      logout();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full p-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 font-semibold text-xs text-center flex items-center justify-center gap-2 cursor-pointer transition-colors"
                   >
-                    Sign Out
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Sign Out</span>
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2.5 pt-1">
                   <Link
                     to="/login"
-                    className="w-full py-2.5 text-center rounded-xl bg-white/5 text-slate-200 font-semibold text-sm"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full py-3 text-center rounded-2xl bg-white/5 hover:bg-white/10 text-slate-200 font-bold text-sm border border-white/10 transition-colors"
                   >
-                    Sign In
+                    Sign In to Account
                   </Link>
                   <Link
                     to="/register"
-                    className="w-full py-2.5 text-center rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-dark-950 font-extrabold text-sm shadow-glow-yellow"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full py-3 text-center rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-500 text-dark-950 font-extrabold text-sm shadow-glow-yellow transition-all"
                   >
-                    Create Account
+                    Create Free Student / Musician Account
                   </Link>
                 </div>
               )}

@@ -12,9 +12,9 @@ COPY client/package*.json ./
 RUN npm ci
 
 # Pass build-time environment variables for Vite bundle
-ARG VITE_STRIPE_PUBLISHABLE_KEY
+ARG VITE_RAZORPAY_KEY_ID
 ARG VITE_API_URL
-ENV VITE_STRIPE_PUBLISHABLE_KEY=$VITE_STRIPE_PUBLISHABLE_KEY
+ENV VITE_RAZORPAY_KEY_ID=$VITE_RAZORPAY_KEY_ID
 ENV VITE_API_URL=$VITE_API_URL
 
 # Copy source and build static bundle

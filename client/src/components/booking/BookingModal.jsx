@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements, useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { Modal } from '../common/Modal';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { bookingService } from '../../services/bookingService';
-import { paymentService } from '../../services/paymentService';
-import { StripePaymentForm } from './StripePaymentForm';
+import { paymentService, loadRazorpayScript } from '../../services/paymentService';
+import { RazorpayPaymentBadge } from './RazorpayPaymentBadge';
 import { formatDate, formatTime12h } from '../../utils/dateUtils';
 import confetti from 'canvas-confetti';
 import {
@@ -21,20 +19,13 @@ import {
   ShieldCheck,
   Mail,
   Ticket,
+  Zap,
 } from 'lucide-react';
 
-const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ||
-    'pk_test_51MelodiumSjecTestKey2026JamRoomPassPubKey999'
-);
-
-const BookingModalForm = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
+export const BookingModal = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
   const { user } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
-
-  const stripe = useStripe();
-  const elements = useElements();
 
   const isOutsider =
     user?.userType === 'OUTSIDER' ||
@@ -43,7 +34,6 @@ const BookingModalForm = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
   const [bookerName, setBookerName] = useState('');
   const [rulesAccepted, setRulesAccepted] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [cardError, setCardError] = useState('');
   const [bookingResults, setBookingResults] = useState(null);
 
   useEffect(() => {
@@ -56,6 +46,24 @@ const BookingModalForm = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
   if (!bookingResults && (!slots || slots.length === 0 || !date)) return null;
 
   const totalHours = slots?.length || 0;
+
+  const handleBookingSuccess = (res) => {
+    confetti({
+      particleCount: 110,
+      spread: 80,
+      origin: { y: 0.6 },
+      colors: ['#ece75f', '#f59e0b', '#10b981', '#ffffff'],
+    });
+
+    const list = res.bookings || (res.booking ? [res.booking] : []);
+    setBookingResults(list);
+    toast.success(
+      isOutsider
+        ? `Payment of ₹500 via Razorpay Successful! Pass Confirmed for ${list.length} ${list.length === 1 ? 'Slot' : 'Slots'} 🎸`
+        : `${list.length} ${list.length === 1 ? 'Slot' : 'Slots'} Reserved Successfully! 🎸`
+    );
+    if (onSuccess) onSuccess(res);
+  };
 
   const handleBookingSubmit = async (e) => {
     if (e) e.preventDefault();
@@ -71,105 +79,135 @@ const BookingModalForm = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
     }
 
     setIsSubmitting(true);
-    setCardError('');
 
     try {
-      let paymentIntentId = '';
-
-      // Process Stripe Payment for External Musicians
+      // Process Razorpay Payment for External Musicians
       if (isOutsider && user?.role !== 'ADMIN') {
-        const intentRes = await paymentService.createPaymentIntent({
+        const orderRes = await paymentService.createPaymentOrder({
           date,
           slots: slots.map((s) => ({ startTime: s.startTime, endTime: s.endTime })),
           bookerName: bookerName.trim(),
         });
 
-        if (!intentRes.success) {
-          throw new Error(intentRes.message || 'Failed to initialize payment.');
+        if (!orderRes.success) {
+          throw new Error(orderRes.message || 'Failed to initialize payment order.');
         }
 
-        const { clientSecret, isSandbox, paymentIntentId: mockId } = intentRes;
+        const isScriptLoaded = await loadRazorpayScript();
 
-        if (isSandbox || !stripe || !elements) {
-          paymentIntentId = mockId || `pi_sandbox_${Date.now()}`;
-        } else {
-          const cardElement = elements.getElement(CardElement);
-          if (!cardElement) {
-            throw new Error('Please enter your card details.');
-          }
-
-          const paymentResult = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-              card: cardElement,
-              billing_details: {
-                name: bookerName.trim(),
-                email: user?.email,
-              },
-            },
+        // Sandbox fallback for test mock mode / offline testing
+        if (orderRes.isSandbox || !isScriptLoaded || !window.Razorpay) {
+          const res = await bookingService.createBooking({
+            date,
+            slots: slots.map((s) => ({ startTime: s.startTime, endTime: s.endTime })),
+            bookerName: bookerName.trim(),
+            purpose: 'Jam Session',
+            paymentMethod: 'RAZORPAY',
+            razorpayOrderId: orderRes.orderId || `order_mock_${Date.now()}`,
+            razorpayPaymentId: `pay_mock_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
+            razorpaySignature: 'mock_signature_verified',
           });
 
-          if (paymentResult.error) {
-            setCardError(paymentResult.error.message || 'Payment failed.');
-            toast.error(paymentResult.error.message || 'Card payment failed.');
-            setIsSubmitting(false);
-            return;
+          if (res.success) {
+            handleBookingSuccess(res);
           }
-
-          if (paymentResult.paymentIntent.status !== 'succeeded') {
-            setCardError('Payment was not completed. Please try again.');
-            toast.error('Payment was not completed.');
-            setIsSubmitting(false);
-            return;
-          }
-
-          paymentIntentId = paymentResult.paymentIntent.id;
+          setIsSubmitting(false);
+          return;
         }
+
+        // Live / Test Razorpay Standard Popup Modal
+        const options = {
+          key: orderRes.keyId,
+          amount: orderRes.amount,
+          currency: orderRes.currency || 'INR',
+          name: 'Melodium SJEC',
+          description: `Jam Room Rehearsal Pass - ${date} (${slots.length} ${slots.length === 1 ? 'hr' : 'hrs'})`,
+          image: '/logo.svg',
+          order_id: orderRes.orderId,
+          prefill: {
+            name: bookerName.trim(),
+            email: user?.email || '',
+            contact: user?.phone || '',
+          },
+          notes: {
+            date,
+            slotsCount: slots.length,
+            bookerName: bookerName.trim(),
+          },
+          theme: {
+            color: '#f59e0b',
+          },
+          handler: async function (response) {
+            try {
+              setIsSubmitting(true);
+              const res = await bookingService.createBooking({
+                date,
+                slots: slots.map((s) => ({ startTime: s.startTime, endTime: s.endTime })),
+                bookerName: bookerName.trim(),
+                purpose: 'Jam Session',
+                paymentMethod: 'RAZORPAY',
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+              });
+
+              if (res.success) {
+                handleBookingSuccess(res);
+              }
+            } catch (createErr) {
+              const msg =
+                createErr.response?.data?.message || createErr.message || 'Payment confirmation failed.';
+              toast.error(msg);
+            } finally {
+              setIsSubmitting(false);
+            }
+          },
+          modal: {
+            ondismiss: function () {
+              setIsSubmitting(false);
+              toast.info('Razorpay payment cancelled.');
+            },
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.on('payment.failed', function (resp) {
+          setIsSubmitting(false);
+          toast.error(resp.error?.description || 'Payment transaction failed.');
+        });
+        rzp.open();
+        return;
       }
 
-      // Create Booking in backend
+      // Free Pass for Verified SJEC Students
       const res = await bookingService.createBooking({
         date,
         slots: slots.map((s) => ({ startTime: s.startTime, endTime: s.endTime })),
         bookerName: bookerName.trim(),
         purpose: 'Jam Session',
-        paymentMethod: isOutsider ? 'STRIPE' : 'STUDENT_FREE_PASS',
-        paymentIntentId,
+        paymentMethod: 'STUDENT_FREE_PASS',
       });
 
       if (res.success) {
-        confetti({
-          particleCount: 110,
-          spread: 80,
-          origin: { y: 0.6 },
-          colors: ['#ece75f', '#f59e0b', '#10b981', '#ffffff'],
-        });
-
-        const list = res.bookings || (res.booking ? [res.booking] : []);
-        setBookingResults(list);
-        toast.success(
-          isOutsider
-            ? `Payment of ₹500 Successful! Pass Confirmed for ${list.length} ${list.length === 1 ? 'Slot' : 'Slots'} 🎸`
-            : `${list.length} ${list.length === 1 ? 'Slot' : 'Slots'} Reserved Successfully! 🎸`
-        );
-        if (onSuccess) onSuccess(res);
+        handleBookingSuccess(res);
       }
     } catch (err) {
       const msg =
         err.response?.data?.message || err.message || 'Unable to complete reservation. Please try again.';
       toast.error(msg);
-      setCardError(msg);
       if (err.response?.status === 409) {
         if (onSuccess) onSuccess(null);
         onClose();
       }
     } finally {
-      setIsSubmitting(false);
+      if (!isOutsider || user?.role === 'ADMIN') {
+        setIsSubmitting(false);
+      }
     }
   };
 
   const resetAndClose = () => {
     setBookingResults(null);
-    setCardError('');
     onClose();
   };
 
@@ -198,11 +236,11 @@ const BookingModalForm = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
         {isSubmitting ? (
           <>
             <span className="w-3.5 h-3.5 border-2 border-dark-950/30 border-t-dark-950 rounded-full animate-spin" />
-            <span>{isOutsider ? 'Processing Payment...' : 'Confirming...'}</span>
+            <span>{isOutsider ? 'Opening Razorpay...' : 'Confirming...'}</span>
           </>
         ) : (
           <>
-            <span>{isOutsider ? 'Pay ₹500 via Stripe & Confirm' : 'Confirm Booking'}</span>
+            <span>{isOutsider ? 'Pay ₹500 via Razorpay & Confirm' : 'Confirm Booking'}</span>
             <ArrowRight className="w-3.5 h-3.5 text-dark-950 stroke-[3]" />
           </>
         )}
@@ -237,7 +275,7 @@ const BookingModalForm = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
     <Modal
       isOpen={isOpen}
       onClose={resetAndClose}
-      title={bookingResults ? 'Booking Confirmed! 🎉' : isOutsider ? 'Book Jam Room (Stripe Checkout)' : 'Book Jam Room'}
+      title={bookingResults ? 'Booking Confirmed! 🎉' : isOutsider ? 'Book Jam Room (Razorpay Checkout)' : 'Book Jam Room'}
       subtitle={bookingResults ? 'Pass Issued' : 'Studio'}
       maxWidth="max-w-xl"
       footer={bookingResults ? successFooter : formFooter}
@@ -280,7 +318,7 @@ const BookingModalForm = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
                     : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                 }`}
               >
-                {isOutsider ? '₹500 Paid via Stripe' : 'SJEC Student (100% Free)'}
+                {isOutsider ? '₹500 Paid via Razorpay' : 'SJEC Student (100% Free)'}
               </span>
             </div>
 
@@ -396,16 +434,10 @@ const BookingModalForm = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
             />
           </div>
 
-          {/* Outsider Stripe Card Checkout Element */}
+          {/* Outsider Razorpay Gateway Badge */}
           {isOutsider && (
             <div className="space-y-1.5 pt-1">
-              <StripePaymentForm
-                onCardChange={(e) => {
-                  if (e.error) setCardError(e.error.message);
-                  else setCardError('');
-                }}
-                error={cardError}
-              />
+              <RazorpayPaymentBadge />
             </div>
           )}
 
@@ -425,13 +457,5 @@ const BookingModalForm = ({ isOpen, onClose, slots = [], date, onSuccess }) => {
         </form>
       )}
     </Modal>
-  );
-};
-
-export const BookingModal = (props) => {
-  return (
-    <Elements stripe={stripePromise}>
-      <BookingModalForm {...props} />
-    </Elements>
   );
 };

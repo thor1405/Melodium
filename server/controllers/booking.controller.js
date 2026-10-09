@@ -1,8 +1,8 @@
-import Stripe from 'stripe';
 import Booking from '../models/Booking.js';
 import BlockedSlot from '../models/BlockedSlot.js';
 import Notification from '../models/Notification.js';
 import ActivityLog from '../models/ActivityLog.js';
+import { verifyRazorpaySignature } from './payment.controller.js';
 import {
   calculateDayAvailability,
   getActiveSettings,
@@ -263,43 +263,42 @@ export const createBooking = async (req, res, next) => {
       (!req.user.email.endsWith('@sjec.ac.in') && req.user.role !== 'ADMIN');
     const effectiveUserType = req.user.role === 'ADMIN' ? 'ADMIN' : isOutsider ? 'OUTSIDER' : 'SJEC_STUDENT';
     const totalDayFee = isOutsider ? 500 : 0; // Flat ₹500 for outsiders, ₹0 Free for SJEC students
-    const paymentIntentId = req.body.paymentIntentId || req.body.stripePaymentIntentId || '';
+    const razorpayOrderId = req.body.razorpayOrderId || req.body.orderId || '';
+    const razorpayPaymentId = req.body.razorpayPaymentId || req.body.paymentId || req.body.paymentIntentId || '';
+    const razorpaySignature = req.body.razorpaySignature || req.body.signature || '';
 
-    // Stripe verification for external musicians
+    // Razorpay verification for external musicians
     if (isOutsider && req.user.role !== 'ADMIN') {
-      if (!paymentIntentId) {
+      if (!razorpayPaymentId && !razorpayOrderId) {
         return res.status(400).json({
           success: false,
-          message: 'External musician reservations require successful ₹500 Stripe payment confirmation.',
+          message: 'External musician reservations require successful ₹500 Razorpay payment confirmation.',
         });
       }
 
-      const secretKey = process.env.STRIPE_SECRET_KEY || '';
-      const isMockKey =
-        !secretKey ||
-        secretKey.startsWith('sk_test_51MelodiumSjecTest') ||
-        paymentIntentId.startsWith('pi_mock_');
+      // If signature is provided and not a sandbox mock order, verify with secret
+      const isMockPayment =
+        razorpayPaymentId.startsWith('pay_mock_') ||
+        razorpayOrderId.startsWith('order_mock_') ||
+        razorpayPaymentId.startsWith('pi_mock_');
 
-      if (!isMockKey) {
-        try {
-          const stripe = new Stripe(secretKey, { apiVersion: '2023-10-16' });
-          const pi = await stripe.paymentIntents.retrieve(paymentIntentId);
-          if (pi.status !== 'succeeded') {
-            return res.status(400).json({
-              success: false,
-              message: `Stripe payment is not completed. Current status: ${pi.status}. Please complete payment first.`,
-            });
-          }
-        } catch (stripeErr) {
+      if (!isMockPayment && razorpaySignature && razorpayOrderId && razorpayPaymentId) {
+        const isValidSignature = verifyRazorpaySignature(
+          razorpayOrderId,
+          razorpayPaymentId,
+          razorpaySignature
+        );
+
+        if (!isValidSignature) {
           return res.status(400).json({
             success: false,
-            message: `Stripe payment verification failed: ${stripeErr.message || 'Invalid Payment Intent'}`,
+            message: 'Razorpay payment verification failed: Invalid cryptographic signature.',
           });
         }
       }
     }
 
-    const effectivePaymentMethod = isOutsider ? 'STRIPE' : 'STUDENT_FREE_PASS';
+    const effectivePaymentMethod = isOutsider ? 'RAZORPAY' : 'STUDENT_FREE_PASS';
     const paymentStatus = isOutsider ? 'PAID' : 'FREE';
 
     // 7. Create all bookings atomically
@@ -333,7 +332,9 @@ export const createBooking = async (req, res, next) => {
         feeAmount: totalDayFee,
         paymentStatus,
         paymentMethod: effectivePaymentMethod,
-        stripePaymentIntentId: paymentIntentId,
+        razorpayOrderId,
+        razorpayPaymentId,
+        razorpaySignature,
         purpose: effectivePurpose,
         participantCount: Number(participantCount) || 1,
         participants: Array.isArray(participants) ? participants : [],
