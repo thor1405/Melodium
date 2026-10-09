@@ -126,6 +126,7 @@ export const AdminTeamPage = () => {
 
     const uploadFormData = new FormData();
     uploadFormData.append('photo', file);
+    uploadFormData.append('image', file);
 
     setIsUploading(true);
     try {
@@ -191,7 +192,7 @@ export const AdminTeamPage = () => {
       tag: 'Mixer Console',
       desc: '',
       image: '/gallery/sound_engineer_console.png',
-      order: equipmentList.length,
+      order: equipmentList.length + 1,
       isActive: true,
     });
     setEditingGear({});
@@ -203,7 +204,7 @@ export const AdminTeamPage = () => {
     setEditingGear(gear);
     setGearFormData({
       title: gear.title || '',
-      tag: gear.tag || 'Gear',
+      tag: gear.tag || 'Mixer Console',
       desc: gear.desc || '',
       image: gear.image || '',
       order: gear.order ?? 0,
@@ -228,6 +229,7 @@ export const AdminTeamPage = () => {
     }
 
     const uploadData = new FormData();
+    uploadData.append('image', file);
     uploadData.append('photo', file);
 
     setGearUploadLoading(true);
@@ -253,9 +255,9 @@ export const AdminTeamPage = () => {
     }
 
     const uploadData = new FormData();
+    uploadData.append('image', file);
     uploadData.append('photo', file);
 
-    const toastId = toast.loading ? toast.loading('Uploading picture...') : null;
     try {
       const uploadRes = await cmsService.uploadEquipmentPhoto(uploadData);
       if (uploadRes.success && uploadRes.imageUrl) {
@@ -671,16 +673,16 @@ export const AdminTeamPage = () => {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
               {equipmentList.map((gear) => (
                 <div
                   key={gear._id}
-                  className={`glass-panel rounded-3xl overflow-hidden border transition-all flex flex-col group relative ${
+                  className={`glass-panel rounded-3xl overflow-hidden border transition-all flex flex-col h-full group relative ${
                     gear.isActive ? 'border-white/10 hover:border-amber-500/40' : 'border-red-500/20 opacity-75'
                   }`}
                 >
-                  {/* Card Image Area with Quick Upload Action */}
-                  <div className="relative h-48 bg-dark-950 overflow-hidden">
+                  {/* Card Image Area with Fixed Aspect Ratio & Quick Upload Action */}
+                  <div className="relative aspect-[16/10] w-full bg-dark-950 overflow-hidden shrink-0">
                     <img
                       src={gear.image}
                       alt={gear.title}
@@ -688,13 +690,13 @@ export const AdminTeamPage = () => {
                       onError={(e) => {
                         e.target.src = '/gallery/sound_engineer_console.png';
                       }}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent" />
 
                     {/* Tag Badge */}
                     <div className="absolute top-3 left-3">
-                      <span className="px-2.5 py-1 rounded-full bg-dark-950/85 backdrop-blur-md border border-white/15 text-amber-300 text-[10px] font-bold uppercase tracking-wider">
+                      <span className="px-2.5 py-1 rounded-full bg-dark-950/85 backdrop-blur-md border border-white/15 text-amber-300 text-[10px] font-bold uppercase tracking-wider shadow-sm">
                         {gear.tag}
                       </span>
                     </div>
@@ -730,28 +732,26 @@ export const AdminTeamPage = () => {
                     </div>
                   </div>
 
-                  {/* Card Body */}
-                  <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                    <div className="space-y-1.5">
-                      <h3 className="font-display font-bold text-sm text-white line-clamp-2">
+                  {/* Card Body with Consistent Vertical Alignment */}
+                  <div className="p-5 flex-1 flex flex-col justify-between">
+                    <div className="space-y-2">
+                      <h3 className="font-display font-bold text-sm text-white line-clamp-2 min-h-[2.5rem] flex items-start">
                         {gear.title}
                       </h3>
-                      <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">
+                      <p className="text-xs text-slate-400 leading-relaxed line-clamp-3 min-h-[3rem]">
                         {gear.desc}
                       </p>
                     </div>
 
-                    {/* Card Actions */}
-                    <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5">
-                        <button
-                          onClick={() => openEditGearModal(gear)}
-                          className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white hover:text-amber-400 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                          <span>Edit Card</span>
-                        </button>
-                      </div>
+                    {/* Card Actions Aligned at Bottom */}
+                    <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+                      <button
+                        onClick={() => openEditGearModal(gear)}
+                        className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white hover:text-amber-400 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Edit Card</span>
+                      </button>
 
                       <button
                         onClick={() => handleDeleteGear(gear)}
@@ -831,12 +831,12 @@ export const AdminTeamPage = () => {
 
                 {/* Picture Preview Box */}
                 {gearFormData.image && (
-                  <div className="relative h-40 rounded-2xl overflow-hidden border border-white/15 bg-dark-950">
+                  <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/15 bg-dark-950">
                     <img
                       src={gearFormData.image}
                       alt="Gear Preview"
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover object-center"
                     />
                     <div className="absolute top-2.5 left-2.5">
                       <span className="px-2 py-0.5 rounded-md bg-dark-950/80 text-amber-300 text-[10px] font-bold">

@@ -205,20 +205,22 @@ export const deleteEquipment = async (req, res, next) => {
 // @access  Private (Admin)
 export const uploadEquipmentPhoto = async (req, res, next) => {
   try {
-    if (!req.file) {
+    const file = req.file || (req.files && req.files.length > 0 ? req.files[0] : null);
+
+    if (!file) {
       return res.status(400).json({
         success: false,
         message: 'Please select an image file to upload.',
       });
     }
 
-    const imageUrl = `/uploads/gallery/${req.file.filename}`;
+    const imageUrl = `/uploads/gallery/${file.filename}`;
 
     res.json({
       success: true,
       message: 'Equipment photo uploaded successfully! 📸',
       imageUrl,
-      filename: req.file.filename,
+      filename: file.filename,
     });
   } catch (error) {
     next(error);

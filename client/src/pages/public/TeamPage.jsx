@@ -249,31 +249,32 @@ export const TeamPage = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
           {studioGear.map((gear, idx) => (
             <motion.div
               key={idx}
               whileHover={{ y: -4 }}
-              className="glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-amber-500/30 transition-all flex flex-col group"
+              className="glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-amber-500/30 transition-all flex flex-col h-full group"
             >
-              <div className="relative h-48 bg-dark-950 overflow-hidden">
+              <div className="relative aspect-[16/10] w-full bg-dark-950 overflow-hidden shrink-0">
                 <img
                   src={gear.image}
                   alt={gear.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent" />
                 <div className="absolute top-3 left-3">
-                  <span className="px-2.5 py-1 rounded-full bg-dark-950/80 backdrop-blur-md border border-white/15 text-amber-300 text-[10px] font-bold uppercase tracking-wider">
+                  <span className="px-2.5 py-1 rounded-full bg-dark-950/80 backdrop-blur-md border border-white/15 text-amber-300 text-[10px] font-bold uppercase tracking-wider shadow-sm">
                     {gear.tag}
                   </span>
                 </div>
               </div>
-              <div className="p-5 space-y-2 flex-1 flex flex-col justify-between">
-                <h3 className="font-display font-bold text-sm text-white group-hover:text-amber-400 transition-colors">
+              <div className="p-5 flex-1 flex flex-col justify-between space-y-2">
+                <h3 className="font-display font-bold text-sm text-white group-hover:text-amber-400 transition-colors line-clamp-2 min-h-[2.5rem] flex items-start">
                   {gear.title}
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">{gear.desc}</p>
+                <p className="text-xs text-slate-400 leading-relaxed line-clamp-3 min-h-[3rem]">{gear.desc}</p>
               </div>
             </motion.div>
           ))}
