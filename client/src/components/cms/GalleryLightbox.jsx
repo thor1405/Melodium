@@ -29,6 +29,7 @@ export const GalleryLightbox = ({ items = [] }) => {
             <img
               src={item.imageUrl}
               alt={item.title}
+              referrerPolicy="no-referrer"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-dark-950/90 via-dark-950/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity" />
@@ -82,6 +83,7 @@ export const GalleryLightbox = ({ items = [] }) => {
                 <img
                   src={selectedItem.imageUrl}
                   alt={selectedItem.title}
+                  referrerPolicy="no-referrer"
                   className="max-h-[75vh] w-full object-contain p-2"
                 />
 

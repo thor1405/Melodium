@@ -235,7 +235,7 @@ export const Navbar = () => {
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-600 to-yellow-400 p-0.5 shadow-sm">
                     <div className="w-full h-full bg-dark-900 rounded-[6px] overflow-hidden flex items-center justify-center">
                       {user.avatar ? (
-                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                        <img src={user.avatar} alt={user.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                       ) : (
                         <User className="w-4 h-4 text-amber-400" />
                       )}
@@ -499,7 +499,7 @@ export const Navbar = () => {
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-yellow-400 p-0.5 shrink-0 shadow-sm">
                       <div className="w-full h-full bg-dark-900 rounded-[10px] overflow-hidden flex items-center justify-center font-bold text-amber-400">
                         {user.avatar ? (
-                          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                          <img src={user.avatar} alt={user.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                         ) : (
                           user.name?.[0] || 'U'
                         )}

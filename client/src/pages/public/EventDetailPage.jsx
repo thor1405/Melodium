@@ -112,6 +112,7 @@ export const EventDetailPage = () => {
         <img
           src={event.posterImage || '/gallery/sound_treated_live_room.png'}
           alt={event.title}
+          referrerPolicy="no-referrer"
           onError={(e) => {
             e.target.src = '/gallery/sound_treated_live_room.png';
           }}

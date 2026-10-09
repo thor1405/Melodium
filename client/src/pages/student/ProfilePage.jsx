@@ -186,6 +186,7 @@ export const ProfilePage = () => {
                 <img
                   src={formData.avatar}
                   alt={user?.name}
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.src = '/gallery/sound_engineer_console.png';

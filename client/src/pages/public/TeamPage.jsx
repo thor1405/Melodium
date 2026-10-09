@@ -108,6 +108,7 @@ export const TeamPage = () => {
               <img
                 src={engineer.photo || '/team/lionel.jpg'}
                 alt={engineer.name}
+                referrerPolicy="no-referrer"
                 onError={(e) => {
                   e.target.src = '/team/lionel.jpg';
                 }}

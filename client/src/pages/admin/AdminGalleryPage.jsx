@@ -117,6 +117,18 @@ export const AdminGalleryPage = () => {
     }
   };
 
+  const handlePasteUrl = (e) => {
+    const text = e.clipboardData?.getData('text')?.trim();
+    if (text && (text.startsWith('http://') || text.startsWith('https://'))) {
+      setFormData((prev) => ({
+        ...prev,
+        imageUrl: text,
+      }));
+      setImageInputMode('url');
+      toast.success('Pasted image link detected!');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -185,6 +197,7 @@ export const AdminGalleryPage = () => {
               <img
                 src={item.imageUrl}
                 alt={item.title}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute top-3 left-3">
@@ -235,7 +248,7 @@ export const AdminGalleryPage = () => {
         subtitle="Performance & Studio Photography"
         maxWidth="max-w-lg"
       >
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} onPaste={handlePasteUrl} className="space-y-4">
           {/* Photo Source Selector Tabs */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-slate-200 block">Photo Media *</label>
@@ -286,6 +299,7 @@ export const AdminGalleryPage = () => {
                     <img
                       src={formData.imageUrl}
                       alt="Gallery Preview"
+                      referrerPolicy="no-referrer"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -341,7 +355,7 @@ export const AdminGalleryPage = () => {
                           Click to Browse Photo from Device
                         </span>
                         <span className="text-[11px] text-slate-400 mt-0.5 block">
-                          Supports high-res JPG, PNG, WEBP (Up to 25MB)
+                          Supports JPG, PNG, WEBP, Google Photos & URLs (Up to 25MB)
                         </span>
                       </div>
                     </div>
@@ -357,19 +371,23 @@ export const AdminGalleryPage = () => {
                 required
                 value={formData.imageUrl}
                 onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                placeholder="https://images.unsplash.com/..."
+                placeholder="Paste photo link (Google Photos, Google UserContent, Unsplash, Imgur, etc.)..."
                 className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-400 transition-all"
               />
               {formData.imageUrl && (
-                <div className="h-32 rounded-xl overflow-hidden border border-white/10 bg-dark-900">
+                <div className="relative h-36 rounded-xl overflow-hidden border border-white/10 bg-dark-900">
                   <img
                     src={formData.imageUrl}
                     alt="Preview"
+                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      e.target.style.display = 'none';
+                      e.currentTarget.classList.add('opacity-40');
                     }}
                   />
+                  <div className="absolute bottom-2 right-2 bg-dark-950/80 px-2 py-1 rounded text-[10px] text-slate-300 border border-white/10">
+                    Live URL Preview
+                  </div>
                 </div>
               )}
             </div>

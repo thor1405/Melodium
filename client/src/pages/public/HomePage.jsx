@@ -189,6 +189,7 @@ export const HomePage = () => {
                 <img
                   src="/gallery/sound_treated_live_room.png"
                   alt="Melodium SJEC Jam Room Studio"
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   onError={(e) => {
                     e.target.style.display = 'none';
@@ -260,6 +261,7 @@ export const HomePage = () => {
                 <img
                   src="/team/lionel.jpg"
                   alt="Lionel - Sound Engineer"
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent" />

@@ -15,6 +15,7 @@ export const TeamCard = ({ member }) => {
         <img
           src={member.photo || '/team/lionel.jpg'}
           alt={member.name}
+          referrerPolicy="no-referrer"
           onError={(e) => {
             e.target.src = '/team/lionel.jpg';
           }}

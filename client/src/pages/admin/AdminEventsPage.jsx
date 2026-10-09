@@ -196,6 +196,7 @@ export const AdminEventsPage = () => {
                 <img
                   src={ev.posterImage}
                   alt={ev.title}
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               ) : (
@@ -371,7 +372,7 @@ export const AdminEventsPage = () => {
                 {formData.posterImage ? (
                   <div className="relative rounded-2xl overflow-hidden border border-amber-500/40 bg-dark-950 group">
                     <div className="h-40 w-full overflow-hidden">
-                      <img src={formData.posterImage} alt="Poster Preview" className="w-full h-full object-cover" />
+                      <img src={formData.posterImage} alt="Poster Preview" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-dark-950/95 via-dark-950/30 to-transparent flex items-end justify-between p-3.5">
                       <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-bold bg-dark-950/80 px-2.5 py-1 rounded-lg border border-emerald-500/30">
@@ -414,20 +415,32 @@ export const AdminEventsPage = () => {
                       <div className="flex flex-col items-center gap-2">
                         <Upload className="w-6 h-6 text-amber-400" />
                         <span className="text-xs font-bold text-white">Click to Upload Event Poster from Device</span>
-                        <span className="text-[10px] text-slate-400">JPG, PNG, WEBP supported</span>
+                        <span className="text-[10px] text-slate-400">JPG, PNG, WEBP, Google Photos supported</span>
                       </div>
                     )}
                   </div>
                 )}
               </div>
             ) : (
-              <input
-                type="url"
-                value={formData.posterImage}
-                onChange={(e) => setFormData({ ...formData, posterImage: e.target.value })}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-400"
-              />
+              <div className="space-y-2">
+                <input
+                  type="url"
+                  value={formData.posterImage}
+                  onChange={(e) => setFormData({ ...formData, posterImage: e.target.value })}
+                  placeholder="Paste poster image URL (Google Photos, Google UserContent, etc.)..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-400"
+                />
+                {formData.posterImage && (
+                  <div className="relative h-32 rounded-xl overflow-hidden border border-white/10 bg-dark-900">
+                    <img
+                      src={formData.posterImage}
+                      alt="Poster Preview"
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
