@@ -289,8 +289,14 @@ export const BookingModal = ({
     <Modal
       isOpen={isOpen}
       onClose={resetAndClose}
-      title={bookingResults ? 'Booking Confirmed! 🎉' : isOutsider ? 'Book Jam Room (Razorpay Checkout)' : 'Book Jam Room'}
-      subtitle={bookingResults ? 'Pass Issued' : 'Studio'}
+      title={
+        bookingResults
+          ? 'Booking Confirmed! 🎉'
+          : isOutsider
+          ? 'Book Jam Room (Razorpay Checkout)'
+          : 'Reserve Jam Room Pass'
+      }
+      subtitle={bookingResults ? 'Official Pass Issued' : 'SJEC Studio Reservation'}
       maxWidth="max-w-xl"
       footer={bookingResults ? successFooter : formFooter}
     >
