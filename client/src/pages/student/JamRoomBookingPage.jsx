@@ -4,6 +4,7 @@ import { DateSelector } from '../../components/booking/DateSelector';
 import { SlotGrid } from '../../components/booking/SlotGrid';
 import { BookingModal } from '../../components/booking/BookingModal';
 import { SlotSkeleton } from '../../components/common/Skeleton';
+import { SpotlightCard } from '../../components/common/SpotlightCard';
 import { bookingService } from '../../services/bookingService';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -339,7 +340,10 @@ export const JamRoomBookingPage = () => {
 
       {/* Jam Room Guidelines Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 pt-2 sm:pt-4">
-        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-white/5 space-y-1.5 sm:space-y-2">
+        <SpotlightCard
+          spotlightColor="rgba(16, 185, 129, 0.15)"
+          className="glass-panel rounded-2xl p-4 sm:p-5 border border-white/5 space-y-1.5 sm:space-y-2 hover:border-emerald-400/30 transition-all"
+        >
           <h3 className="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>SJEC Students: 100% Free</span>
@@ -347,9 +351,12 @@ export const JamRoomBookingPage = () => {
           <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
             All 1-hour rehearsal slots on your active date are completely free for verified SJEC student & faculty musicians.
           </p>
-        </div>
+        </SpotlightCard>
 
-        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-white/5 space-y-1.5 sm:space-y-2">
+        <SpotlightCard
+          spotlightColor="rgba(245, 158, 11, 0.15)"
+          className="glass-panel rounded-2xl p-4 sm:p-5 border border-white/5 space-y-1.5 sm:space-y-2 hover:border-amber-400/30 transition-all"
+        >
           <h3 className="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
             <span>Outsiders: Flat ₹500 / Day Pass</span>
@@ -357,9 +364,12 @@ export const JamRoomBookingPage = () => {
           <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
             External bands and guest musicians pay a single flat ₹500 Razorpay fee covering all reserved slots for that entire day.
           </p>
-        </div>
+        </SpotlightCard>
 
-        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-white/5 space-y-1.5 sm:space-y-2">
+        <SpotlightCard
+          spotlightColor="rgba(234, 179, 8, 0.15)"
+          className="glass-panel rounded-2xl p-4 sm:p-5 border border-white/5 space-y-1.5 sm:space-y-2 hover:border-yellow-400/30 transition-all"
+        >
           <h3 className="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0" />
             <span>Flexible Multi-Day Booking</span>
@@ -367,7 +377,7 @@ export const JamRoomBookingPage = () => {
           <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
             Reserve slots across multiple dates in advance. No restrictions on scheduling separate practice sessions on different days.
           </p>
-        </div>
+        </SpotlightCard>
       </div>
 
       {/* Reservation & Pass Confirmation Modal */}

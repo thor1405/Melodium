@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { BackgroundVideoPlayer } from '../../components/common/BackgroundVideoPlayer';
 import { GalleryLightbox } from '../../components/cms/GalleryLightbox';
 import { TeamCard } from '../../components/cms/TeamCard';
+import { SpotlightCard } from '../../components/common/SpotlightCard';
+import { AnimatedCounter } from '../../components/common/AnimatedCounter';
+import { SoundVisualizer } from '../../components/common/SoundVisualizer';
 import { cmsService } from '../../services/cmsService';
 import { bookingService } from '../../services/bookingService';
 import { reviewService } from '../../services/reviewService';
@@ -111,12 +114,7 @@ export const HomePage = () => {
             variants={fadeInUp}
             className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-600/25 via-yellow-500/20 to-transparent border border-amber-500/40 backdrop-blur-md shadow-lg"
           >
-            <div className="flex items-end gap-0.5 h-3.5 px-1">
-              <span className="w-0.5 bg-amber-400 rounded-full animate-wave-1" />
-              <span className="w-0.5 bg-amber-300 rounded-full animate-wave-2" />
-              <span className="w-0.5 bg-yellow-400 rounded-full animate-wave-3" />
-              <span className="w-0.5 bg-amber-400 rounded-full animate-wave-4" />
-            </div>
+            <SoundVisualizer bars={5} barClassName="bg-amber-400" className="h-3" />
             <span className="text-xs font-bold tracking-widest uppercase text-amber-300">
               MELODIUM STUDIO
             </span>
@@ -166,6 +164,50 @@ export const HomePage = () => {
           </motion.div>
         </motion.div>
       </section>
+
+      {/* 1.5 LIVE STUDIO STATS COUNTER STRIP */}
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-16 relative z-20"
+      >
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 p-3 sm:p-4 rounded-3xl glass-panel-elevated border border-amber-500/25 shadow-2xl backdrop-blur-2xl">
+          <SpotlightCard className="p-4 sm:p-5 text-center space-y-1 bg-white/[0.02]">
+            <div className="text-2xl sm:text-4xl font-black font-display text-white tracking-tight">
+              <AnimatedCounter to={500} suffix="+" />
+            </div>
+            <div className="text-xs font-bold text-amber-300">Jam Hours Logged</div>
+            <p className="text-[11px] text-slate-400 hidden sm:block">Band rehearsals & studio sessions</p>
+          </SpotlightCard>
+
+          <SpotlightCard className="p-4 sm:p-5 text-center space-y-1 bg-white/[0.02]">
+            <div className="text-2xl sm:text-4xl font-black font-display text-amber-400 tracking-tight">
+              <AnimatedCounter to={100} suffix="%" />
+            </div>
+            <div className="text-xs font-bold text-amber-300">Free for SJEC Students</div>
+            <p className="text-[11px] text-slate-400 hidden sm:block">Zero cost university access</p>
+          </SpotlightCard>
+
+          <SpotlightCard className="p-4 sm:p-5 text-center space-y-1 bg-white/[0.02]">
+            <div className="text-2xl sm:text-4xl font-black font-display text-white tracking-tight">
+              <AnimatedCounter to={24} suffix="/7" />
+            </div>
+            <div className="text-xs font-bold text-amber-300">Automated Slot Booking</div>
+            <p className="text-[11px] text-slate-400 hidden sm:block">Instant rehearsal passes</p>
+          </SpotlightCard>
+
+          <SpotlightCard className="p-4 sm:p-5 text-center space-y-1 bg-white/[0.02]">
+            <div className="text-2xl sm:text-4xl font-black font-display text-emerald-400 tracking-tight flex items-center justify-center gap-1">
+              <span>5.0</span>
+              <Star className="w-5 h-5 fill-amber-400 text-amber-400 shrink-0" />
+            </div>
+            <div className="text-xs font-bold text-amber-300">Musician Rating</div>
+            <p className="text-[11px] text-slate-400 hidden sm:block">Rated by SJEC performers</p>
+          </SpotlightCard>
+        </div>
+      </motion.section>
 
       {/* 2. JAM ROOM STUDIO 1 SPOTLIGHT (SCROLL-TRIGGERED REVEAL) */}
       <motion.section

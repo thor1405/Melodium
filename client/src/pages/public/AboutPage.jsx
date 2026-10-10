@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { SpotlightCard } from '../../components/common/SpotlightCard';
+import { AnimatedCounter } from '../../components/common/AnimatedCounter';
+import { SoundVisualizer } from '../../components/common/SoundVisualizer';
 import {
   Music2,
   Radio,
@@ -50,14 +53,7 @@ export const AboutPage = () => {
 
       {/* Mission & Vision Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          whileHover={{ y: -6, scale: 1.015 }}
-          className="glass-panel-elevated rounded-3xl p-8 sm:p-10 border border-white/10 space-y-4 relative overflow-hidden transition-all hover:border-amber-400/40 hover:shadow-glow-yellow/15"
-        >
+        <SpotlightCard className="p-8 sm:p-10 border border-white/10 space-y-4">
           <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-glow-yellow/30">
             <Target className="w-6 h-6" />
           </div>
@@ -68,16 +64,9 @@ export const AboutPage = () => {
             seek to break genre boundaries and develop well-rounded artists capable of live
             performance and studio composition.
           </p>
-        </motion.div>
+        </SpotlightCard>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          whileHover={{ y: -6, scale: 1.015 }}
-          className="glass-panel-elevated rounded-3xl p-8 sm:p-10 border border-white/10 space-y-4 relative overflow-hidden transition-all hover:border-amber-400/40 hover:shadow-glow-yellow/15"
-        >
+        <SpotlightCard className="p-8 sm:p-10 border border-white/10 space-y-4">
           <div className="w-12 h-12 rounded-2xl bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center text-yellow-400 shadow-glow-yellow/30">
             <Compass className="w-6 h-6" />
           </div>
@@ -87,7 +76,7 @@ export const AboutPage = () => {
             unmatched musicianship, innovative fusion of Western and Indian classical traditions,
             and sound engineering excellence.
           </p>
-        </motion.div>
+        </SpotlightCard>
       </div>
 
       {/* Musical Culture at SJEC */}
@@ -108,10 +97,7 @@ export const AboutPage = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="p-5 rounded-2xl bg-white/5 border border-white/5 space-y-2 hover:border-amber-400/30 transition-all"
-          >
+          <SpotlightCard className="p-5 space-y-2">
             <h3 className="font-bold text-white text-base font-display">
               Multi-Genre Jam Sessions
             </h3>
@@ -119,12 +105,9 @@ export const AboutPage = () => {
               From blues rock power trios and progressive metal breakdowns to gentle acoustic folk
               duets and Carnatic-western fusion, Melodium embraces all forms of musical expression.
             </p>
-          </motion.div>
+          </SpotlightCard>
 
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="p-5 rounded-2xl bg-white/5 border border-white/5 space-y-2 hover:border-amber-400/30 transition-all"
-          >
+          <SpotlightCard className="p-5 space-y-2">
             <h3 className="font-bold text-white text-base font-display">
               Studio Sound & Production
             </h3>
@@ -133,12 +116,9 @@ export const AboutPage = () => {
               digital mixing, balanced foldback monitor mixes, acoustically tuned amps, and
               multi-track recording.
             </p>
-          </motion.div>
+          </SpotlightCard>
 
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="p-5 rounded-2xl bg-white/5 border border-white/5 space-y-2 hover:border-amber-400/30 transition-all"
-          >
+          <SpotlightCard className="p-5 space-y-2">
             <h3 className="font-bold text-white text-base font-display">
               Stage Performance
             </h3>
@@ -147,7 +127,7 @@ export const AboutPage = () => {
               Battle of the Bands competitions, charity concerts, and college convocation
               ceremonies.
             </p>
-          </motion.div>
+          </SpotlightCard>
         </div>
       </motion.div>
 
@@ -167,10 +147,7 @@ export const AboutPage = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="p-6 rounded-2xl glass-panel border border-white/5 hover:border-amber-400/30 flex items-start gap-4 transition-all"
-          >
+          <SpotlightCard className="p-6 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
               <Trophy className="w-5 h-5" />
             </div>
@@ -180,12 +157,9 @@ export const AboutPage = () => {
                 2024 & 2025 Regional Champions competing against 24 engineering college rock bands.
               </p>
             </div>
-          </motion.div>
+          </SpotlightCard>
 
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="p-6 rounded-2xl glass-panel border border-white/5 hover:border-amber-400/30 flex items-start gap-4 transition-all"
-          >
+          <SpotlightCard className="p-6 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-yellow-500/20 text-yellow-400 flex items-center justify-center shrink-0">
               <Award className="w-5 h-5" />
             </div>
@@ -195,22 +169,21 @@ export const AboutPage = () => {
                 Individual accolades awarded to Melodium artists at the VTU State Cultural Festival.
               </p>
             </div>
-          </motion.div>
+          </SpotlightCard>
 
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="p-6 rounded-2xl glass-panel border border-white/5 hover:border-amber-400/30 flex items-start gap-4 transition-all"
-          >
+          <SpotlightCard className="p-6 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
               <Volume2 className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-sm text-white">Over 400+ Studio Jam Sessions</h4>
+              <h4 className="font-bold text-sm text-white">
+                <AnimatedCounter to={400} suffix="+" /> Studio Jam Sessions
+              </h4>
               <p className="text-xs text-slate-400 mt-1">
                 Facilitating consistent weekly rehearsals and fostering new bands across batches.
               </p>
             </div>
-          </motion.div>
+          </SpotlightCard>
         </div>
       </motion.div>
 

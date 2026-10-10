@@ -5,6 +5,9 @@ import { useToast } from '../../context/ToastContext';
 import { reviewService } from '../../services/reviewService';
 import { formatDate } from '../../utils/dateUtils';
 import { Modal } from '../../components/common/Modal';
+import { SpotlightCard } from '../../components/common/SpotlightCard';
+import { AnimatedCounter } from '../../components/common/AnimatedCounter';
+import { SoundVisualizer } from '../../components/common/SoundVisualizer';
 import {
   Star,
   Sparkles,
@@ -181,8 +184,8 @@ export const ReviewsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8 sm:space-y-12">
           {/* Top Title */}
           <div className="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider shadow-glow-yellow">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider shadow-glow-yellow">
+              <SoundVisualizer barsCount={4} barColor="bg-amber-400" />
               <span>Musician Experiences & Testimonials</span>
             </div>
 
@@ -207,7 +210,11 @@ export const ReviewsPage = () => {
               </span>
               <div className="flex items-baseline gap-2">
                 <span className="text-5xl sm:text-6xl font-display font-black text-white">
-                  {stats.averageRating ? stats.averageRating.toFixed(1) : '5.0'}
+                  {stats.averageRating ? (
+                    <AnimatedCounter to={stats.averageRating} duration={1.2} />
+                  ) : (
+                    '5.0'
+                  )}
                 </span>
                 <span className="text-slate-500 text-base font-semibold">/ 5.0</span>
               </div>
@@ -225,7 +232,11 @@ export const ReviewsPage = () => {
                 ))}
               </div>
               <p className="text-xs text-slate-400 font-medium">
-                Based on <strong>{stats.totalReviews}</strong> verified musician reviews
+                Based on{' '}
+                <strong>
+                  <AnimatedCounter to={stats.totalReviews} duration={1.2} />
+                </strong>{' '}
+                verified musician reviews
               </p>
             </div>
 
@@ -259,7 +270,9 @@ export const ReviewsPage = () => {
               <div className="space-y-1">
                 <div className="text-xs font-bold text-white flex items-center justify-center lg:justify-end gap-1.5 text-glow-yellow">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  <span>{stats.satisfactionRate}% Positive Feedback</span>
+                  <span>
+                    <AnimatedCounter to={stats.satisfactionRate} duration={1.2} />% Positive Feedback
+                  </span>
                 </div>
                 <p className="text-[11px] text-slate-400">
                   Have you jammed at Melodium? Share your experience with the community.
@@ -269,7 +282,7 @@ export const ReviewsPage = () => {
               <button
                 type="button"
                 onClick={handleOpenWriteModal}
-                className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-dark-950 font-black text-xs sm:text-sm shadow-glow-yellow flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] cursor-pointer"
+                className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-dark-950 font-black text-xs sm:text-sm shadow-glow-yellow flex items-center justify-center gap-2 transition-all transform hover:scale-105 active:scale-95 cursor-pointer shimmer-btn"
               >
                 <PenSquare className="w-4 h-4" />
                 <span>Write a Review</span>
@@ -350,11 +363,9 @@ export const ReviewsPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {reviews.map((rev) => (
-              <motion.div
+              <SpotlightCard
                 key={rev._id}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2 }}
+                spotlightColor={rev.isFeatured ? 'rgba(245, 158, 11, 0.22)' : 'rgba(245, 158, 11, 0.12)'}
                 className={`rounded-3xl p-5 sm:p-6 flex flex-col justify-between space-y-4 transition-all border ${
                   rev.isFeatured
                     ? 'glass-panel-elevated border-amber-400/50 shadow-glow-yellow ring-1 ring-amber-400/40'
@@ -444,7 +455,7 @@ export const ReviewsPage = () => {
                     )}
                   </button>
                 </div>
-              </motion.div>
+              </SpotlightCard>
             ))}
           </div>
         )}

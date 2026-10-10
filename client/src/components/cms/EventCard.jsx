@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatDate, formatTime12h, formatSlotRange } from '../../utils/dateUtils';
 import { Calendar, Clock, MapPin, Users, ArrowRight, Heart } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { SpotlightCard } from '../common/SpotlightCard';
 
 export const EventCard = ({ event, onRsvp, isRsvpd }) => {
   if (!event) return null;
@@ -12,9 +12,9 @@ export const EventCard = ({ event, onRsvp, isRsvpd }) => {
   const isUpcoming = event.status === 'UPCOMING';
 
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      className="glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-white/20 transition-all flex flex-col justify-between group"
+    <SpotlightCard
+      spotlightColor="rgba(245, 158, 11, 0.15)"
+      className="glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-amber-400/40 hover:shadow-glow-yellow/15 transition-all flex flex-col justify-between group"
     >
       {/* Event Poster */}
       <div className="relative h-52 sm:h-56 overflow-hidden">
@@ -124,6 +124,6 @@ export const EventCard = ({ event, onRsvp, isRsvpd }) => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </SpotlightCard>
   );
 };

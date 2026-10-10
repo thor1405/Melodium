@@ -107,7 +107,9 @@ export const SlotGrid = ({
               key={slot.startTime}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.01 }}
+              transition={{ delay: idx * 0.01, duration: 0.2 }}
+              whileHover={isAvailable || isSelected ? { y: -4, scale: 1.02 } : undefined}
+              whileTap={isAvailable || isSelected ? { scale: 0.97 } : undefined}
               onClick={() => {
                 if (isAvailable || isSelected) onToggleSlot(slot);
               }}

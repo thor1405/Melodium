@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { cmsService } from '../../services/cmsService';
+import { SpotlightCard } from '../../components/common/SpotlightCard';
+import { SoundVisualizer } from '../../components/common/SoundVisualizer';
 import {
   Sliders,
   Mic2,
@@ -142,7 +144,7 @@ export const TeamPage = () => {
           {/* Photo Showcase */}
           <div className="lg:col-span-5">
             <motion.div
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
               className="relative rounded-2xl overflow-hidden border-2 border-amber-500/40 shadow-2xl bg-dark-900 aspect-[3/4] max-w-md mx-auto group"
             >
@@ -157,11 +159,11 @@ export const TeamPage = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/25 to-transparent" />
 
-              {/* Verified Sound Engineer Badge */}
+              {/* Verified Sound Engineer Badge with Dynamic Equalizer */}
               <div className="absolute top-4 left-4">
                 <span className="px-3.5 py-1.5 rounded-full bg-dark-950/85 backdrop-blur-md border border-amber-500/50 text-amber-300 text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg">
-                  <Sliders className="w-3.5 h-3.5 text-amber-400" />
-                  Resident Sound Engineer
+                  <SoundVisualizer barsCount={4} barColor="bg-amber-400" />
+                  <span>Resident Sound Engineer</span>
                 </span>
               </div>
 
@@ -197,63 +199,71 @@ export const TeamPage = () => {
               </p>
             </div>
 
-            {/* Core Responsibilities Grid */}
+            {/* Core Responsibilities Grid with Spotlight Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-              <motion.div
-                whileHover={{ y: -3, scale: 1.02 }}
-                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/30 transition-all"
+              <SpotlightCard
+                spotlightColor="rgba(245, 158, 11, 0.15)"
+                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/40 transition-all"
               >
                 <div className="font-bold text-white text-xs flex items-center gap-2">
-                  <Sliders className="w-4 h-4 text-amber-400 shrink-0" />
+                  <div className="w-7 h-7 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
+                    <Sliders className="w-3.5 h-3.5 text-amber-400" />
+                  </div>
                   <span>Digital Mixing & EQ</span>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                   Dynamic channel fader balancing, parametric equalizers, noise gates, and monitor
                   foldbacks.
                 </p>
-              </motion.div>
+              </SpotlightCard>
 
-              <motion.div
-                whileHover={{ y: -3, scale: 1.02 }}
-                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/30 transition-all"
+              <SpotlightCard
+                spotlightColor="rgba(245, 158, 11, 0.15)"
+                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/40 transition-all"
               >
                 <div className="font-bold text-white text-xs flex items-center gap-2">
-                  <Mic2 className="w-4 h-4 text-amber-400 shrink-0" />
+                  <div className="w-7 h-7 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
+                    <Mic2 className="w-3.5 h-3.5 text-amber-400" />
+                  </div>
                   <span>Multitrack DAW Recording</span>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                   Direct stem audio tracking via Logic Pro & Ableton Live for band demos and contest
                   entries.
                 </p>
-              </motion.div>
+              </SpotlightCard>
 
-              <motion.div
-                whileHover={{ y: -3, scale: 1.02 }}
-                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/30 transition-all"
+              <SpotlightCard
+                spotlightColor="rgba(245, 158, 11, 0.15)"
+                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/40 transition-all"
               >
                 <div className="font-bold text-white text-xs flex items-center gap-2">
-                  <Volume2 className="w-4 h-4 text-amber-400 shrink-0" />
+                  <div className="w-7 h-7 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
+                    <Volume2 className="w-3.5 h-3.5 text-amber-400" />
+                  </div>
                   <span>Live Rehearsal Soundchecks</span>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                   Pre-session gain staging, feedback suppression, instrument isolation, and acoustic
                   tuning.
                 </p>
-              </motion.div>
+              </SpotlightCard>
 
-              <motion.div
-                whileHover={{ y: -3, scale: 1.02 }}
-                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/30 transition-all"
+              <SpotlightCard
+                spotlightColor="rgba(245, 158, 11, 0.15)"
+                className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1.5 hover:border-amber-400/40 transition-all"
               >
                 <div className="font-bold text-white text-xs flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
+                  <div className="w-7 h-7 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
+                    <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                  </div>
                   <span>Studio Equipment Custody</span>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                   Maintaining tube guitar heads, condenser capsules, active subwoofers, and cables
                   in the Jam Room.
                 </p>
-              </motion.div>
+              </SpotlightCard>
             </div>
 
             {/* CTAs */}
@@ -299,10 +309,9 @@ export const TeamPage = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
           {studioGear.map((gear, idx) => (
-            <motion.div
-              key={idx}
-              whileHover={{ y: -6, scale: 1.015 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
+            <SpotlightCard
+              key={gear._id || idx}
+              spotlightColor="rgba(245, 158, 11, 0.12)"
               className="glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-amber-500/40 hover:shadow-glow-yellow/10 transition-all flex flex-col h-full group"
             >
               <div className="relative aspect-[16/10] w-full bg-dark-950 overflow-hidden shrink-0">
@@ -327,7 +336,7 @@ export const TeamPage = () => {
                   {gear.desc}
                 </p>
               </div>
-            </motion.div>
+            </SpotlightCard>
           ))}
         </div>
       </motion.div>
@@ -355,8 +364,8 @@ export const TeamPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300">
-          <motion.div
-            whileHover={{ y: -3 }}
+          <SpotlightCard
+            spotlightColor="rgba(245, 158, 11, 0.1)"
             className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1 hover:border-amber-400/20 transition-all"
           >
             <div className="font-bold text-white">1. Arrive 5 Mins Early</div>
@@ -364,9 +373,9 @@ export const TeamPage = () => {
               Check in with Lionel at the Jam Room to set channel inputs, plug in your instruments,
               and perform a line check.
             </p>
-          </motion.div>
-          <motion.div
-            whileHover={{ y: -3 }}
+          </SpotlightCard>
+          <SpotlightCard
+            spotlightColor="rgba(245, 158, 11, 0.1)"
             className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1 hover:border-amber-400/20 transition-all"
           >
             <div className="font-bold text-white">2. Master Volume Handling</div>
@@ -374,9 +383,9 @@ export const TeamPage = () => {
               Never unplug live guitar cables without turning amplifier master dials to zero to
               prevent speaker damage.
             </p>
-          </motion.div>
-          <motion.div
-            whileHover={{ y: -3 }}
+          </SpotlightCard>
+          <SpotlightCard
+            spotlightColor="rgba(245, 158, 11, 0.1)"
             className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1 hover:border-amber-400/20 transition-all"
           >
             <div className="font-bold text-white">3. Multitrack Export Request</div>
@@ -384,7 +393,7 @@ export const TeamPage = () => {
               If your band requires raw DAW audio stems or rough mixdown exports, notify Lionel at
               the start of the session.
             </p>
-          </motion.div>
+          </SpotlightCard>
         </div>
       </motion.div>
     </div>

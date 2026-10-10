@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { cmsService } from '../../services/cmsService';
 import { MelodiumLogo } from './MelodiumLogo';
+import { ScrollProgressBar } from './ScrollProgressBar';
 import {
   Music2,
   Calendar,
@@ -667,6 +668,9 @@ export const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Top Scroll Reading Progress Indicator */}
+      <ScrollProgressBar />
     </header>
   );
 };
