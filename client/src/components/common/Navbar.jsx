@@ -32,6 +32,7 @@ export const Navbar = () => {
   const [isMobileNotifOpen, setIsMobileNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [hoveredPath, setHoveredPath] = useState(null);
 
   const notifRef = useRef(null);
   const userRef = useRef(null);
@@ -160,39 +161,75 @@ export const Navbar = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 p-1 rounded-2xl bg-white/[0.03] border border-white/5">
+        <nav
+          onMouseLeave={() => setHoveredPath(null)}
+          className="hidden md:flex items-center gap-1 lg:gap-1.5 p-1.5 rounded-2xl bg-white/[0.04] border border-white/10 shadow-lg backdrop-blur-md relative"
+        >
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
+            const isHovered = hoveredPath === link.path;
             return (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={handleNavClick}
-                className={`relative px-3.5 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                  isActive ? 'text-amber-300' : 'text-slate-300 hover:text-white'
+                onMouseEnter={() => setHoveredPath(link.path)}
+                className={`relative px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all select-none ${
+                  isActive
+                    ? 'text-amber-300'
+                    : isHovered
+                    ? 'text-white'
+                    : 'text-slate-300 hover:text-white'
                 }`}
               >
-                {isActive && (
+                {/* Magnetic Sliding Hover Pill */}
+                {isHovered && !isActive && (
                   <motion.div
-                    layoutId="navbar-indicator"
-                    className="absolute inset-0 rounded-xl bg-amber-500/15 border border-amber-500/30 shadow-inner"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    layoutId="navbar-hover-glider"
+                    className="absolute inset-0 rounded-xl bg-white/[0.08] border border-white/15 shadow-sm"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ type: 'spring', stiffness: 450, damping: 30 }}
                   />
                 )}
-                <span className="relative z-10">{link.name}</span>
+
+                {/* Active Page Indicator */}
+                {isActive && (
+                  <motion.div
+                    layoutId="navbar-active-indicator"
+                    className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-amber-500/20 border border-amber-400/50 shadow-inner shadow-amber-500/10"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+
+                <motion.span
+                  className="relative z-10 block"
+                  whileHover={{ y: -1, scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  {link.name}
+                </motion.span>
               </Link>
             );
           })}
 
           {/* Jam Room Booking Direct CTA Button */}
-          <Link
-            to="/jam-room#booking-calendar"
-            onClick={handleBookJamRoomClick}
-            className="ml-1.5 flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-extrabold text-xs shadow-glow-yellow transition-all hover:scale-[1.03] active:scale-[0.97] shimmer-btn cursor-pointer"
+          <motion.div
+            whileHover={{ scale: 1.06, y: -1 }}
+            whileTap={{ scale: 0.94 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
           >
-            <Radio className="w-3.5 h-3.5 animate-pulse text-dark-950" />
-            <span>Book Jam Room</span>
-          </Link>
+            <Link
+              to="/jam-room#booking-calendar"
+              onClick={handleBookJamRoomClick}
+              className="ml-1.5 flex items-center gap-2 px-4 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-dark-950 font-black text-xs shadow-glow-yellow transition-all shimmer-btn cursor-pointer"
+            >
+              <Radio className="w-3.5 h-3.5 animate-pulse text-dark-950" />
+              <span>Book Jam Room</span>
+            </Link>
+          </motion.div>
         </nav>
 
         {/* Right Action Icons & User Dropdown (Desktop) */}
