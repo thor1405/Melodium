@@ -28,7 +28,7 @@ export const initialJamRoomVideos = [
     title: 'Mapex Drum Kit Isolation & Soundcheck',
     description: 'Listen to the punchy dynamic mic setup on the snare, toms, and Zildjian cymbals inside the isolated drum corner.',
     videoUrl: 'https://cdn.pixabay.com/video/2016/08/17/4397-178652397_large.mp4',
-    thumbnailUrl: '/gallery/sound_treated_live_room.png',
+    thumbnailUrl: '/gallery/logic_pro_daw_station.png',
     duration: 30,
     tag: 'Drum Kit',
     isFeatured: true,
@@ -67,14 +67,10 @@ export const initialJamRoomVideos = [
 
 export const seedJamRoomVideos = async () => {
   try {
-    const count = await JamRoomVideo.countDocuments();
-    if (count === 0) {
-      console.log('🎬 Seeding initial 30-second Jam Room short videos...');
-      await JamRoomVideo.insertMany(initialJamRoomVideos);
-      console.log(`✅ Seeded ${initialJamRoomVideos.length} Jam Room short videos.`);
-    } else {
-      console.log(`ℹ️ JamRoomVideo collection already has ${count} videos.`);
-    }
+    await JamRoomVideo.deleteMany({});
+    console.log('🎬 Seeding refined 30-second Jam Room short videos...');
+    await JamRoomVideo.insertMany(initialJamRoomVideos);
+    console.log(`✅ Seeded ${initialJamRoomVideos.length} Jam Room short videos.`);
   } catch (err) {
     console.error('❌ Error seeding Jam Room short videos:', err.message);
   }

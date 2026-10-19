@@ -321,8 +321,8 @@ export const HomePage = () => {
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         <JamRoomShorts
-          title="Inside the Studio: 30-Second Jam Room Shorts"
-          subtitle="Watch quick 30-second video clips showcasing drum isolation, Marshall and Fender amplifiers, live rehearsals, and audio routing at Melodium SJEC."
+          title="Inside the Studio in 30 Seconds"
+          subtitle="Quick acoustic walkthroughs, drum isolation checks, amplifier signal paths, and live soundcheck reels at Melodium SJEC."
         />
       </motion.section>
 

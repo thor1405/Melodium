@@ -388,21 +388,33 @@ export const AdminVideosPage = () => {
               }`}
             >
               {/* Card Video Header */}
-              <div className="relative aspect-[9/12] bg-dark-950 overflow-hidden">
+              <div className="relative aspect-[16/10] bg-dark-950 overflow-hidden">
+                <img
+                  src={vid.thumbnailUrl || '/gallery/sound_treated_live_room.png'}
+                  alt={vid.title}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    e.target.src = '/gallery/sound_treated_live_room.png';
+                  }}
+                />
                 <video
                   src={vid.videoUrl}
-                  poster={vid.thumbnailUrl || '/gallery/sound_treated_live_room.png'}
                   muted
                   loop
                   playsInline
-                  onMouseEnter={(e) => e.target.play().catch(() => {})}
+                  onMouseEnter={(e) => {
+                    e.target.style.opacity = '1';
+                    e.target.play().catch(() => {});
+                  }}
                   onMouseLeave={(e) => {
                     e.target.pause();
                     e.target.currentTime = 0;
+                    e.target.style.opacity = '0';
                   }}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent pointer-events-none" />
 
                 {/* Top Badges */}
                 <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-1">

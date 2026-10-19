@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { jamRoomVideoService } from '../../services/jamRoomVideoService';
-import { SpotlightCard } from '../common/SpotlightCard';
 import { SoundVisualizer } from '../common/SoundVisualizer';
 import {
   Play,
@@ -164,86 +163,99 @@ export const JamRoomShorts = ({ title, subtitle, showBookButton = true }) => {
   const currentReel = activeReelIndex !== null ? videos[activeReelIndex] : null;
 
   if (!loading && videos.length === 0 && selectedTag === 'ALL') {
-    return null; // Don't render empty section if no videos yet
+    return null;
   }
 
   return (
     <section className="space-y-6 sm:space-y-8">
-      {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider shadow-glow-yellow">
-            <Film className="w-3.5 h-3.5" />
-            <span>30-Second Jam Room Shorts</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+      {/* Refined Section Header & Filter Controls */}
+      <div className="space-y-4">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider shadow-glow-yellow">
+              <Film className="w-3.5 h-3.5 text-amber-400" />
+              <span>Studio Shorts • 30 Seconds</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-display font-extrabold text-white tracking-tight leading-tight">
+              {title || 'Inside the Studio: 30-Second Shorts'}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              {subtitle ||
+                'Quick acoustic walkthroughs, drum isolation checks, amplifier signal paths, and live soundcheck reels at Academic Block 3.'}
+            </p>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-display font-extrabold text-white tracking-tight">
-            {title || 'Experience the Jam Room in 30 Seconds'}
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-2xl leading-relaxed">
-            {subtitle ||
-              'Watch quick 30-second studio tours, drum isolation breakdowns, amplifier line checks, and Lionel live console routing at Academic Block 3.'}
-          </p>
-        </div>
 
-        {/* Category Filter Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar shrink-0">
-          {TAG_FILTERS.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => setSelectedTag(tag)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                selectedTag === tag
-                  ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-dark-950 font-bold shadow-glow-yellow'
-                  : 'bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/5'
-              }`}
-            >
-              {tag === 'ALL' ? 'All Shorts' : tag}
-            </button>
-          ))}
+          {/* Minimalist Filter Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar shrink-0 p-1 rounded-2xl bg-white/5 border border-white/5">
+            {TAG_FILTERS.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setSelectedTag(tag)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  selectedTag === tag
+                    ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-dark-950 font-bold shadow-glow-yellow'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {tag === 'ALL' ? 'All Shorts' : tag}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Videos Grid (Portrait 9:16 Shorts format) */}
+      {/* Videos Grid (Cinematic 4:5 Aspect Ratio) */}
       {loading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="aspect-[9/16] rounded-3xl bg-white/5 animate-pulse border border-white/5"
+              className="aspect-[4/5] rounded-3xl bg-white/5 animate-pulse border border-white/5"
             />
           ))}
         </div>
       ) : videos.length === 0 ? (
-        <div className="p-8 sm:p-12 rounded-3xl glass-panel text-center text-slate-400 text-xs border border-white/5 space-y-2">
+        <div className="p-10 rounded-3xl glass-panel text-center text-slate-400 text-xs border border-white/5 space-y-2">
           <Film className="w-8 h-8 text-amber-400/60 mx-auto" />
           <p className="font-semibold text-white">No short videos found in this category.</p>
           <p className="text-[11px] text-slate-500">Switch categories to view other Jam Room reels.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
           {videos.map((video, idx) => {
             const isHovered = hoveredVideoId === video._id;
             const isLiked = likedMap[video._id];
 
             return (
-              <SpotlightCard
+              <motion.div
                 key={video._id}
-                spotlightColor="rgba(245, 158, 11, 0.2)"
-                className="group relative rounded-3xl overflow-hidden glass-panel border border-white/10 hover:border-amber-400/50 hover:shadow-glow-yellow/20 transition-all cursor-pointer flex flex-col justify-between aspect-[9/15] sm:aspect-[9/16] select-none"
+                whileHover={{ y: -6, scale: 1.015 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+                className="group relative rounded-3xl overflow-hidden border border-white/10 hover:border-amber-400/50 hover:shadow-glow-yellow/20 bg-dark-900 transition-all cursor-pointer aspect-[4/5] flex flex-col justify-between shadow-2xl select-none"
                 onClick={() => handleOpenReel(idx)}
                 onMouseEnter={() => setHoveredVideoId(video._id)}
                 onMouseLeave={() => setHoveredVideoId(null)}
               >
-                {/* Background Video / Thumbnail Preview */}
-                <div className="absolute inset-0 bg-dark-950 overflow-hidden">
+                {/* 1. Full-Bleed High-Res Poster Image (Always 100% Covers Card) */}
+                <img
+                  src={video.thumbnailUrl || '/gallery/sound_treated_live_room.png'}
+                  alt={video.title}
+                  referrerPolicy="no-referrer"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  onError={(e) => {
+                    e.target.src = '/gallery/sound_treated_live_room.png';
+                  }}
+                />
+
+                {/* 2. Live Video Preview Layer (Smoothly fades in and plays on hover) */}
+                {video.videoUrl && (
                   <video
                     src={video.videoUrl}
-                    poster={video.thumbnailUrl || '/gallery/sound_treated_live_room.png'}
                     muted
                     loop
                     playsInline
-                    preload="metadata"
+                    preload="none"
                     ref={(el) => {
                       if (el) {
                         if (isHovered) {
@@ -254,58 +266,71 @@ export const JamRoomShorts = ({ title, subtitle, showBookButton = true }) => {
                         }
                       }
                     }}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                      isHovered ? 'opacity-100' : 'opacity-0'
+                    }`}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/30 to-dark-950/40 opacity-90 group-hover:opacity-80 transition-opacity" />
-                </div>
+                )}
 
-                {/* Top Badges */}
-                <div className="relative z-10 p-3 sm:p-4 flex items-center justify-between gap-1.5">
+                {/* 3. Deep Cinematic Scrim Gradient (Ensures high contrast & readability) */}
+                <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/40 to-black/30 group-hover:from-dark-950/95 transition-all duration-300" />
+
+                {/* 4. Top Badges Row */}
+                <div className="relative z-10 p-4 flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
-                    <span className="px-2 py-0.5 rounded-full bg-dark-950/85 backdrop-blur-md border border-amber-500/40 text-amber-300 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md">
-                      <Clock className="w-3 h-3 text-amber-400" />
+                    {/* 30s Recording Pill */}
+                    <span className="px-2.5 py-1 rounded-full bg-dark-950/85 backdrop-blur-md border border-white/15 text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
                       <span>{video.duration || 30}s</span>
                     </span>
-                    <span className="px-2 py-0.5 rounded-full bg-dark-950/80 backdrop-blur-md border border-white/15 text-slate-300 text-[10px] font-bold truncate max-w-[85px] sm:max-w-[100px]">
+
+                    {/* Category Pill */}
+                    <span className="px-2.5 py-1 rounded-full bg-dark-950/80 backdrop-blur-md border border-white/10 text-amber-300 text-[10px] font-bold uppercase tracking-wider shadow-sm truncate max-w-[110px]">
                       {video.tag}
                     </span>
                   </div>
 
-                  {/* Soundwave Animation on Hover */}
+                  {/* Equalizer Wave Badge */}
                   <div className="opacity-70 group-hover:opacity-100 transition-opacity">
                     <SoundVisualizer barsCount={3} barColor="bg-amber-400" />
                   </div>
                 </div>
 
-                {/* Center Big Play Button Overlay */}
-                <div className="relative z-10 self-center my-auto transition-transform duration-300 group-hover:scale-115">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-amber-400/90 text-dark-950 flex items-center justify-center shadow-glow-yellow backdrop-blur-md border border-amber-300/50">
-                    <Play className="w-6 h-6 fill-dark-950 translate-x-0.5 text-dark-950" />
+                {/* 5. Center Centered Glassmorphic Play Button */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                  <div className="w-14 h-14 rounded-full bg-dark-950/60 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-115 group-hover:bg-amber-400 group-hover:text-dark-950 group-hover:border-amber-300 group-hover:shadow-glow-yellow">
+                    <Play className="w-5 h-5 fill-current translate-x-0.5" />
                   </div>
                 </div>
 
-                {/* Bottom Video Meta */}
-                <div className="relative z-10 p-3 sm:p-4 space-y-2 bg-gradient-to-t from-dark-950 via-dark-950/90 to-transparent pt-6">
-                  <h3 className="font-display font-extrabold text-xs sm:text-sm text-white group-hover:text-amber-300 transition-colors line-clamp-2 leading-snug">
-                    {video.title}
-                  </h3>
+                {/* 6. Bottom Meta Information (Pinned to bottom) */}
+                <div className="relative z-10 p-4 sm:p-5 pt-10 space-y-2 bg-gradient-to-t from-dark-950 via-dark-950/90 to-transparent">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-amber-400/90 block">
+                      {video.tag}
+                    </span>
+                    <h3 className="font-display font-black text-sm sm:text-base text-white group-hover:text-amber-300 transition-colors line-clamp-2 leading-snug">
+                      {video.title}
+                    </h3>
+                    {video.description && (
+                      <p className="text-[11px] text-slate-300 line-clamp-1 leading-relaxed opacity-85">
+                        {video.description}
+                      </p>
+                    )}
+                  </div>
 
-                  {video.description && (
-                    <p className="text-[10px] sm:text-[11px] text-slate-400 line-clamp-1">
-                      {video.description}
-                    </p>
-                  )}
-
-                  <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 pt-1 border-t border-white/10">
-                    <div className="flex items-center gap-1">
-                      <Eye className="w-3 h-3 text-amber-400" />
-                      <span>{video.viewsCount || 0}</span>
+                  {/* Footer Metrics */}
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-white/10">
+                    <div className="flex items-center gap-1.5 text-slate-300 font-medium">
+                      <Eye className="w-3.5 h-3.5 text-amber-400" />
+                      <span>{video.viewsCount || 0} views</span>
                     </div>
 
                     <button
                       type="button"
                       onClick={(e) => handleLike(e, video._id)}
-                      className="flex items-center gap-1 hover:text-rose-400 transition-colors cursor-pointer group/btn"
+                      className="flex items-center gap-1.5 text-slate-300 hover:text-rose-400 font-medium transition-colors cursor-pointer group/btn"
+                      title="Like this short"
                     >
                       <Heart
                         className={`w-3.5 h-3.5 transition-transform group-hover/btn:scale-125 ${
@@ -318,16 +343,16 @@ export const JamRoomShorts = ({ title, subtitle, showBookButton = true }) => {
                     </button>
                   </div>
                 </div>
-              </SpotlightCard>
+              </motion.div>
             );
           })}
         </div>
       )}
 
-      {/* Interactive Fullscreen Reel Viewer Modal */}
+      {/* Interactive Fullscreen Reel Viewer Lightbox */}
       <AnimatePresence>
         {activeReelIndex !== null && currentReel && (
-          <div className="fixed inset-0 z-[10000] flex items-center justify-center p-2 sm:p-4 md:p-6 bg-dark-950/95 backdrop-blur-2xl">
+          <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 bg-dark-950/95 backdrop-blur-2xl">
             {/* Backdrop Dismiss Click */}
             <div className="absolute inset-0" onClick={handleCloseReel} />
 
@@ -336,7 +361,7 @@ export const JamRoomShorts = ({ title, subtitle, showBookButton = true }) => {
               type="button"
               onClick={handlePrevReel}
               title="Previous Short (Left Arrow)"
-              className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-amber-500 hover:text-dark-950 text-white backdrop-blur-md border border-white/10 items-center justify-center transition-all hover:scale-110 cursor-pointer shadow-2xl"
+              className="hidden md:flex absolute left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-amber-500 hover:text-dark-950 text-white backdrop-blur-md border border-white/10 items-center justify-center transition-all hover:scale-110 cursor-pointer shadow-2xl"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
@@ -346,22 +371,22 @@ export const JamRoomShorts = ({ title, subtitle, showBookButton = true }) => {
               type="button"
               onClick={handleNextReel}
               title="Next Short (Right Arrow)"
-              className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-amber-500 hover:text-dark-950 text-white backdrop-blur-md border border-white/10 items-center justify-center transition-all hover:scale-110 cursor-pointer shadow-2xl"
+              className="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-amber-500 hover:text-dark-950 text-white backdrop-blur-md border border-white/10 items-center justify-center transition-all hover:scale-110 cursor-pointer shadow-2xl"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
 
             {/* Main Shorts Reel Container */}
             <motion.div
-              initial={{ scale: 0.92, opacity: 0, y: 20 }}
+              initial={{ scale: 0.94, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.92, opacity: 0, y: 20 }}
+              exit={{ scale: 0.94, opacity: 0, y: 20 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-10 w-full max-w-[420px] sm:max-w-[460px] h-[92vh] max-h-[850px] rounded-3xl overflow-hidden bg-black border-2 border-amber-500/40 shadow-glow-yellow/30 flex flex-col justify-between"
+              className="relative z-10 w-full max-w-[420px] sm:max-w-[440px] h-[90vh] max-h-[820px] rounded-3xl overflow-hidden bg-black border-2 border-amber-500/40 shadow-glow-yellow/30 flex flex-col justify-between"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Top Progress Bar (30s countdown timeline) */}
-              <div className="absolute top-0 left-0 right-0 z-30 h-1.5 bg-white/20">
+              <div className="absolute top-0 left-0 right-0 z-30 h-1 bg-white/20">
                 <div
                   className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-150"
                   style={{ width: `${progress}%` }}
@@ -369,7 +394,7 @@ export const JamRoomShorts = ({ title, subtitle, showBookButton = true }) => {
               </div>
 
               {/* Top Header Actions Overlay */}
-              <div className="absolute top-2 left-0 right-0 z-30 p-4 flex items-center justify-between bg-gradient-to-b from-dark-950/80 to-transparent">
+              <div className="absolute top-1 left-0 right-0 z-30 p-4 flex items-center justify-between bg-gradient-to-b from-dark-950/90 to-transparent">
                 <div className="flex items-center gap-2">
                   <span className="px-2.5 py-1 rounded-full bg-dark-950/90 backdrop-blur-md border border-amber-500/50 text-amber-300 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-lg">
                     <Clock className="w-3 h-3 text-amber-400" />
@@ -455,7 +480,7 @@ export const JamRoomShorts = ({ title, subtitle, showBookButton = true }) => {
                   <button
                     type="button"
                     onClick={(e) => handleLike(e, currentReel._id)}
-                    className="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 text-white transition-all cursor-pointer shrink-0"
+                    className="flex flex-col items-center gap-1 p-2.5 rounded-2xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 text-white transition-all cursor-pointer shrink-0"
                   >
                     <Heart
                       className={`w-5 h-5 transition-transform active:scale-125 ${
