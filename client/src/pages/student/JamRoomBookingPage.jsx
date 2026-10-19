@@ -5,6 +5,7 @@ import { SlotGrid } from '../../components/booking/SlotGrid';
 import { BookingModal } from '../../components/booking/BookingModal';
 import { SlotSkeleton } from '../../components/common/Skeleton';
 import { SpotlightCard } from '../../components/common/SpotlightCard';
+import { JamRoomShorts } from '../../components/jamroom/JamRoomShorts';
 import { bookingService } from '../../services/bookingService';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -337,6 +338,9 @@ export const JamRoomBookingPage = () => {
           />
         )}
       </div>
+
+      {/* 30-Second Jam Room Shorts Section */}
+      <JamRoomShorts />
 
       {/* Jam Room Guidelines Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 pt-2 sm:pt-4">

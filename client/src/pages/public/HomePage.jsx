@@ -4,6 +4,7 @@ import { BackgroundVideoPlayer } from '../../components/common/BackgroundVideoPl
 import { GalleryLightbox } from '../../components/cms/GalleryLightbox';
 import { TeamCard } from '../../components/cms/TeamCard';
 import { SpotlightCard } from '../../components/common/SpotlightCard';
+import { JamRoomShorts } from '../../components/jamroom/JamRoomShorts';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { SoundVisualizer } from '../../components/common/SoundVisualizer';
 import { cmsService } from '../../services/cmsService';
@@ -309,6 +310,20 @@ export const HomePage = () => {
             </div>
           </div>
         </div>
+      </motion.section>
+
+      {/* 2.5 30-SECOND JAM ROOM REELS & SHORTS */}
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
+        <JamRoomShorts
+          title="Inside the Studio: 30-Second Jam Room Shorts"
+          subtitle="Watch quick 30-second video clips showcasing drum isolation, Marshall and Fender amplifiers, live rehearsals, and audio routing at Melodium SJEC."
+        />
       </motion.section>
 
       {/* 3. PERFORMANCE GALLERY PREVIEW (SCROLL REVEAL) */}

@@ -42,6 +42,8 @@ export const AdminLayout = () => {
         return 'Registered Students & Musicians';
       case '/admin/gallery':
         return 'Photo Gallery Management';
+      case '/admin/videos':
+        return 'Jam Room 30-Second Short Videos';
       case '/admin/settings':
         return 'Jam Room Rules & Studio Parameters';
       case '/admin/analytics':
