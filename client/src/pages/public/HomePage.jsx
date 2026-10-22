@@ -5,7 +5,6 @@ import { GalleryLightbox } from '../../components/cms/GalleryLightbox';
 import { TeamCard } from '../../components/cms/TeamCard';
 import { SpotlightCard } from '../../components/common/SpotlightCard';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
-import { SoundVisualizer } from '../../components/common/SoundVisualizer';
 import { cmsService } from '../../services/cmsService';
 import { bookingService } from '../../services/bookingService';
 import { reviewService } from '../../services/reviewService';
@@ -109,12 +108,12 @@ export const HomePage = () => {
           variants={staggerContainer}
           className="relative z-10 text-center space-y-6 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
         >
-          {/* Badge with Live Equalizer Visualizer */}
+          {/* Badge */}
           <motion.div
             variants={fadeInUp}
-            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-600/25 via-yellow-500/20 to-transparent border border-amber-500/40 backdrop-blur-md shadow-lg"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-600/25 via-yellow-500/20 to-transparent border border-amber-500/40 backdrop-blur-md shadow-lg"
           >
-            <SoundVisualizer bars={5} barClassName="bg-amber-400" className="h-3" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-xs font-bold tracking-widest uppercase text-amber-300">
               MELODIUM STUDIO
             </span>

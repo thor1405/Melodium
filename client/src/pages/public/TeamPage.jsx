@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { cmsService } from '../../services/cmsService';
 import { SpotlightCard } from '../../components/common/SpotlightCard';
-import { SoundVisualizer } from '../../components/common/SoundVisualizer';
 import {
   Sliders,
   Mic2,
@@ -159,10 +158,10 @@ export const TeamPage = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/25 to-transparent" />
 
-              {/* Verified Sound Engineer Badge with Dynamic Equalizer */}
+              {/* Verified Sound Engineer Badge */}
               <div className="absolute top-4 left-4">
                 <span className="px-3.5 py-1.5 rounded-full bg-dark-950/85 backdrop-blur-md border border-amber-500/50 text-amber-300 text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg">
-                  <SoundVisualizer barsCount={4} barColor="bg-amber-400" />
+                  <Sliders className="w-3.5 h-3.5 text-amber-400" />
                   <span>Resident Sound Engineer</span>
                 </span>
               </div>

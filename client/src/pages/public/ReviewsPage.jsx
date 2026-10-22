@@ -7,7 +7,6 @@ import { formatDate } from '../../utils/dateUtils';
 import { Modal } from '../../components/common/Modal';
 import { SpotlightCard } from '../../components/common/SpotlightCard';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
-import { SoundVisualizer } from '../../components/common/SoundVisualizer';
 import {
   Star,
   Sparkles,
@@ -184,8 +183,8 @@ export const ReviewsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8 sm:space-y-12">
           {/* Top Title */}
           <div className="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider shadow-glow-yellow">
-              <SoundVisualizer barsCount={4} barColor="bg-amber-400" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider shadow-glow-yellow">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <span>Musician Experiences & Testimonials</span>
             </div>
 

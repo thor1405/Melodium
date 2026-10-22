@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { SpotlightCard } from '../../components/common/SpotlightCard';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
-import { SoundVisualizer } from '../../components/common/SoundVisualizer';
 import {
   Music2,
   Radio,
