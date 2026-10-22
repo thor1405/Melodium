@@ -12,7 +12,7 @@ const DEFAULT_EQUIPMENT = [
   },
   {
     title: 'Sound-Treated Live Rehearsal Hall',
-    tag: 'Jam Room',
+    tag: 'Studio',
     desc: 'Acoustically isolated rehearsal space at SJEC featuring wood flooring and bass absorption.',
     image: '/gallery/sound_treated_live_room.png',
     order: 2,

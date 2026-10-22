@@ -75,7 +75,7 @@ export const seedDatabase = async () => {
   await GalleryItem.create([
     {
       title: 'Sound-Treated Jam Room Live Rehearsal Hall',
-      category: 'JAM_SESSIONS',
+      category: 'STUDIO',
       imageUrl: '/gallery/sound_treated_live_room.png',
       caption: 'Acoustically isolated rehearsal space at SJEC featuring custom sound dampeners, acoustic wood flooring, and studio vocal booth.',
       eventDate: 'October 2026',

@@ -414,6 +414,7 @@ export const AdminGalleryPage = () => {
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               className="w-full px-3.5 py-2.5 rounded-xl bg-dark-900 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
             >
+              <option value="STUDIO">Studio</option>
               <option value="PERFORMANCES">Live Performances</option>
               <option value="JAM_SESSIONS">Jam Room Sessions</option>
               <option value="COMPETITIONS">Battle of the Bands / Competitions</option>

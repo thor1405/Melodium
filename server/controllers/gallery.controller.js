@@ -8,7 +8,13 @@ export const getGalleryItems = async (req, res, next) => {
     const { category, featured } = req.query;
     const query = {};
 
-    if (category && category !== 'ALL') query.category = category;
+    if (category && category !== 'ALL') {
+      if (category === 'STUDIO' || category === 'STUDIO_GEAR') {
+        query.category = { $in: ['STUDIO', 'STUDIO_GEAR'] };
+      } else {
+        query.category = category;
+      }
+    }
     if (featured === 'true') query.featured = true;
 
     const items = await GalleryItem.find(query).sort({ order: 1, createdAt: -1 });

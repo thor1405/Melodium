@@ -9,7 +9,7 @@ const galleryItemSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ['PERFORMANCES', 'JAM_SESSIONS', 'COMPETITIONS', 'COLLEGE_EVENTS', 'BEHIND_THE_SCENES', 'STUDIO_GEAR'],
+      enum: ['PERFORMANCES', 'JAM_SESSIONS', 'COMPETITIONS', 'COLLEGE_EVENTS', 'BEHIND_THE_SCENES', 'STUDIO_GEAR', 'STUDIO'],
       default: 'PERFORMANCES',
       index: true,
     },

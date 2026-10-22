@@ -31,7 +31,7 @@ export const GalleryPage = () => {
 
   const categories = [
     { label: 'All Photos', value: 'ALL' },
-    { label: 'Studio Gear & Room', value: 'STUDIO_GEAR' },
+    { label: 'Studio', value: 'STUDIO' },
     { label: 'Jam Sessions', value: 'JAM_SESSIONS' },
     { label: 'Live Performances', value: 'PERFORMANCES' },
     { label: 'Behind The Scenes', value: 'BEHIND_THE_SCENES' },

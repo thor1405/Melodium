@@ -51,7 +51,7 @@ export const TeamPage = () => {
       title: 'Sound-Treated Live Rehearsal Hall',
       desc: 'Acoustically isolated rehearsal space at SJEC featuring wood flooring and bass absorption.',
       image: '/gallery/sound_treated_live_room.png',
-      tag: 'Jam Room',
+      tag: 'Studio',
     },
     {
       _id: 'default-3',
@@ -162,7 +162,7 @@ export const TeamPage = () => {
               <div className="absolute top-4 left-4">
                 <span className="px-3.5 py-1.5 rounded-full bg-dark-950/85 backdrop-blur-md border border-amber-500/50 text-amber-300 text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg">
                   <Sliders className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Resident Sound Engineer</span>
+                  <span>Sound Engineer</span>
                 </span>
               </div>
 
