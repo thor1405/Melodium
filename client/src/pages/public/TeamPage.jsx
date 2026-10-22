@@ -32,7 +32,7 @@ export const TeamPage = () => {
     name: 'Lionel',
     role: 'Sound Engineer & Studio Custodian',
     photo: '/team/lionel.jpg',
-    bio: 'Official Resident Sound Engineer for Melodium SJEC. Manages live rehearsal acoustics, multitrack studio recording, digital mixing console routing, and audio calibration at Jam Room (Academic Block 3).',
+    bio: 'Official Sound Engineer for Melodium SJEC. Manages live rehearsal acoustics, multitrack studio recording, digital mixing console routing, and audio calibration at the Studio (Academic Block 3).',
     instrument: 'Live Sound, Multitrack DAW & Studio Acoustics',
     department: 'Studio Audio Engineering',
   });
@@ -194,7 +194,7 @@ export const TeamPage = () => {
               </h3>
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
                 {engineer.bio ||
-                  'Official Resident Sound Engineer for Melodium SJEC. Manages live rehearsal acoustics, multitrack studio recording, digital mixing console routing, and audio calibration at Jam Room (Academic Block 3).'}
+                  'Official Sound Engineer for Melodium SJEC. Manages live rehearsal acoustics, multitrack studio recording, digital mixing console routing, and audio calibration at the Studio (Academic Block 3).'}
               </p>
             </div>
 
