@@ -13,8 +13,6 @@ import TeamMember from '../models/TeamMember.js';
 import Notification from '../models/Notification.js';
 import ActivityLog from '../models/ActivityLog.js';
 import Review from '../models/Review.js';
-import JamRoomVideo from '../models/JamRoomVideo.js';
-import { initialJamRoomVideos } from '../scripts/seedJamRoomVideos.js';
 import { defaultBookingSettings } from '../config/defaultSettings.js';
 import { getNowInTimezone } from '../services/availability.service.js';
 
@@ -34,7 +32,6 @@ export const seedDatabase = async () => {
     Notification.deleteMany({}),
     ActivityLog.deleteMany({}),
     Review.deleteMany({}),
-    JamRoomVideo.deleteMany({}),
   ]);
 
   console.log('🧹 Cleaned existing database collections.');
@@ -188,10 +185,6 @@ export const seedDatabase = async () => {
     },
   ]);
   console.log('⭐ Seeded 4 Authentic Musician Reviews & Testimonials.');
-
-  // 3.9 Populate Initial 30-Second Jam Room Short Videos
-  await JamRoomVideo.insertMany(initialJamRoomVideos);
-  console.log('🎬 Seeded 30-Second Jam Room Short Videos.');
 
   // 4. Initial System Setup Activity Log
   await ActivityLog.create({

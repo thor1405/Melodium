@@ -17,7 +17,6 @@ import notificationRoutes from './routes/notification.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
 import reviewRoutes from './routes/review.routes.js';
 import equipmentRoutes from './routes/equipment.routes.js';
-import jamRoomVideoRoutes from './routes/jamRoomVideo.routes.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 import { seedDatabase } from './seed/seed.js';
 import User from './models/User.js';
@@ -90,7 +89,6 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/equipment', equipmentRoutes);
-app.use('/api/jam-room-videos', jamRoomVideoRoutes);
 
 // Serve Frontend SPA in Production (Docker / Raspberry Pi / Standalone)
 const clientDistPath = path.join(__dirname, 'public');

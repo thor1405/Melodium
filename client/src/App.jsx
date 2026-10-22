@@ -27,7 +27,6 @@ import { AdminBookingsPage } from './pages/admin/AdminBookingsPage';
 import { AdminCalendarPage } from './pages/admin/AdminCalendarPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminGalleryPage } from './pages/admin/AdminGalleryPage';
-import { AdminVideosPage } from './pages/admin/AdminVideosPage';
 import { AdminReviewsPage } from './pages/admin/AdminReviewsPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { AdminTeamPage } from './pages/admin/AdminTeamPage';
@@ -197,7 +196,6 @@ export const App = () => {
               <Route path="calendar" element={<AdminCalendarPage />} />
               <Route path="users" element={<AdminUsersPage />} />
               <Route path="gallery" element={<AdminGalleryPage />} />
-              <Route path="videos" element={<AdminVideosPage />} />
               <Route path="reviews" element={<AdminReviewsPage />} />
               <Route path="team" element={<AdminTeamPage />} />
               <Route path="sound-engineer" element={<AdminTeamPage />} />
